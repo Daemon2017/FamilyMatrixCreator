@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace FamilyMatrixCreator
@@ -11,13 +12,35 @@ namespace FamilyMatrixCreator
             InitializeComponent();
         }
 
-        int[,,] relationshipsMatrix = new int[42, 42, 10];
-        int[,] ancestorsMatrix = new int[42, 42];
-        int[,] descendantsMatrix = new int[42, 42];
+        int[,,] relationshipsMatrix;
+        int[,] ancestorsMatrix;
+        int[,] descendantsMatrix;
 
         private void Form1_Load(object sender, EventArgs e)
         {
             string input = File.ReadAllText(@"relationships.csv");
+            int numberOfLines = input.Split('\n').Length - 1;
+            int numberOfCells = 0;
+
+            foreach (var row in input.Split('\n'))
+            {
+                foreach (var col in row.Trim().Split(','))
+                {
+                    int count = 0;
+
+                    foreach (Match m in Regex.Matches(col, ";"))
+                    {
+                        count++;
+                    }
+
+                    if (count > numberOfCells)
+                    {
+                        numberOfCells = count;
+                    }
+                }
+            }
+
+            relationshipsMatrix = new int[numberOfLines, numberOfLines, numberOfCells + 1];
 
             int i = 0,
                 j = 0,
@@ -48,6 +71,25 @@ namespace FamilyMatrixCreator
             }
 
             input = File.ReadAllText(@"ancestors.csv");
+            numberOfLines = input.Split('\n').Length - 1;
+            numberOfCells = 0;
+
+            foreach (var row in input.Split('\n'))
+            {
+                int count = 0;
+
+                foreach (Match m in Regex.Matches(row, ","))
+                {
+                    count++;
+                }
+
+                if (count > numberOfCells)
+                {
+                    numberOfCells = count;
+                }
+            }
+
+            ancestorsMatrix = new int[numberOfLines, numberOfCells + 1];
 
             i = 0;
             j = 0;
@@ -70,6 +112,25 @@ namespace FamilyMatrixCreator
             }
 
             input = File.ReadAllText(@"descendants.csv");
+            numberOfLines = input.Split('\n').Length - 1;
+            numberOfCells = 0;
+
+            foreach (var row in input.Split('\n'))
+            {
+                int count = 0;
+
+                foreach (Match m in Regex.Matches(row, ","))
+                {
+                    count++;
+                }
+
+                if (count > numberOfCells)
+                {
+                    numberOfCells = count;
+                }
+            }
+
+            descendantsMatrix = new int[numberOfLines, numberOfCells + 1];
 
             i = 0;
             j = 0;
