@@ -15,36 +15,60 @@ namespace FamilyMatrixCreator
         int[,,] relationshipsMatrix;
         int[,] ancestorsMatrix;
         int[,] descendantsMatrix;
+        int numberOfProband;
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            /*
+             * Загрузка матрицы возможных степеней родства
+             * Определение номера строки, содержащей возможные степени родства пробанда
+             */
             string input = File.ReadAllText(@"relationships.csv");
             int numberOfLines = input.Split('\n').Length - 1;
             int numberOfCells = 0;
 
+            int i = 0,
+                j = 0,
+                k = 0;
+
             foreach (var row in input.Split('\n'))
             {
+                if (!(row.Equals("")) && !(row.Equals("\r")))
+                {
+                    int cellsCounter = 0;
+
+                    foreach (Match m in Regex.Matches(row, ";"))
+                    {
+                        cellsCounter++;
+                    }
+
+                    if (0 == cellsCounter)
+                    {
+                        numberOfProband = i;
+                    }
+                }
+
                 foreach (var col in row.Trim().Split(','))
                 {
-                    int count = 0;
+                    int cellsCounter = 0;
 
                     foreach (Match m in Regex.Matches(col, ";"))
                     {
-                        count++;
+                        cellsCounter++;
                     }
 
-                    if (count > numberOfCells)
+                    if (cellsCounter > numberOfCells)
                     {
-                        numberOfCells = count;
+                        numberOfCells = cellsCounter;
                     }
                 }
+
+                i++;
             }
 
             relationshipsMatrix = new int[numberOfLines, numberOfLines, numberOfCells + 1];
 
-            int i = 0,
-                j = 0,
-                k = 0;
+            i = 0;
 
             foreach (var row in input.Split('\n'))
             {
@@ -70,6 +94,9 @@ namespace FamilyMatrixCreator
                 i++;
             }
 
+            /*
+             * Загрузка матрицы предковых степеней родства
+             */
             input = File.ReadAllText(@"ancestors.csv");
             numberOfLines = input.Split('\n').Length - 1;
             numberOfCells = 0;
@@ -111,6 +138,9 @@ namespace FamilyMatrixCreator
                 i++;
             }
 
+            /*
+             * Загрузка матрицы потомковых степеней родства
+             */
             input = File.ReadAllText(@"descendants.csv");
             numberOfLines = input.Split('\n').Length - 1;
             numberOfCells = 0;
