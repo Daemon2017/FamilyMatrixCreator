@@ -12,7 +12,7 @@ namespace FamilyMatrixCreator
             InitializeComponent();
         }
 
-        int[,,] relationshipsMatrix;
+        int[,][] relationshipsMatrix;
         int[,] ancestorsMatrix;
         int[,] descendantsMatrix;
         int numberOfProband;
@@ -31,8 +31,14 @@ namespace FamilyMatrixCreator
                 j = 0,
                 k = 0;
 
+            relationshipsMatrix = new int[numberOfLines, numberOfLines][];
+
+            i = 0;
+
             foreach (var row in input.Split('\n'))
             {
+                j = 0;
+
                 if (!(row.Equals("")) && !(row.Equals("\r")))
                 {
                     int cellsCounter = 0;
@@ -46,49 +52,38 @@ namespace FamilyMatrixCreator
                     {
                         numberOfProband = i;
                     }
-                }
 
-                foreach (var col in row.Trim().Split(','))
-                {
-                    int cellsCounter = 0;
-
-                    foreach (Match m in Regex.Matches(col, ";"))
+                    foreach (var col in row.Trim().Split(','))
                     {
-                        cellsCounter++;
-                    }
+                        k = 0;
 
-                    if (cellsCounter > numberOfCells)
-                    {
-                        numberOfCells = cellsCounter;
-                    }
-                }
+                        cellsCounter = 0;
 
-                i++;
-            }
-
-            relationshipsMatrix = new int[numberOfLines, numberOfLines, numberOfCells + 1];
-
-            i = 0;
-
-            foreach (var row in input.Split('\n'))
-            {
-                j = 0;
-
-                foreach (var col in row.Trim().Split(','))
-                {
-                    k = 0;
-
-                    foreach (var subcol in col.Trim().Split(';'))
-                    {
-                        if (subcol != "")
+                        foreach (Match m in Regex.Matches(col, ";"))
                         {
-                            relationshipsMatrix[i, j, k] = int.Parse(subcol.Trim());
+                            cellsCounter++;
                         }
 
-                        k++;
-                    }
+                        if (cellsCounter > numberOfCells)
+                        {
+                            numberOfCells = cellsCounter;
+                        }
 
-                    j++;
+                        relationshipsMatrix[i, j] = new int[numberOfCells + 1];
+                        numberOfCells = 0;
+
+                        foreach (var subcol in col.Trim().Split(';'))
+                        {
+                            if (subcol != "")
+                            {
+                                relationshipsMatrix[i, j][k] = int.Parse(subcol.Trim());
+                            }
+
+                            k++;
+                        }
+
+                        j++;
+                    }
                 }
 
                 i++;
