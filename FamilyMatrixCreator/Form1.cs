@@ -13,8 +13,8 @@ namespace FamilyMatrixCreator
         }
 
         int[,][] relationshipsMatrix;
-        int[,] ancestorsMatrix;
-        int[,] descendantsMatrix;
+        int[][] ancestorsMatrix;
+        int[][] descendantsMatrix;
         int numberOfProband;
 
         private void Form1_Load(object sender, EventArgs e)
@@ -23,60 +23,54 @@ namespace FamilyMatrixCreator
              * Загрузка матрицы возможных степеней родства
              * Определение номера строки, содержащей возможные степени родства пробанда
              */
-            string input = File.ReadAllText(@"relationships.csv");
-            int numberOfLines = input.Split('\n').Length - 1;
-            int numberOfCells = 0;
-
             int i = 0,
                 j = 0,
                 k = 0;
-
+            string input = File.ReadAllText(@"relationships.csv");
+            int numberOfLines = input.Split('\n').Length - 1;
+            int quantityOfCells = 0;
             relationshipsMatrix = new int[numberOfLines, numberOfLines][];
-
-            i = 0;
 
             foreach (var row in input.Split('\n'))
             {
                 j = 0;
+                int counter = 0;
 
                 if (!(row.Equals("")) && !(row.Equals("\r")))
                 {
-                    int cellsCounter = 0;
-
                     foreach (Match m in Regex.Matches(row, ";"))
                     {
-                        cellsCounter++;
+                        counter++;
                     }
 
-                    if (0 == cellsCounter)
+                    if (0 == counter)
                     {
                         numberOfProband = i;
                     }
 
-                    foreach (var col in row.Trim().Split(','))
+                    foreach (var column in row.Trim().Split(','))
                     {
                         k = 0;
+                        counter = 0;
 
-                        cellsCounter = 0;
-
-                        foreach (Match m in Regex.Matches(col, ";"))
+                        foreach (Match m in Regex.Matches(column, ";"))
                         {
-                            cellsCounter++;
+                            counter++;
                         }
 
-                        if (cellsCounter > numberOfCells)
+                        if (counter > quantityOfCells)
                         {
-                            numberOfCells = cellsCounter;
+                            quantityOfCells = counter;
                         }
 
-                        relationshipsMatrix[i, j] = new int[numberOfCells + 1];
-                        numberOfCells = 0;
+                        relationshipsMatrix[i, j] = new int[quantityOfCells + 1];
+                        quantityOfCells = 0;
 
-                        foreach (var subcol in col.Trim().Split(';'))
+                        foreach (var cell in column.Trim().Split(';'))
                         {
-                            if (subcol != "")
+                            if (cell != "")
                             {
-                                relationshipsMatrix[i, j][k] = int.Parse(subcol.Trim());
+                                relationshipsMatrix[i, j][k] = int.Parse(cell.Trim());
                             }
 
                             k++;
@@ -92,42 +86,42 @@ namespace FamilyMatrixCreator
             /*
              * Загрузка матрицы предковых степеней родства
              */
-            input = File.ReadAllText(@"ancestors.csv");
-            numberOfLines = input.Split('\n').Length - 1;
-            numberOfCells = 0;
-
-            foreach (var row in input.Split('\n'))
-            {
-                int count = 0;
-
-                foreach (Match m in Regex.Matches(row, ","))
-                {
-                    count++;
-                }
-
-                if (count > numberOfCells)
-                {
-                    numberOfCells = count;
-                }
-            }
-
-            ancestorsMatrix = new int[numberOfLines, numberOfCells + 1];
-
             i = 0;
             j = 0;
+            input = File.ReadAllText(@"ancestors.csv");
+            numberOfLines = input.Split('\n').Length - 1;
+            quantityOfCells = 0;
+            ancestorsMatrix = new int[numberOfLines][];
 
             foreach (var row in input.Split('\n'))
             {
                 j = 0;
+                int counter = 0;
 
-                foreach (var col in row.Trim().Split(','))
+                if (!(row.Equals("")) && !(row.Equals("\r")))
                 {
-                    if (col != "")
+                    foreach (Match m in Regex.Matches(row, ","))
                     {
-                        ancestorsMatrix[i, j] = int.Parse(col.Trim());
+                        counter++;
                     }
 
-                    j++;
+                    if (counter > quantityOfCells)
+                    {
+                        quantityOfCells = counter;
+                    }
+
+                    ancestorsMatrix[i] = new int[quantityOfCells + 1];
+                    quantityOfCells = 0;
+
+                    foreach (var column in row.Trim().Split(','))
+                    {
+                        if (column != "")
+                        {
+                            ancestorsMatrix[i][j] = int.Parse(column.Trim());
+                        }
+
+                        j++;
+                    }
                 }
 
                 i++;
@@ -136,42 +130,42 @@ namespace FamilyMatrixCreator
             /*
              * Загрузка матрицы потомковых степеней родства
              */
-            input = File.ReadAllText(@"descendants.csv");
-            numberOfLines = input.Split('\n').Length - 1;
-            numberOfCells = 0;
-
-            foreach (var row in input.Split('\n'))
-            {
-                int count = 0;
-
-                foreach (Match m in Regex.Matches(row, ","))
-                {
-                    count++;
-                }
-
-                if (count > numberOfCells)
-                {
-                    numberOfCells = count;
-                }
-            }
-
-            descendantsMatrix = new int[numberOfLines, numberOfCells + 1];
-
             i = 0;
             j = 0;
+            input = File.ReadAllText(@"descendants.csv");
+            numberOfLines = input.Split('\n').Length - 1;
+            quantityOfCells = 0;
+            descendantsMatrix = new int[numberOfLines][];
 
             foreach (var row in input.Split('\n'))
             {
                 j = 0;
+                int counter = 0;
 
-                foreach (var col in row.Trim().Split(','))
+                if (!(row.Equals("")) && !(row.Equals("\r")))
                 {
-                    if (col != "")
+                    foreach (Match m in Regex.Matches(row, ","))
                     {
-                        descendantsMatrix[i, j] = int.Parse(col.Trim());
+                        counter++;
                     }
 
-                    j++;
+                    if (counter > quantityOfCells)
+                    {
+                        quantityOfCells = counter;
+                    }
+
+                    descendantsMatrix[i] = new int[quantityOfCells + 1];
+                    quantityOfCells = 0;
+
+                    foreach (var column in row.Trim().Split(','))
+                    {
+                        if (column != "")
+                        {
+                            descendantsMatrix[i][j] = int.Parse(column.Trim());
+                        }
+
+                        j++;
+                    }
                 }
 
                 i++;
