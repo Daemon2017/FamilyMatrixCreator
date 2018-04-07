@@ -13,6 +13,7 @@ namespace FamilyMatrixCreator
         }
 
         int[,][] relationshipsMatrix;
+        int[] relationshipsHelper;
         int[][] ancestorsMatrix;
         int[][] descendantsMatrix;
         int numberOfProband;
@@ -79,6 +80,25 @@ namespace FamilyMatrixCreator
 
                         j++;
                     }
+                }
+
+                i++;
+            }
+
+            /*
+             * Загрузка указателя к матрице возможных степеней родства
+             */
+            i = 0;
+            input = File.ReadAllText(@"relationshipsHelper.csv");
+            numberOfLines = input.Split('\n').Length - 1;
+            quantityOfCells = 0;
+            relationshipsHelper = new int[numberOfLines];
+
+            foreach (var row in input.Split('\n'))
+            {
+                if (row != "")
+                {
+                    relationshipsHelper[i] = int.Parse(row.Trim());
                 }
 
                 i++;
@@ -182,7 +202,7 @@ namespace FamilyMatrixCreator
             {
                 generatedMatrix[i] = new int[100];
 
-                for (int j = 0; j < 100; j++)
+                for (int j = i; j < 100; j++)
                 {
                     int rndValue = rnd.Next(relationshipsMatrix.GetLength(1));
                     generatedMatrix[i][j] = relationshipsMatrix[numberOfProband, rndValue][0];
