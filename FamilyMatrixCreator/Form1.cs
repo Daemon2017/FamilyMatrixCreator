@@ -16,6 +16,7 @@ namespace FamilyMatrixCreator
         int[][] ancestorsMatrix;
         int[][] descendantsMatrix;
         int numberOfProband;
+        int[][] generatedMatrix;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -174,7 +175,19 @@ namespace FamilyMatrixCreator
 
         private void Button1_Click(object sender, EventArgs e)
         {
+            generatedMatrix = new int[100][];
+            Random rnd = new Random();
 
+            for (int i = 0; i < 100; i++)
+            {
+                generatedMatrix[i] = new int[100];
+
+                for (int j = 0; j < 100; j++)
+                {
+                    int rndValue = rnd.Next(relationshipsMatrix.GetLength(1));
+                    generatedMatrix[i][j] = relationshipsMatrix[numberOfProband, rndValue][0];
+                }
+            }
         }
     }
 }
