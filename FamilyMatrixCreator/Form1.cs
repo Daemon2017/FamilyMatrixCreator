@@ -204,7 +204,7 @@ namespace FamilyMatrixCreator
 
                 for (int j = i; j < 100; j++)
                 {
-                    if(0==i)
+                    if (0 == i)
                     {
                         int rndValueY = rnd.Next(relationshipsMatrix.GetLength(1));
                         generatedMatrix[i][j] = relationshipsMatrix[numberOfProband, rndValueY][0];
@@ -213,22 +213,21 @@ namespace FamilyMatrixCreator
                     {
                         int numberOfFirst = 0,
                             numberOfSecond = 0;
-                        int[] allowedRelationships;
 
-                        for (int n = 0; n < relationshipsMatrix.GetLength(1); n++)
+                        for (int k = 0; k < relationshipsMatrix.GetLength(1); k++)
                         {
-                            if (relationshipsMatrix[numberOfProband, n][0] == generatedMatrix[0][j])
+                            if (relationshipsMatrix[numberOfProband, k][0] == generatedMatrix[0][i])
                             {
-                                numberOfFirst = n;
+                                numberOfFirst = k;
                             }
 
-                            if (relationshipsMatrix[numberOfProband, n][0] == generatedMatrix[0][i])
+                            if (relationshipsMatrix[numberOfProband, k][0] == generatedMatrix[0][j])
                             {
-                                numberOfSecond = n;
+                                numberOfSecond = k;
                             }
                         }
 
-                        allowedRelationships = relationshipsMatrix[numberOfFirst, numberOfSecond];
+                        int[] allowedRelationships = relationshipsMatrix[numberOfFirst, numberOfSecond];
                         int rndValueY = rnd.Next(allowedRelationships.GetLength(0));
                         generatedMatrix[i][j] = allowedRelationships[rndValueY];
                     }
@@ -238,7 +237,7 @@ namespace FamilyMatrixCreator
                         generatedMatrix[i][j] = 0;
                     }
 
-                    if(1== generatedMatrix[i][j])
+                    if (1 == generatedMatrix[i][j])
                     {
                         j--;
                     }
