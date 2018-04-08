@@ -204,8 +204,69 @@ namespace FamilyMatrixCreator
 
                 for (int j = i; j < 100; j++)
                 {
-                    int rndValue = rnd.Next(relationshipsMatrix.GetLength(1));
-                    generatedMatrix[i][j] = relationshipsMatrix[numberOfProband, rndValue][0];
+                    if(0==i)
+                    {
+                        int rndValueY = rnd.Next(relationshipsMatrix.GetLength(1));
+                        generatedMatrix[i][j] = relationshipsMatrix[numberOfProband, rndValueY][0];
+                    }
+                    else
+                    {
+                        int numberOfFirst = 0,
+                            numberOfSecond = 0;
+                        int[] allowedRelationships;
+
+                        for (int n = 0; n < relationshipsMatrix.GetLength(1); n++)
+                        {
+                            if (relationshipsMatrix[numberOfProband, n][0] == generatedMatrix[0][j])
+                            {
+                                numberOfFirst = n;
+                            }
+
+                            if (relationshipsMatrix[numberOfProband, n][0] == generatedMatrix[0][i])
+                            {
+                                numberOfSecond = n;
+                            }
+                        }
+
+                        allowedRelationships = relationshipsMatrix[numberOfFirst, numberOfSecond];
+                        int rndValueY = rnd.Next(allowedRelationships.GetLength(0));
+                        generatedMatrix[i][j] = allowedRelationships[rndValueY];
+                    }
+
+                    if (i == j)
+                    {
+                        generatedMatrix[i][j] = 0;
+                    }
+
+                    if(1== generatedMatrix[i][j])
+                    {
+                        j--;
+                    }
+                }
+            }
+
+            using (StreamWriter outfile = new StreamWriter(@"generated.csv"))
+            {
+                for (int x = 0; x < generatedMatrix.GetLength(0); x++)
+                {
+                    string content = "";
+
+                    for (int y = 0; y < generatedMatrix[x].GetLength(0); y++)
+                    {
+                        string temp = generatedMatrix[x][y].ToString();
+
+                        if (temp != null)
+                        {
+                            content += temp + ",";
+                        }
+                    }
+
+                    if (content != "")
+                    {
+                        content = content.Remove(content.Length - 1);
+                    }
+
+                    outfile.WriteLine(content);
                 }
             }
         }
