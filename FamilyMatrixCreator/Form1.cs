@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -178,6 +179,9 @@ namespace FamilyMatrixCreator
             generatedMatrix = new int[100][];
             Random rnd = new Random();
 
+            /*
+             * Построение матрицы родственных связей.
+             */
             for (int i = 0; i < 100; i++)
             {
                 generatedMatrix[i] = new int[100];
@@ -191,30 +195,73 @@ namespace FamilyMatrixCreator
                     }
                     else
                     {
-                        int numberOfFirst = 0,
-                            numberOfSecond = 0;
+                        int[] allPossibleRelationships = { 0 };
 
-                        for (int k = 0; k < relationshipsMatrix.GetLength(1); k++)
+                        /*
+                         * Каждая из строк после 0-й вносит ограничения в список возможных степеней родства.
+                         */
+                        for (int k = 0; k < i; k++)
                         {
-                            if (relationshipsMatrix[numberOfProband, k][0] == generatedMatrix[0][i])
+                            int numberOfFirst = 0,
+                                numberOfSecond = 0;
+
+                            /*
+                             * Нахождение номера ячейки в матрице возможных степеней родства пробанда,
+                             * которая содержит выбранную степень родства.
+                             */
+                            for (int l = 0; l < relationshipsMatrix.GetLength(1); l++)
                             {
-                                numberOfFirst = k;
+                                if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][i])
+                                {
+                                    numberOfFirst = l;
+                                }
+
+                                if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][j])
+                                {
+                                    numberOfSecond = l;
+                                }
                             }
 
-                            if (relationshipsMatrix[numberOfProband, k][0] == generatedMatrix[0][j])
+                            if (0 == k)
                             {
-                                numberOfSecond = k;
+                                allPossibleRelationships = relationshipsMatrix[numberOfFirst, numberOfSecond];
+                            }
+                            else
+                            {
+                                int[] currentPossibleRelationships = relationshipsMatrix[numberOfFirst, numberOfSecond];
+
+                                /*
+                                 * Исключение из списка возможных степеней родства тех, 
+                                 * что могут вступить в конфликт с уже существующими родственниками.
+                                 */
+                                for (int m = 0; m < allPossibleRelationships.GetLength(0); m++)
+                                {
+                                    bool isRelationshipAllowed = false;
+
+                                    for (int n = 0; n < currentPossibleRelationships.GetLength(0); n++)
+                                    {
+                                        if (allPossibleRelationships[m] == currentPossibleRelationships[n])
+                                        {
+                                            isRelationshipAllowed = true;
+                                        }
+                                    }
+                                    
+                                    if (false == isRelationshipAllowed)
+                                    {
+                                        allPossibleRelationships = allPossibleRelationships.Where(val => val != allPossibleRelationships[m]).ToArray();
+                                        m--;
+                                    }
+                                }
                             }
                         }
 
-                        int[] allowedRelationships = relationshipsMatrix[numberOfFirst, numberOfSecond];
-                        int rndValueY = rnd.Next(allowedRelationships.GetLength(0));
-                        generatedMatrix[i][j] = allowedRelationships[rndValueY];
+                        int rndValueY = rnd.Next(allPossibleRelationships.GetLength(0));
+                        generatedMatrix[i][j] = allPossibleRelationships[rndValueY];
                     }
 
                     if (i == j)
                     {
-                        generatedMatrix[i][j] = 0;
+                        generatedMatrix[i][j] = 255;
                     }
 
                     if (1 == generatedMatrix[i][j])
