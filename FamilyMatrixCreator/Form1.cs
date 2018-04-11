@@ -17,7 +17,6 @@ namespace FamilyMatrixCreator
         int[][] ancestorsMatrix;
         int[][] descendantsMatrix;
         int numberOfProband;
-        int[][] generatedMatrix;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -176,7 +175,7 @@ namespace FamilyMatrixCreator
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            generatedMatrix = new int[100][];
+            int[][] generatedMatrix = new int[100][];
             Random rnd = new Random();
 
             /*
@@ -202,33 +201,33 @@ namespace FamilyMatrixCreator
                          */
                         for (int k = 0; k < i; k++)
                         {
-                            int numberOfFirst = 0,
-                                numberOfSecond = 0;
-
-                            /*
-                             * Нахождение номера ячейки в матрице возможных степеней родства пробанда,
-                             * которая содержит выбранную степень родства.
-                             */
-                            for (int l = 0; l < relationshipsMatrix.GetLength(1); l++)
-                            {
-                                if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][i])
-                                {
-                                    numberOfFirst = l;
-                                }
-
-                                if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][j])
-                                {
-                                    numberOfSecond = l;
-                                }
-                            }
-
                             if (0 == k)
                             {
-                                allPossibleRelationships = relationshipsMatrix[numberOfFirst, numberOfSecond];
+                                int numberOfI = 0,
+                                    numberOfJ = 0;
+
+                                /*
+                                 * Нахождение номера ячейки в матрице возможных степеней родства пробанда,
+                                 * которая содержит выбранную степень родства.
+                                 */
+                                for (int l = 0; l < relationshipsMatrix.GetLength(1); l++)
+                                {
+                                    if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][i])
+                                    {
+                                        numberOfI = l;
+                                    }
+
+                                    if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][j])
+                                    {
+                                        numberOfJ = l;
+                                    }
+                                }
+
+                                allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ];
                             }
                             else
                             {
-                                int[] currentPossibleRelationships = relationshipsMatrix[numberOfFirst, numberOfSecond];
+                                int[] currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ];
 
                                 /*
                                  * Исключение из списка возможных степеней родства тех, 
