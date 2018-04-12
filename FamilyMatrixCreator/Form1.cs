@@ -189,6 +189,9 @@ namespace FamilyMatrixCreator
                 {
                     if (0 == i)
                     {
+                        /*
+                         * Создание случайных степеней родства для пробанда.
+                         */
                         int rndValueY = rnd.Next(relationshipsMatrix.GetLength(1));
                         generatedMatrix[i][j] = relationshipsMatrix[numberOfProband, rndValueY][0];
                     }
@@ -197,32 +200,32 @@ namespace FamilyMatrixCreator
                         int[] allPossibleRelationships = { 0 };
 
                         /*
-                         * Каждая из строк после 0-й вносит ограничения в список возможных степеней родства.
+                         * Исключение невозможных степеней родства.
                          */
                         for (int k = 0; k < i; k++)
                         {
-                            if (0 == k)
+                            int numberOfI = 0,
+                                numberOfJ = 0;
+
+                            /*
+                             * Среди возможных степеней родства пробанда ищется такая,
+                             * что содержит выбранную степень родства.
+                             */
+                            for (int l = 0; l < relationshipsMatrix.GetLength(1); l++)
                             {
-                                int numberOfI = 0,
-                                    numberOfJ = 0;
-
-                                /*
-                                 * Нахождение номера ячейки в матрице возможных степеней родства пробанда,
-                                 * которая содержит выбранную степень родства.
-                                 */
-                                for (int l = 0; l < relationshipsMatrix.GetLength(1); l++)
+                                if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][i])
                                 {
-                                    if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][i])
-                                    {
-                                        numberOfI = l;
-                                    }
-
-                                    if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][j])
-                                    {
-                                        numberOfJ = l;
-                                    }
+                                    numberOfI = l;
                                 }
 
+                                if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][j])
+                                {
+                                    numberOfJ = l;
+                                }
+                            }
+
+                            if (0 == k)
+                            {
                                 allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ];
                             }
                             else
@@ -244,7 +247,7 @@ namespace FamilyMatrixCreator
                                             isRelationshipAllowed = true;
                                         }
                                     }
-                                    
+
                                     if (false == isRelationshipAllowed)
                                     {
                                         allPossibleRelationships = allPossibleRelationships.Where(val => val != allPossibleRelationships[m]).ToArray();
