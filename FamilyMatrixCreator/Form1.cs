@@ -208,7 +208,7 @@ namespace FamilyMatrixCreator
                                 numberOfJ = 0;
 
                             /*
-                             * Среди возможных степеней родства пробанда ищется такая,
+                             * Среди возможных степеней родства пробанда ищется ищется порядковый номер той,
                              * что содержит выбранную степень родства.
                              */
                             for (int l = 0; l < relationshipsMatrix.GetLength(1); l++)
@@ -233,8 +233,8 @@ namespace FamilyMatrixCreator
                                 int[] currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ];
 
                                 /*
-                                 * Исключение из списка возможных степеней родства тех, 
-                                 * что могут вступить в конфликт с уже существующими родственниками.
+                                 * Исключение тех возможных степеней родства, 
+                                 * что могут вызвать конфликт с уже существующими родственниками.
                                  */
                                 for (int m = 0; m < allPossibleRelationships.GetLength(0); m++)
                                 {
@@ -248,7 +248,7 @@ namespace FamilyMatrixCreator
                                         }
                                     }
 
-                                    if (false == isRelationshipAllowed)
+                                    if (false == isRelationshipAllowed && 0 != allPossibleRelationships[m])
                                     {
                                         allPossibleRelationships = allPossibleRelationships.Where(val => val != allPossibleRelationships[m]).ToArray();
                                         m--;
@@ -263,12 +263,14 @@ namespace FamilyMatrixCreator
 
                     if (i == j)
                     {
-                        generatedMatrix[i][j] = 255;
+                        generatedMatrix[i][j] = 1;
                     }
-
-                    if (1 == generatedMatrix[i][j])
+                    else
                     {
-                        j--;
+                        if (1 == generatedMatrix[i][j])
+                        {
+                            j--;
+                        }
                     }
                 }
             }
