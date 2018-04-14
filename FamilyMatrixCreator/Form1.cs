@@ -20,10 +20,6 @@ namespace FamilyMatrixCreator
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            /*
-             * Загрузка матрицы возможных степеней родства
-             * Определение номера строки, содержащей возможные степени родства пробанда
-             */
             int i = 0,
                 j = 0,
                 k = 0;
@@ -32,6 +28,9 @@ namespace FamilyMatrixCreator
             int quantityOfCells = 0;
             relationshipsMatrix = new int[numberOfLines, numberOfLines][];
 
+            /*
+             * Загрузка матрицы возможных степеней родства.
+             */
             foreach (var row in input.Split('\n'))
             {
                 j = 0;
@@ -39,6 +38,9 @@ namespace FamilyMatrixCreator
 
                 if (!(row.Equals("")) && !(row.Equals("\r")))
                 {
+                    /*
+                     * Определение номера строки, содержащей возможные степени родства пробанда.
+                     */
                     foreach (Match m in Regex.Matches(row, ";"))
                     {
                         counter++;
@@ -54,6 +56,9 @@ namespace FamilyMatrixCreator
                         k = 0;
                         counter = 0;
 
+                        /*
+                         * Определение числа возможных степеней родства. 
+                         */
                         foreach (Match m in Regex.Matches(column, ";"))
                         {
                             counter++;
@@ -84,9 +89,6 @@ namespace FamilyMatrixCreator
                 i++;
             }
 
-            /*
-             * Загрузка матрицы предковых степеней родства
-             */
             i = 0;
             j = 0;
             input = File.ReadAllText(@"ancestors.csv");
@@ -94,6 +96,9 @@ namespace FamilyMatrixCreator
             quantityOfCells = 0;
             ancestorsMatrix = new int[numberOfLines][];
 
+            /*
+             * Загрузка матрицы предковых степеней родства.
+             */
             foreach (var row in input.Split('\n'))
             {
                 j = 0;
@@ -101,6 +106,10 @@ namespace FamilyMatrixCreator
 
                 if (!(row.Equals("")) && !(row.Equals("\r")))
                 {
+                    /*
+                     * Определение количества степеней родства, 
+                     * приходящихся предковыми текущей степени родства.
+                     */
                     foreach (Match m in Regex.Matches(row, ","))
                     {
                         counter++;
@@ -128,9 +137,6 @@ namespace FamilyMatrixCreator
                 i++;
             }
 
-            /*
-             * Загрузка матрицы потомковых степеней родства
-             */
             i = 0;
             j = 0;
             input = File.ReadAllText(@"descendants.csv");
@@ -138,6 +144,9 @@ namespace FamilyMatrixCreator
             quantityOfCells = 0;
             descendantsMatrix = new int[numberOfLines][];
 
+            /*
+             * Загрузка матрицы потомковых степеней родства.
+             */
             foreach (var row in input.Split('\n'))
             {
                 j = 0;
@@ -145,6 +154,10 @@ namespace FamilyMatrixCreator
 
                 if (!(row.Equals("")) && !(row.Equals("\r")))
                 {
+                    /*
+                     * Определение количества степеней родства, 
+                     * приходящихся потомковыми текущей степени родства.
+                     */
                     foreach (Match m in Regex.Matches(row, ","))
                     {
                         counter++;
@@ -208,8 +221,8 @@ namespace FamilyMatrixCreator
                                 numberOfJ = 0;
 
                             /*
-                             * Среди возможных степеней родства пробанда ищется ищется порядковый номер той,
-                             * что содержит выбранную степень родства.
+                             * Среди возможных степеней родства пробанда ищутся порядковые номера тех,
+                             * что содержат выбранные степени родства.
                              */
                             for (int l = 0; l < relationshipsMatrix.GetLength(1); l++)
                             {
