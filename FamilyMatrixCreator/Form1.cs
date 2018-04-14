@@ -175,17 +175,17 @@ namespace FamilyMatrixCreator
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            int[][] generatedMatrix = new int[100][];
+            int[][] generatedMatrix = new int[10][];
             Random rnd = new Random();
 
             /*
              * Построение матрицы родственных связей.
              */
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
-                generatedMatrix[i] = new int[100];
+                generatedMatrix[i] = new int[10];
 
-                for (int j = i; j < 100; j++)
+                for (int j = i; j < 10; j++)
                 {
                     if (0 == i)
                     {
@@ -227,14 +227,37 @@ namespace FamilyMatrixCreator
                             if (0 == k)
                             {
                                 allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ];
+
+                                /*
+                                 * Исключение возможных степеней родства, 
+                                 * которые невозможно сгенерировать.
+                                 */
+                                for (int m = 0; m < allPossibleRelationships.GetLength(0); m++)
+                                {
+                                    bool isRelationshipAllowed = false;
+
+                                    for (int n = 0; n < relationshipsMatrix.GetLength(1); n++)
+                                    {
+                                        if (allPossibleRelationships[m] == relationshipsMatrix[numberOfProband, n][0])
+                                        {
+                                            isRelationshipAllowed = true;
+                                        }
+                                    }
+
+                                    if (false == isRelationshipAllowed && 0 != allPossibleRelationships[m])
+                                    {
+                                        allPossibleRelationships = allPossibleRelationships.Where(val => val != allPossibleRelationships[m]).ToArray();
+                                        m--;
+                                    }
+                                }
                             }
                             else
                             {
                                 int[] currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ];
 
                                 /*
-                                 * Исключение тех возможных степеней родства, 
-                                 * что могут вызвать конфликт с уже существующими родственниками.
+                                 * Исключение возможных степеней родства, 
+                                 * которые могут вызвать конфликт с уже существующими родственниками.
                                  */
                                 for (int m = 0; m < allPossibleRelationships.GetLength(0); m++)
                                 {
