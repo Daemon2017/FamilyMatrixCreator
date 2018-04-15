@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -13,10 +14,22 @@ namespace FamilyMatrixCreator
             InitializeComponent();
         }
 
+        private static RNGCryptoServiceProvider _RNG = new RNGCryptoServiceProvider();
         int[,][] relationshipsMatrix;
         int[][] ancestorsMatrix;
         int[][] descendantsMatrix;
         int numberOfProband;
+
+        private static int GetNextRnd(int min, int max)
+        {
+            byte[] rndBytes = new byte[4];
+            _RNG.GetBytes(rndBytes);
+            int rand = BitConverter.ToInt32(rndBytes, 0);
+            const Decimal OldRange = (Decimal)int.MaxValue - (Decimal)int.MinValue;
+            Decimal NewRange = max - min;
+            Decimal NewValue = ((Decimal)rand - (Decimal)int.MinValue) / OldRange * NewRange + (Decimal)min;
+            return (int)NewValue;
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -190,7 +203,6 @@ namespace FamilyMatrixCreator
         {
             int generatedMatrixSize = 100;
             int[][] generatedMatrix = new int[generatedMatrixSize][];
-            Random rnd = new Random();
 
             /*
              * Построение матрицы родственных связей.
@@ -210,7 +222,7 @@ namespace FamilyMatrixCreator
                         /*
                          * Создание случайных степеней родства для пробанда.
                          */
-                        int randomRelative = rnd.Next(relationshipsMatrix.GetLength(1));
+                        int randomRelative = GetNextRnd(0, relationshipsMatrix.GetLength(1));
                         generatedMatrix[person][relative] = relationshipsMatrix[numberOfProband, randomRelative][0];
 
                         int numberOfPerson = 0;
@@ -373,7 +385,7 @@ namespace FamilyMatrixCreator
                             }
                         }
 
-                        int randomRelative = rnd.Next(allPossibleRelationships.GetLength(0));
+                        int randomRelative = GetNextRnd(0, allPossibleRelationships.GetLength(0));
                         generatedMatrix[person][relative] = allPossibleRelationships[randomRelative];
                     }
 
