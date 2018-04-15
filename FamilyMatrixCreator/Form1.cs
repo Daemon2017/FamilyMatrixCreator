@@ -20,9 +20,9 @@ namespace FamilyMatrixCreator
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            int i = 0,
-                j = 0,
-                k = 0;
+            int person = 0,
+                relative = 0,
+                relationship = 0;
             string input = File.ReadAllText(@"relationships.csv");
             int numberOfLines = input.Split('\n').Length - 1;
             int quantityOfCells = 0;
@@ -33,7 +33,7 @@ namespace FamilyMatrixCreator
              */
             foreach (var row in input.Split('\n'))
             {
-                j = 0;
+                relative = 0;
                 int counter = 0;
 
                 if (!(row.Equals("")) && !(row.Equals("\r")))
@@ -48,12 +48,12 @@ namespace FamilyMatrixCreator
 
                     if (0 == counter)
                     {
-                        numberOfProband = i;
+                        numberOfProband = person;
                     }
 
                     foreach (var column in row.Trim().Split(','))
                     {
-                        k = 0;
+                        relationship = 0;
                         counter = 0;
 
                         /*
@@ -69,28 +69,28 @@ namespace FamilyMatrixCreator
                             quantityOfCells = counter;
                         }
 
-                        relationshipsMatrix[i, j] = new int[quantityOfCells + 1];
+                        relationshipsMatrix[person, relative] = new int[quantityOfCells + 1];
                         quantityOfCells = 0;
 
                         foreach (var cell in column.Trim().Split(';'))
                         {
                             if (cell != "")
                             {
-                                relationshipsMatrix[i, j][k] = int.Parse(cell.Trim());
+                                relationshipsMatrix[person, relative][relationship] = int.Parse(cell.Trim());
                             }
 
-                            k++;
+                            relationship++;
                         }
 
-                        j++;
+                        relative++;
                     }
                 }
 
-                i++;
+                person++;
             }
 
-            i = 0;
-            j = 0;
+            person = 0;
+            relative = 0;
             input = File.ReadAllText(@"ancestors.csv");
             numberOfLines = input.Split('\n').Length - 1;
             quantityOfCells = 0;
@@ -101,7 +101,7 @@ namespace FamilyMatrixCreator
              */
             foreach (var row in input.Split('\n'))
             {
-                j = 0;
+                relative = 0;
                 int counter = 0;
 
                 if (!(row.Equals("")) && !(row.Equals("\r")))
@@ -120,25 +120,25 @@ namespace FamilyMatrixCreator
                         quantityOfCells = counter;
                     }
 
-                    ancestorsMatrix[i] = new int[quantityOfCells + 1];
+                    ancestorsMatrix[person] = new int[quantityOfCells + 1];
                     quantityOfCells = 0;
 
                     foreach (var column in row.Trim().Split(','))
                     {
                         if (column != "")
                         {
-                            ancestorsMatrix[i][j] = int.Parse(column.Trim());
+                            ancestorsMatrix[person][relative] = int.Parse(column.Trim());
                         }
 
-                        j++;
+                        relative++;
                     }
                 }
 
-                i++;
+                person++;
             }
 
-            i = 0;
-            j = 0;
+            person = 0;
+            relative = 0;
             input = File.ReadAllText(@"descendants.csv");
             numberOfLines = input.Split('\n').Length - 1;
             quantityOfCells = 0;
@@ -149,7 +149,7 @@ namespace FamilyMatrixCreator
              */
             foreach (var row in input.Split('\n'))
             {
-                j = 0;
+                relative = 0;
                 int counter = 0;
 
                 if (!(row.Equals("")) && !(row.Equals("\r")))
@@ -168,54 +168,124 @@ namespace FamilyMatrixCreator
                         quantityOfCells = counter;
                     }
 
-                    descendantsMatrix[i] = new int[quantityOfCells + 1];
+                    descendantsMatrix[person] = new int[quantityOfCells + 1];
                     quantityOfCells = 0;
 
                     foreach (var column in row.Trim().Split(','))
                     {
                         if (column != "")
                         {
-                            descendantsMatrix[i][j] = int.Parse(column.Trim());
+                            descendantsMatrix[person][relative] = int.Parse(column.Trim());
                         }
 
-                        j++;
+                        relative++;
                     }
                 }
 
-                i++;
+                person++;
             }
         }
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            int[][] generatedMatrix = new int[10][];
+            int generatedMatrixSize = 100;
+            int[][] generatedMatrix = new int[generatedMatrixSize][];
             Random rnd = new Random();
 
             /*
              * Построение матрицы родственных связей.
              */
-            for (int i = 0; i < 10; i++)
+            for (int person = 0;
+                person < generatedMatrixSize;
+                person++)
             {
-                generatedMatrix[i] = new int[10];
+                generatedMatrix[person] = new int[generatedMatrixSize];
 
-                for (int j = i; j < 10; j++)
+                for (int relative = person;
+                    relative < generatedMatrixSize;
+                    relative++)
                 {
-                    if (0 == i)
+                    if (0 == person)
                     {
                         /*
                          * Создание случайных степеней родства для пробанда.
                          */
-                        int rndValueY = rnd.Next(relationshipsMatrix.GetLength(1));
-                        generatedMatrix[i][j] = relationshipsMatrix[numberOfProband, rndValueY][0];
+                        int randomRelative = rnd.Next(relationshipsMatrix.GetLength(1));
+                        generatedMatrix[person][relative] = relationshipsMatrix[numberOfProband, randomRelative][0];
+
+                        int numberOfPerson = 0;
+
+                        /*
+                         * Среди возможных степеней родства пробанда ищется порядковый номер того,
+                         * что содержит выбранную степень родства.
+                         */
+                        for (int number = 0;
+                            number < relationshipsMatrix.GetLength(1);
+                            number++)
+                        {
+                            if (relationshipsMatrix[numberOfProband, number][0] == generatedMatrix[person][relative])
+                            {
+                                numberOfPerson = number;
+                            }
+                        }
+
+                        /*
+                         * Исключение тех степеней родства, 
+                         * которые не имеют ни одной общей степени родства с теми, 
+                         * что доступны пробанду.
+                         */
+                        int quantityOfPossibleRelatives = 0;
+
+                        for (int possibleRelative = 0;
+                            possibleRelative < relationshipsMatrix.GetLength(1);
+                            possibleRelative++)
+                        {
+                            int quantityOfPossibleRelationships = 0;
+
+                            for (int possibleRelationship = 0;
+                                possibleRelationship < relationshipsMatrix[numberOfPerson, possibleRelative].Length;
+                                possibleRelationship++)
+                            {
+                                int quantityOfPossibleProbandsRelationships = 0;
+
+                                for (int possibleProbandsRelationship = 0;
+                                    possibleProbandsRelationship < relationshipsMatrix.GetLength(1);
+                                    possibleProbandsRelationship++)
+                                {
+                                    if (relationshipsMatrix[numberOfProband, possibleProbandsRelationship][0] == relationshipsMatrix[numberOfPerson, possibleRelative][possibleRelationship]
+                                        || 0 == relationshipsMatrix[numberOfPerson, possibleRelative][possibleRelationship])
+                                    {
+                                        quantityOfPossibleProbandsRelationships++;
+                                    }
+                                }
+
+                                if (quantityOfPossibleProbandsRelationships == relationshipsMatrix.GetLength(1))
+                                {
+                                    quantityOfPossibleRelationships++;
+                                }
+                            }
+
+                            if (quantityOfPossibleRelationships > 0)
+                            {
+                                quantityOfPossibleRelatives++;
+                            }
+                        }
+
+                        if (quantityOfPossibleRelatives == 0)
+                        {
+                            relative--;
+                        }
                     }
-                    else
+                    else if (person > 0)
                     {
                         int[] allPossibleRelationships = { 0 };
 
                         /*
                          * Исключение невозможных степеней родства.
                          */
-                        for (int k = 0; k < i; k++)
+                        for (int k = 0;
+                            k < person;
+                            k++)
                         {
                             int numberOfI = 0,
                                 numberOfJ = 0;
@@ -224,16 +294,18 @@ namespace FamilyMatrixCreator
                              * Среди возможных степеней родства пробанда ищутся порядковые номера тех,
                              * что содержат выбранные степени родства.
                              */
-                            for (int l = 0; l < relationshipsMatrix.GetLength(1); l++)
+                            for (int number = 0;
+                                number < relationshipsMatrix.GetLength(1);
+                                number++)
                             {
-                                if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][i])
+                                if (relationshipsMatrix[numberOfProband, number][0] == generatedMatrix[k][person])
                                 {
-                                    numberOfI = l;
+                                    numberOfI = number;
                                 }
 
-                                if (relationshipsMatrix[numberOfProband, l][0] == generatedMatrix[k][j])
+                                if (relationshipsMatrix[numberOfProband, number][0] == generatedMatrix[k][relative])
                                 {
-                                    numberOfJ = l;
+                                    numberOfJ = number;
                                 }
                             }
 
@@ -245,11 +317,15 @@ namespace FamilyMatrixCreator
                                  * Исключение возможных степеней родства, 
                                  * которые невозможно сгенерировать.
                                  */
-                                for (int m = 0; m < allPossibleRelationships.GetLength(0); m++)
+                                for (int m = 0;
+                                    m < allPossibleRelationships.GetLength(0);
+                                    m++)
                                 {
                                     bool isRelationshipAllowed = false;
 
-                                    for (int n = 0; n < relationshipsMatrix.GetLength(1); n++)
+                                    for (int n = 0;
+                                        n < relationshipsMatrix.GetLength(1);
+                                        n++)
                                     {
                                         if (allPossibleRelationships[m] == relationshipsMatrix[numberOfProband, n][0])
                                         {
@@ -272,11 +348,15 @@ namespace FamilyMatrixCreator
                                  * Исключение возможных степеней родства, 
                                  * которые могут вызвать конфликт с уже существующими родственниками.
                                  */
-                                for (int m = 0; m < allPossibleRelationships.GetLength(0); m++)
+                                for (int m = 0;
+                                    m < allPossibleRelationships.GetLength(0);
+                                    m++)
                                 {
                                     bool isRelationshipAllowed = false;
 
-                                    for (int n = 0; n < currentPossibleRelationships.GetLength(0); n++)
+                                    for (int n = 0;
+                                        n < currentPossibleRelationships.GetLength(0);
+                                        n++)
                                     {
                                         if (allPossibleRelationships[m] == currentPossibleRelationships[n])
                                         {
@@ -293,33 +373,50 @@ namespace FamilyMatrixCreator
                             }
                         }
 
-                        int rndValueY = rnd.Next(allPossibleRelationships.GetLength(0));
-                        generatedMatrix[i][j] = allPossibleRelationships[rndValueY];
+                        int randomRelative = rnd.Next(allPossibleRelationships.GetLength(0));
+                        generatedMatrix[person][relative] = allPossibleRelationships[randomRelative];
                     }
 
-                    if (i == j)
+                    if (person >= 0 && relative >= 0)
                     {
-                        generatedMatrix[i][j] = 1;
-                    }
-                    else
-                    {
-                        if (1 == generatedMatrix[i][j])
+                        if (person == relative)
                         {
-                            j--;
+                            /*
+                             * Заполнение диагонали единицами.
+                             */
+                            generatedMatrix[person][relative] = 1;
+                        }
+                        else
+                        {
+                            /*
+                             * Недопущение появления единиц где-либо, 
+                             * кроме диагонали.
+                             */
+                            if (1 == generatedMatrix[person][relative])
+                            {
+                                relative--;
+                            }
                         }
                     }
                 }
             }
 
+            /*
+             * Сохранение матрицы в файл.
+             */
             using (StreamWriter outfile = new StreamWriter(@"generated.csv"))
             {
-                for (int x = 0; x < generatedMatrix.GetLength(0); x++)
+                for (int person = 0;
+                    person < generatedMatrix.GetLength(0);
+                    person++)
                 {
                     string content = "";
 
-                    for (int y = 0; y < generatedMatrix[x].GetLength(0); y++)
+                    for (int relative = 0;
+                        relative < generatedMatrix[person].GetLength(0);
+                        relative++)
                     {
-                        string temp = generatedMatrix[x][y].ToString();
+                        string temp = generatedMatrix[person][relative].ToString();
 
                         if (temp != null)
                         {
