@@ -196,13 +196,13 @@ namespace FamilyMatrixCreator
              * Построение матрицы родственных связей.
              */
             for (int person = 0;
-                person < generatedMatrixSize;
+                person < generatedMatrix.GetLength(0);
                 person++)
             {
-                generatedMatrix[person] = new int[generatedMatrixSize];
+                generatedMatrix[person] = new int[generatedMatrix.GetLength(0)];
 
                 for (int relative = person;
-                    relative < generatedMatrixSize;
+                    relative < generatedMatrix.GetLength(0);
                     relative++)
                 {
                     if (0 == person)
