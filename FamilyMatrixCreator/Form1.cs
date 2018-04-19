@@ -393,6 +393,53 @@ namespace FamilyMatrixCreator
                                     }
                                 }
 
+                                /*
+                                 * Устранение нулевых степеней родства везде, где это возможно.
+                                 */
+                                if (true == checkBox1.Checked)
+                                {
+                                    bool relationZeroExists = false;
+                                    bool relationOneExists = false;
+
+                                    /*
+                                     * Степень родства вида "Пробанд" (1) впоследствии будет устраняться,
+                                     * поэтому важно проверить, присутствует ли оно в списке допустимых степеней родства.
+                                     */
+                                    foreach (var relationship in allPossibleRelationships)
+                                    {
+                                        if (0 == relationship)
+                                        {
+                                            relationZeroExists = true;
+                                        }
+                                        if (1 == relationship)
+                                        {
+                                            relationOneExists = true;
+                                        }
+                                    }
+
+                                    /*
+                                     * Если присутствует - подвергаем чистке только те списки,
+                                     * где помимо "0" и "1" может быть, как минимум, еще одна степень родства.
+                                     */
+                                    if (true == relationZeroExists)
+                                    {
+                                        if (true == relationOneExists)
+                                        {
+                                            if (allPossibleRelationships.GetLength(0) > 2)
+                                            {
+                                                allPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToArray();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (allPossibleRelationships.GetLength(0) > 1)
+                                            {
+                                                allPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToArray();
+                                            }
+                                        }
+                                    }
+                                }
+
                                 int randomRelative = GetNextRnd(0, allPossibleRelationships.GetLength(0));
                                 generatedMatrix[person][relative] = allPossibleRelationships[randomRelative];
                             }
