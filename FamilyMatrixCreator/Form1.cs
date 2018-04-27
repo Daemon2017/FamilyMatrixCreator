@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -18,6 +19,7 @@ namespace FamilyMatrixCreator
         int[,][] relationshipsMatrix;
         int[][] ancestorsMatrix;
         int[][] descendantsMatrix;
+        float[] centimorgansMatrix;
         int numberOfProband;
 
         private static int GetNextRnd(int min, int max)
@@ -25,9 +27,9 @@ namespace FamilyMatrixCreator
             byte[] rndBytes = new byte[4];
             _RNG.GetBytes(rndBytes);
             int rand = BitConverter.ToInt32(rndBytes, 0);
-            const Decimal OldRange = (Decimal)int.MaxValue - (Decimal)int.MinValue;
+            const Decimal OldRange = int.MaxValue - (Decimal)int.MinValue;
             Decimal NewRange = max - min;
-            Decimal NewValue = ((Decimal)rand - (Decimal)int.MinValue) / OldRange * NewRange + (Decimal)min;
+            Decimal NewValue = (rand - (Decimal)int.MinValue) / OldRange * NewRange + min;
             return (int)NewValue;
         }
 
@@ -197,9 +199,28 @@ namespace FamilyMatrixCreator
 
                 person++;
             }
+
+            person = 0;
+            input = File.ReadAllText(@"centimorgans.csv");
+            numberOfLines = input.Split('\n').Length - 1;
+            quantityOfCells = 0;
+            centimorgansMatrix = new float[numberOfLines];
+
+            /*
+             * Загрузка матрицы значений сантиморган.
+             */
+            foreach (var row in input.Split('\n'))
+            {
+                if (!(row.Equals("")) && !(row.Equals("\r")))
+                {
+                    centimorgansMatrix[person] = float.Parse(row, new NumberFormatInfo() { NumberDecimalSeparator = "." });
+                }
+
+                person++;
+            }
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void Generate(object sender, EventArgs e)
         {
             int quantityOfMatrixes = Convert.ToInt16(textBox1.Text);
             int[] quantityOfEachRelationship = new int[relationshipsMatrix.GetLength(1)];
@@ -210,19 +231,19 @@ namespace FamilyMatrixCreator
                 for (int matrix = 0; matrix < quantityOfMatrixes; matrix++)
                 {
                     int generatedMatrixSize = 100;
-                    int[][] generatedMatrix = new int[generatedMatrixSize][];
+                    int[][] generatedOutputMatrix = new int[generatedMatrixSize][];
 
                     /*
                      * Построение матрицы родственных связей.
                      */
                     for (int person = 0;
-                        person < generatedMatrix.GetLength(0);
+                        person < generatedOutputMatrix.GetLength(0);
                         person++)
                     {
-                        generatedMatrix[person] = new int[generatedMatrix.GetLength(0)];
+                        generatedOutputMatrix[person] = new int[generatedOutputMatrix.GetLength(0)];
 
                         for (int relative = person;
-                            relative < generatedMatrix.GetLength(0);
+                            relative < generatedOutputMatrix.GetLength(0);
                             relative++)
                         {
                             if (0 == person)
@@ -231,7 +252,7 @@ namespace FamilyMatrixCreator
                                  * Создание случайных степеней родства для пробанда.
                                  */
                                 int randomRelative = GetNextRnd(0, relationshipsMatrix.GetLength(1));
-                                generatedMatrix[person][relative] = relationshipsMatrix[numberOfProband, randomRelative][0];
+                                generatedOutputMatrix[person][relative] = relationshipsMatrix[numberOfProband, randomRelative][0];
 
                                 int numberOfPerson = 0;
 
@@ -243,7 +264,7 @@ namespace FamilyMatrixCreator
                                     number < relationshipsMatrix.GetLength(1);
                                     number++)
                                 {
-                                    if (relationshipsMatrix[numberOfProband, number][0] == generatedMatrix[person][relative])
+                                    if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[person][relative])
                                     {
                                         numberOfPerson = number;
                                     }
@@ -318,12 +339,12 @@ namespace FamilyMatrixCreator
                                         number < relationshipsMatrix.GetLength(1);
                                         number++)
                                     {
-                                        if (relationshipsMatrix[numberOfProband, number][0] == generatedMatrix[k][person])
+                                        if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[k][person])
                                         {
                                             numberOfI = number;
                                         }
 
-                                        if (relationshipsMatrix[numberOfProband, number][0] == generatedMatrix[k][relative])
+                                        if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[k][relative])
                                         {
                                             numberOfJ = number;
                                         }
@@ -441,7 +462,7 @@ namespace FamilyMatrixCreator
                                 }
 
                                 int randomRelative = GetNextRnd(0, allPossibleRelationships.GetLength(0));
-                                generatedMatrix[person][relative] = allPossibleRelationships[randomRelative];
+                                generatedOutputMatrix[person][relative] = allPossibleRelationships[randomRelative];
                             }
 
                             if (person >= 0 && relative >= 0)
@@ -451,7 +472,7 @@ namespace FamilyMatrixCreator
                                     /*
                                      * Заполнение диагонали единицами.
                                      */
-                                    generatedMatrix[person][relative] = 1;
+                                    generatedOutputMatrix[person][relative] = 1;
                                 }
                                 else
                                 {
@@ -459,7 +480,7 @@ namespace FamilyMatrixCreator
                                      * Недопущение появления единиц где-либо, 
                                      * кроме диагонали.
                                      */
-                                    if (1 == generatedMatrix[person][relative])
+                                    if (1 == generatedOutputMatrix[person][relative])
                                     {
                                         relative--;
                                     }
@@ -468,22 +489,82 @@ namespace FamilyMatrixCreator
                         }
                     }
 
+                    float[][] generatedInputMatrix = new float[generatedMatrixSize][];
+
+                    for (int person = 0;
+                        person < generatedOutputMatrix.GetLength(0);
+                        person++)
+                    {
+                        generatedInputMatrix[person] = new float[generatedOutputMatrix.GetLength(0)];
+
+                        for (int relative = 0;
+                            relative < generatedOutputMatrix.GetLength(0);
+                            relative++)
+                        {
+                            for (int relationship = 0;
+                                relationship < relationshipsMatrix.GetLength(1);
+                                relationship++)
+                            {
+                                if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
+                                {
+                                    generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
+                                }
+                            }
+                        }
+                    }
+
+                    Directory.CreateDirectory("input");
+
                     /*
-                     * Сохранение матрицы в файл.
+                     * Сохранение входной матрицы в файл.
                      */
-                    using (StreamWriter outfile = new StreamWriter(@"generated" + matrix + ".csv"))
+                    using (StreamWriter outfile = new StreamWriter(@"input\generated" + matrix + ".csv"))
                     {
                         for (int person = 0;
-                            person < generatedMatrix.GetLength(0);
+                            person < generatedInputMatrix.GetLength(0);
                             person++)
                         {
                             string content = "";
 
                             for (int relative = 0;
-                                relative < generatedMatrix[person].GetLength(0);
+                                relative < generatedInputMatrix[person].GetLength(0);
                                 relative++)
                             {
-                                string temp = generatedMatrix[person][relative].ToString();
+                                string temp = generatedInputMatrix[person][relative].ToString();
+
+                                if (temp != null)
+                                {
+                                    content += temp.Replace(",", ".") + ",";
+                                }
+                            }
+
+                            if (content != "")
+                            {
+                                content = content.Remove(content.Length - 1);
+                            }
+
+                            outfile.WriteLine(content);
+                        }
+                    }
+
+                    Directory.CreateDirectory("output");
+
+                    /*
+                     * Сохранение выходной матрицы в файл.
+                     */
+                    using (StreamWriter outfile = new StreamWriter(@"output\generated" + matrix + ".csv"))
+                    {
+                        for (int person = 0;
+                            person < generatedOutputMatrix.GetLength(0);
+                            person++)
+                        {
+                            string content = "";
+
+                            for (int relative = 0;
+                                relative < generatedOutputMatrix[person].GetLength(0);
+                                relative++)
+                            {
+                                string temp = generatedOutputMatrix[person][relative].ToString();
 
                                 if (temp != null)
                                 {
@@ -503,15 +584,15 @@ namespace FamilyMatrixCreator
                     /*
                      * Сбор статистики по родству.
                      */
-                    for (int person = 0; person < generatedMatrix.GetLength(0); person++)
+                    for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
                     {
-                        for (int relative = 0; relative < generatedMatrix.GetLength(0); relative++)
+                        for (int relative = 0; relative < generatedOutputMatrix.GetLength(0); relative++)
                         {
                             for (int probandsRelatioship = 0;
                                 probandsRelatioship < relationshipsMatrix.GetLength(1);
                                 probandsRelatioship++)
                             {
-                                if (generatedMatrix[person][relative] == relationshipsMatrix[numberOfProband, probandsRelatioship][0])
+                                if (generatedOutputMatrix[person][relative] == relationshipsMatrix[numberOfProband, probandsRelatioship][0])
                                 {
                                     quantityOfEachRelationship[probandsRelatioship]++;
                                 }

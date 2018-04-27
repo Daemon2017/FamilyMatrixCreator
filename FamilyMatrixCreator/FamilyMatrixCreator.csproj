@@ -68,6 +68,9 @@
     <None Include="ancestors.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="centimorgans.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="descendants.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
