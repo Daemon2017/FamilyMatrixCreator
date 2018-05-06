@@ -12,6 +12,8 @@ namespace FamilyMatrixCreator
     {
         public Form1()
         {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+
             InitializeComponent();
         }
 
@@ -20,6 +22,7 @@ namespace FamilyMatrixCreator
         int[][] ancestorsMatrix;
         int[][] descendantsMatrix;
         float[] centimorgansMatrix;
+        int[] clustersMatrix;
         int numberOfProband;
 
         private static int GetNextRnd(int min, int max)
@@ -35,6 +38,9 @@ namespace FamilyMatrixCreator
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            /*
+             * Загрузка матрицы возможных степеней родства.
+             */
             int person = 0,
                 relative = 0,
                 relationship = 0;
@@ -43,9 +49,6 @@ namespace FamilyMatrixCreator
             int quantityOfCells = 0;
             relationshipsMatrix = new int[numberOfLines, numberOfLines][];
 
-            /*
-             * Загрузка матрицы возможных степеней родства.
-             */
             foreach (var row in input.Split('\n'))
             {
                 relative = 0;
@@ -104,6 +107,9 @@ namespace FamilyMatrixCreator
                 person++;
             }
 
+            /*
+             * Загрузка матрицы предковых степеней родства.
+             */
             person = 0;
             relative = 0;
             input = File.ReadAllText(@"ancestors.csv");
@@ -111,9 +117,6 @@ namespace FamilyMatrixCreator
             quantityOfCells = 0;
             ancestorsMatrix = new int[numberOfLines][];
 
-            /*
-             * Загрузка матрицы предковых степеней родства.
-             */
             foreach (var row in input.Split('\n'))
             {
                 relative = 0;
@@ -152,6 +155,9 @@ namespace FamilyMatrixCreator
                 person++;
             }
 
+            /*
+             * Загрузка матрицы потомковых степеней родства.
+             */
             person = 0;
             relative = 0;
             input = File.ReadAllText(@"descendants.csv");
@@ -159,9 +165,6 @@ namespace FamilyMatrixCreator
             quantityOfCells = 0;
             descendantsMatrix = new int[numberOfLines][];
 
-            /*
-             * Загрузка матрицы потомковых степеней родства.
-             */
             foreach (var row in input.Split('\n'))
             {
                 relative = 0;
@@ -200,20 +203,37 @@ namespace FamilyMatrixCreator
                 person++;
             }
 
+            /*
+            * Загрузка матрицы значений сантиморган.
+            */
             person = 0;
             input = File.ReadAllText(@"centimorgans.csv");
             numberOfLines = input.Split('\n').Length - 1;
-            quantityOfCells = 0;
             centimorgansMatrix = new float[numberOfLines];
 
-            /*
-             * Загрузка матрицы значений сантиморган.
-             */
             foreach (var row in input.Split('\n'))
             {
                 if (!(row.Equals("")) && !(row.Equals("\r")))
                 {
-                    centimorgansMatrix[person] = float.Parse(row, new NumberFormatInfo() { NumberDecimalSeparator = "." });
+                    centimorgansMatrix[person] = float.Parse(row);
+                }
+
+                person++;
+            }
+
+            /*
+             * Загрузка матрицы принадлежности к кластерам.
+             */
+            person = 0;
+            input = File.ReadAllText(@"clusters.csv");
+            numberOfLines = input.Split('\n').Length - 1;
+            clustersMatrix = new int[numberOfLines];
+
+            foreach (var row in input.Split('\n'))
+            {
+                if (!(row.Equals("")) && !(row.Equals("\r")))
+                {
+                    clustersMatrix[person] = int.Parse(row);
                 }
 
                 person++;
@@ -513,12 +533,35 @@ namespace FamilyMatrixCreator
                         }
                     }
 
+                    if (true == checkBox2.Checked)
+                    {
+                        for (int person = 0;
+                            person < generatedOutputMatrix.GetLength(0);
+                            person++)
+                        {
+                            for (int relative = 0;
+                                relative < generatedOutputMatrix.GetLength(0);
+                                relative++)
+                            {
+                                for (int relationship = 0;
+                                    relationship < relationshipsMatrix.GetLength(1);
+                                    relationship++)
+                                {
+                                    if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
+                                    {
+                                        generatedOutputMatrix[person][relative] = clustersMatrix[relationship];
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     Directory.CreateDirectory("input");
 
                     /*
                      * Сохранение входной матрицы в файл.
                      */
-                    using (StreamWriter outfile = new StreamWriter(@"input\generated" + matrix + ".csv"))
+                    using (StreamWriter outfile = new StreamWriter(@"input\generated_input" + matrix + ".csv"))
                     {
                         for (int person = 0;
                             person < generatedInputMatrix.GetLength(0);
@@ -534,7 +577,7 @@ namespace FamilyMatrixCreator
 
                                 if (temp != null)
                                 {
-                                    content += temp.Replace(",", ".") + ",";
+                                    content += temp + ",";
                                 }
                             }
 
@@ -552,7 +595,7 @@ namespace FamilyMatrixCreator
                     /*
                      * Сохранение выходной матрицы в файл.
                      */
-                    using (StreamWriter outfile = new StreamWriter(@"output\generated" + matrix + ".csv"))
+                    using (StreamWriter outfile = new StreamWriter(@"output\generated_output" + matrix + ".csv"))
                     {
                         for (int person = 0;
                             person < generatedOutputMatrix.GetLength(0);
@@ -584,17 +627,24 @@ namespace FamilyMatrixCreator
                     /*
                      * Сбор статистики по родству.
                      */
-                    for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
+                    if (true == checkBox2.Checked)
                     {
-                        for (int relative = 0; relative < generatedOutputMatrix.GetLength(0); relative++)
+
+                    }
+                    else
+                    {
+                        for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
                         {
-                            for (int probandsRelatioship = 0;
-                                probandsRelatioship < relationshipsMatrix.GetLength(1);
-                                probandsRelatioship++)
+                            for (int relative = 0; relative < generatedOutputMatrix.GetLength(0); relative++)
                             {
-                                if (generatedOutputMatrix[person][relative] == relationshipsMatrix[numberOfProband, probandsRelatioship][0])
+                                for (int probandsRelatioship = 0;
+                                    probandsRelatioship < relationshipsMatrix.GetLength(1);
+                                    probandsRelatioship++)
                                 {
-                                    quantityOfEachRelationship[probandsRelatioship]++;
+                                    if (generatedOutputMatrix[person][relative] == relationshipsMatrix[numberOfProband, probandsRelatioship][0])
+                                    {
+                                        quantityOfEachRelationship[probandsRelatioship]++;
+                                    }
                                 }
                             }
                         }
@@ -604,12 +654,19 @@ namespace FamilyMatrixCreator
                 /*
                  * Вывод статистики по родству.
                  */
-                int relationshipNumber = 0;
-                foreach (var quantity in quantityOfEachRelationship)
+                if (true == checkBox2.Checked)
                 {
-                    textBox2.Text += "Родство " + relationshipsMatrix[numberOfProband, relationshipNumber][0] + ": " + quantity + Environment.NewLine;
 
-                    relationshipNumber++;
+                }
+                else
+                {
+                    int relationshipNumber = 0;
+                    foreach (var quantity in quantityOfEachRelationship)
+                    {
+                        textBox2.Text += "Родство " + relationshipsMatrix[numberOfProband, relationshipNumber][0] + ": " + quantity + Environment.NewLine;
+
+                        relationshipNumber++;
+                    }
                 }
             }
         }
