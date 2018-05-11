@@ -3,7 +3,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace FamilyMatrixCreator
@@ -22,7 +21,7 @@ namespace FamilyMatrixCreator
         int[][] ancestorsMatrix;
         int[][] descendantsMatrix;
         float[] centimorgansMatrix;
-        int[] clustersMatrix;
+        float[] clustersMatrix;
         int numberOfProband;
 
         private static int GetNextRnd(int min, int max)
@@ -34,210 +33,6 @@ namespace FamilyMatrixCreator
             Decimal NewRange = max - min;
             Decimal NewValue = (rand - (Decimal)int.MinValue) / OldRange * NewRange + min;
             return (int)NewValue;
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            /*
-             * Загрузка матрицы возможных степеней родства.
-             */
-            int person = 0,
-                relative = 0,
-                relationship = 0;
-            string input = File.ReadAllText(@"relationships.csv");
-            int numberOfLines = input.Split('\n').Length - 1;
-            int quantityOfCells = 0;
-            relationshipsMatrix = new int[numberOfLines, numberOfLines][];
-
-            foreach (var row in input.Split('\n'))
-            {
-                relative = 0;
-                int counter = 0;
-
-                if (!(row.Equals("")) && !(row.Equals("\r")))
-                {
-                    /*
-                     * Определение номера строки, содержащей возможные степени родства пробанда.
-                     */
-                    foreach (Match m in Regex.Matches(row, ";"))
-                    {
-                        counter++;
-                    }
-
-                    if (0 == counter)
-                    {
-                        numberOfProband = person;
-                    }
-
-                    foreach (var column in row.Trim().Split(','))
-                    {
-                        relationship = 0;
-                        counter = 0;
-
-                        /*
-                         * Определение числа возможных степеней родства. 
-                         */
-                        foreach (Match m in Regex.Matches(column, ";"))
-                        {
-                            counter++;
-                        }
-
-                        if (counter > quantityOfCells)
-                        {
-                            quantityOfCells = counter;
-                        }
-
-                        relationshipsMatrix[person, relative] = new int[quantityOfCells + 1];
-                        quantityOfCells = 0;
-
-                        foreach (var cell in column.Trim().Split(';'))
-                        {
-                            if (cell != "")
-                            {
-                                relationshipsMatrix[person, relative][relationship] = int.Parse(cell.Trim());
-                            }
-
-                            relationship++;
-                        }
-
-                        relative++;
-                    }
-                }
-
-                person++;
-            }
-
-            /*
-             * Загрузка матрицы предковых степеней родства.
-             */
-            person = 0;
-            relative = 0;
-            input = File.ReadAllText(@"ancestors.csv");
-            numberOfLines = input.Split('\n').Length - 1;
-            quantityOfCells = 0;
-            ancestorsMatrix = new int[numberOfLines][];
-
-            foreach (var row in input.Split('\n'))
-            {
-                relative = 0;
-                int counter = 0;
-
-                if (!(row.Equals("")) && !(row.Equals("\r")))
-                {
-                    /*
-                     * Определение количества степеней родства, 
-                     * приходящихся предковыми текущей степени родства.
-                     */
-                    foreach (Match m in Regex.Matches(row, ","))
-                    {
-                        counter++;
-                    }
-
-                    if (counter > quantityOfCells)
-                    {
-                        quantityOfCells = counter;
-                    }
-
-                    ancestorsMatrix[person] = new int[quantityOfCells + 1];
-                    quantityOfCells = 0;
-
-                    foreach (var column in row.Trim().Split(','))
-                    {
-                        if (column != "")
-                        {
-                            ancestorsMatrix[person][relative] = int.Parse(column.Trim());
-                        }
-
-                        relative++;
-                    }
-                }
-
-                person++;
-            }
-
-            /*
-             * Загрузка матрицы потомковых степеней родства.
-             */
-            person = 0;
-            relative = 0;
-            input = File.ReadAllText(@"descendants.csv");
-            numberOfLines = input.Split('\n').Length - 1;
-            quantityOfCells = 0;
-            descendantsMatrix = new int[numberOfLines][];
-
-            foreach (var row in input.Split('\n'))
-            {
-                relative = 0;
-                int counter = 0;
-
-                if (!(row.Equals("")) && !(row.Equals("\r")))
-                {
-                    /*
-                     * Определение количества степеней родства, 
-                     * приходящихся потомковыми текущей степени родства.
-                     */
-                    foreach (Match m in Regex.Matches(row, ","))
-                    {
-                        counter++;
-                    }
-
-                    if (counter > quantityOfCells)
-                    {
-                        quantityOfCells = counter;
-                    }
-
-                    descendantsMatrix[person] = new int[quantityOfCells + 1];
-                    quantityOfCells = 0;
-
-                    foreach (var column in row.Trim().Split(','))
-                    {
-                        if (column != "")
-                        {
-                            descendantsMatrix[person][relative] = int.Parse(column.Trim());
-                        }
-
-                        relative++;
-                    }
-                }
-
-                person++;
-            }
-
-            /*
-            * Загрузка матрицы значений сантиморган.
-            */
-            person = 0;
-            input = File.ReadAllText(@"centimorgans.csv");
-            numberOfLines = input.Split('\n').Length - 1;
-            centimorgansMatrix = new float[numberOfLines];
-
-            foreach (var row in input.Split('\n'))
-            {
-                if (!(row.Equals("")) && !(row.Equals("\r")))
-                {
-                    centimorgansMatrix[person] = float.Parse(row);
-                }
-
-                person++;
-            }
-
-            /*
-             * Загрузка матрицы принадлежности к кластерам.
-             */
-            person = 0;
-            input = File.ReadAllText(@"clusters.csv");
-            numberOfLines = input.Split('\n').Length - 1;
-            clustersMatrix = new int[numberOfLines];
-
-            foreach (var row in input.Split('\n'))
-            {
-                if (!(row.Equals("")) && !(row.Equals("\r")))
-                {
-                    clustersMatrix[person] = int.Parse(row);
-                }
-
-                person++;
-            }
         }
 
         private void Generate(object sender, EventArgs e)
@@ -549,7 +344,7 @@ namespace FamilyMatrixCreator
                                 {
                                     if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
                                     {
-                                        generatedOutputMatrix[person][relative] = clustersMatrix[relationship];
+                                        generatedOutputMatrix[person][relative] = Convert.ToInt16(clustersMatrix[relationship]);
                                     }
                                 }
                             }
