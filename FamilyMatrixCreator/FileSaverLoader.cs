@@ -7,6 +7,38 @@ namespace FamilyMatrixCreator
 {
     public partial class Form1 : Form
     {
+        private void SaveToFile(string outputFileName, float[][] generatedMatrix, int matrixNumber)
+        {
+            using (StreamWriter outfile = new StreamWriter(outputFileName + matrixNumber + ".csv"))
+            {
+                for (int person = 0;
+                    person < generatedMatrix.GetLength(0);
+                    person++)
+                {
+                    string content = "";
+
+                    for (int relative = 0;
+                        relative < generatedMatrix[person].GetLength(0);
+                        relative++)
+                    {
+                        string temp = generatedMatrix[person][relative].ToString();
+
+                        if (temp != null)
+                        {
+                            content += temp + ",";
+                        }
+                    }
+
+                    if (content != "")
+                    {
+                        content = content.Remove(content.Length - 1);
+                    }
+
+                    outfile.WriteLine(content);
+                }
+            }
+        }
+
         private int[,][] LoadFromFile2DJagged(string inputFileName)
         {
             int person = 0,

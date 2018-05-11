@@ -43,10 +43,10 @@ namespace FamilyMatrixCreator
 
             if (quantityOfMatrixes > 0)
             {
-                for (int matrix = 0; matrix < quantityOfMatrixes; matrix++)
+                for (int matrixNumber = 0; matrixNumber < quantityOfMatrixes; matrixNumber++)
                 {
                     int generatedMatrixSize = 100;
-                    int[][] generatedOutputMatrix = new int[generatedMatrixSize][];
+                    float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
                     /*
                      * Построение матрицы родственных связей.
@@ -55,7 +55,7 @@ namespace FamilyMatrixCreator
                         person < generatedOutputMatrix.GetLength(0);
                         person++)
                     {
-                        generatedOutputMatrix[person] = new int[generatedOutputMatrix.GetLength(0)];
+                        generatedOutputMatrix[person] = new float[generatedOutputMatrix.GetLength(0)];
 
                         for (int relative = person;
                             relative < generatedOutputMatrix.GetLength(0);
@@ -356,68 +356,14 @@ namespace FamilyMatrixCreator
                     /*
                      * Сохранение входной матрицы в файл.
                      */
-                    using (StreamWriter outfile = new StreamWriter(@"input\generated_input" + matrix + ".csv"))
-                    {
-                        for (int person = 0;
-                            person < generatedInputMatrix.GetLength(0);
-                            person++)
-                        {
-                            string content = "";
-
-                            for (int relative = 0;
-                                relative < generatedInputMatrix[person].GetLength(0);
-                                relative++)
-                            {
-                                string temp = generatedInputMatrix[person][relative].ToString();
-
-                                if (temp != null)
-                                {
-                                    content += temp + ",";
-                                }
-                            }
-
-                            if (content != "")
-                            {
-                                content = content.Remove(content.Length - 1);
-                            }
-
-                            outfile.WriteLine(content);
-                        }
-                    }
+                    SaveToFile(@"input\generated_input", generatedInputMatrix, matrixNumber);
 
                     Directory.CreateDirectory("output");
 
                     /*
                      * Сохранение выходной матрицы в файл.
                      */
-                    using (StreamWriter outfile = new StreamWriter(@"output\generated_output" + matrix + ".csv"))
-                    {
-                        for (int person = 0;
-                            person < generatedOutputMatrix.GetLength(0);
-                            person++)
-                        {
-                            string content = "";
-
-                            for (int relative = 0;
-                                relative < generatedOutputMatrix[person].GetLength(0);
-                                relative++)
-                            {
-                                string temp = generatedOutputMatrix[person][relative].ToString();
-
-                                if (temp != null)
-                                {
-                                    content += temp + ",";
-                                }
-                            }
-
-                            if (content != "")
-                            {
-                                content = content.Remove(content.Length - 1);
-                            }
-
-                            outfile.WriteLine(content);
-                        }
-                    }
+                    SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
 
                     /*
                      * Сбор статистики по родству.
