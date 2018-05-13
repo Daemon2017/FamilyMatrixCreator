@@ -49,7 +49,7 @@ namespace FamilyMatrixCreator
                     float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
                     /*
-                     * Построение матрицы родственных связей.
+                     * Построение входной матрицы (матрицы общих сМ).
                      */
                     for (int person = 0;
                         person < generatedOutputMatrix.GetLength(0);
@@ -169,6 +169,8 @@ namespace FamilyMatrixCreator
                                     {
                                         allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ];
 
+                                        allPossibleRelationships = allPossibleRelationships.Where(val => val != 1).ToArray();
+
                                         /*
                                          * Исключение возможных степеней родства, 
                                          * которые невозможно сгенерировать.
@@ -230,44 +232,22 @@ namespace FamilyMatrixCreator
                                 }
 
                                 /*
-                                 * Устранение нулевых степеней родства везде, где это возможно.
+                                 * Избегание степени родства "0" везде, 
+                                 * где это возможно.
                                  */
                                 if (true == checkBox1.Checked)
                                 {
-                                    bool relationZeroExists = false;
-                                    bool relationOneExists = false;
-
                                     /*
-                                     * Степень родства вида "Пробанд" (1) впоследствии будет устраняться,
-                                     * поэтому важно проверить, присутствует ли оно в списке допустимых степеней родства.
+                                     * Проверяем списки на наличие сепени родства "0".
                                      */
                                     foreach (var relationship in allPossibleRelationships)
                                     {
                                         if (0 == relationship)
                                         {
-                                            relationZeroExists = true;
-                                        }
-                                        if (1 == relationship)
-                                        {
-                                            relationOneExists = true;
-                                        }
-                                    }
-
-                                    /*
-                                     * Если присутствует - подвергаем чистке только те списки,
-                                     * где помимо "0" и "1" может быть, как минимум, еще одна степень родства.
-                                     */
-                                    if (true == relationZeroExists)
-                                    {
-                                        if (true == relationOneExists)
-                                        {
-                                            if (allPossibleRelationships.GetLength(0) > 2)
-                                            {
-                                                allPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToArray();
-                                            }
-                                        }
-                                        else
-                                        {
+                                            /*
+                                             * Подвергаем избавлению от "0" только те списки,
+                                             * где помимо "0" может быть, как минимум, еще одна степень родства.
+                                             */
                                             if (allPossibleRelationships.GetLength(0) > 1)
                                             {
                                                 allPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToArray();
@@ -280,25 +260,14 @@ namespace FamilyMatrixCreator
                                 generatedOutputMatrix[person][relative] = allPossibleRelationships[randomRelative];
                             }
 
+                            /*
+                             * Заполнение диагонали единицами.
+                             */
                             if (person >= 0 && relative >= 0)
                             {
                                 if (person == relative)
                                 {
-                                    /*
-                                     * Заполнение диагонали единицами.
-                                     */
                                     generatedOutputMatrix[person][relative] = 1;
-                                }
-                                else
-                                {
-                                    /*
-                                     * Недопущение появления единиц где-либо, 
-                                     * кроме диагонали.
-                                     */
-                                    if (1 == generatedOutputMatrix[person][relative])
-                                    {
-                                        relative--;
-                                    }
                                 }
                             }
                         }
@@ -306,6 +275,9 @@ namespace FamilyMatrixCreator
 
                     float[][] generatedInputMatrix = new float[generatedMatrixSize][];
 
+                    /*
+                     * Построение выходной матрицы (матрицы родственных связей).
+                     */
                     for (int person = 0;
                         person < generatedOutputMatrix.GetLength(0);
                         person++)
@@ -328,29 +300,6 @@ namespace FamilyMatrixCreator
                         }
                     }
 
-                    if (true == checkBox2.Checked)
-                    {
-                        for (int person = 0;
-                            person < generatedOutputMatrix.GetLength(0);
-                            person++)
-                        {
-                            for (int relative = 0;
-                                relative < generatedOutputMatrix.GetLength(0);
-                                relative++)
-                            {
-                                for (int relationship = 0;
-                                    relationship < relationshipsMatrix.GetLength(1);
-                                    relationship++)
-                                {
-                                    if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
-                                    {
-                                        generatedOutputMatrix[person][relative] = Convert.ToInt16(clustersMatrix[relationship]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
                     Directory.CreateDirectory("input");
 
                     /*
@@ -366,26 +315,20 @@ namespace FamilyMatrixCreator
                     SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
 
                     /*
-                     * Сбор статистики по родству.
+                     * Сбор статистики по родству осуществляем только сейчас, 
+                     * т.к. некоторые значения могут меняться из-за relative--.
                      */
-                    if (true == checkBox2.Checked)
+                    for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
                     {
-
-                    }
-                    else
-                    {
-                        for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
+                        for (int relative = 0; relative < generatedOutputMatrix.GetLength(0); relative++)
                         {
-                            for (int relative = 0; relative < generatedOutputMatrix.GetLength(0); relative++)
+                            for (int probandsRelatioship = 0;
+                                probandsRelatioship < relationshipsMatrix.GetLength(1);
+                                probandsRelatioship++)
                             {
-                                for (int probandsRelatioship = 0;
-                                    probandsRelatioship < relationshipsMatrix.GetLength(1);
-                                    probandsRelatioship++)
+                                if (generatedOutputMatrix[person][relative] == relationshipsMatrix[numberOfProband, probandsRelatioship][0])
                                 {
-                                    if (generatedOutputMatrix[person][relative] == relationshipsMatrix[numberOfProband, probandsRelatioship][0])
-                                    {
-                                        quantityOfEachRelationship[probandsRelatioship]++;
-                                    }
+                                    quantityOfEachRelationship[probandsRelatioship]++;
                                 }
                             }
                         }
@@ -395,19 +338,12 @@ namespace FamilyMatrixCreator
                 /*
                  * Вывод статистики по родству.
                  */
-                if (true == checkBox2.Checked)
+                int relationshipNumber = 0;
+                foreach (var quantity in quantityOfEachRelationship)
                 {
+                    textBox2.Text += "Родство " + relationshipsMatrix[numberOfProband, relationshipNumber][0] + ": " + quantity + Environment.NewLine;
 
-                }
-                else
-                {
-                    int relationshipNumber = 0;
-                    foreach (var quantity in quantityOfEachRelationship)
-                    {
-                        textBox2.Text += "Родство " + relationshipsMatrix[numberOfProband, relationshipNumber][0] + ": " + quantity + Environment.NewLine;
-
-                        relationshipNumber++;
-                    }
+                    relationshipNumber++;
                 }
             }
         }
