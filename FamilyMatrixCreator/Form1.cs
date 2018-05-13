@@ -49,7 +49,7 @@ namespace FamilyMatrixCreator
                     float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
                     /*
-                     * Построение входной матрицы (матрицы общих сМ).
+                     * Построение выходной матрицы (матрицы родственных отношений).
                      */
                     for (int person = 0;
                         person < generatedOutputMatrix.GetLength(0);
@@ -276,7 +276,7 @@ namespace FamilyMatrixCreator
                     float[][] generatedInputMatrix = new float[generatedMatrixSize][];
 
                     /*
-                     * Построение выходной матрицы (матрицы родственных связей).
+                     * Построение входной матрицы (матрицы сМ).
                      */
                     for (int person = 0;
                         person < generatedOutputMatrix.GetLength(0);
@@ -300,20 +300,6 @@ namespace FamilyMatrixCreator
                         }
                     }
 
-                    Directory.CreateDirectory("input");
-
-                    /*
-                     * Сохранение входной матрицы в файл.
-                     */
-                    SaveToFile(@"input\generated_input", generatedInputMatrix, matrixNumber);
-
-                    Directory.CreateDirectory("output");
-
-                    /*
-                     * Сохранение выходной матрицы в файл.
-                     */
-                    SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
-
                     /*
                      * Сбор статистики по родству осуществляем только сейчас, 
                      * т.к. некоторые значения могут меняться из-за relative--.
@@ -333,6 +319,20 @@ namespace FamilyMatrixCreator
                             }
                         }
                     }
+                                       
+                    Directory.CreateDirectory("input");
+
+                    /*
+                     * Сохранение входной матрицы в файл.
+                     */
+                    SaveToFile(@"input\generated_input", generatedInputMatrix, matrixNumber);
+
+                    Directory.CreateDirectory("output");
+
+                    /*
+                     * Сохранение выходной матрицы в файл.
+                     */
+                    SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
                 }
 
                 /*
