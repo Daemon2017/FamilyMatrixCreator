@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FamilyMatrixCreator
@@ -43,14 +44,14 @@ namespace FamilyMatrixCreator
 
             if (quantityOfMatrixes > 0)
             {
-                for (int matrixNumber = 0; matrixNumber < quantityOfMatrixes; matrixNumber++)
+                Parallel.For(0, quantityOfMatrixes, matrixNumber =>
                 {
-                    int generatedMatrixSize = 100;
-                    float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
-
                     /*
                      * Построение выходной матрицы (матрицы родственных отношений).
                      */
+                    int generatedMatrixSize = 100;
+                    float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
+
                     for (int person = 0;
                         person < generatedOutputMatrix.GetLength(0);
                         person++)
@@ -238,7 +239,7 @@ namespace FamilyMatrixCreator
                                 if (true == checkBox1.Checked)
                                 {
                                     /*
-                                     * Проверяем списки на наличие сепени родства "0".
+                                     * Проверяем списки на наличие степени родства "0".
                                      */
                                     foreach (var relationship in allPossibleRelationships)
                                     {
@@ -273,11 +274,11 @@ namespace FamilyMatrixCreator
                         }
                     }
 
-                    float[][] generatedInputMatrix = new float[generatedMatrixSize][];
-
                     /*
                      * Построение входной матрицы (матрицы сМ).
                      */
+                    float[][] generatedInputMatrix = new float[generatedMatrixSize][];
+
                     for (int person = 0;
                         person < generatedOutputMatrix.GetLength(0);
                         person++)
@@ -304,9 +305,13 @@ namespace FamilyMatrixCreator
                      * Сбор статистики по родству осуществляем только сейчас, 
                      * т.к. некоторые значения могут меняться из-за relative--.
                      */
-                    for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
+                    for (int person = 0;
+                        person < generatedOutputMatrix.GetLength(0);
+                        person++)
                     {
-                        for (int relative = 0; relative < generatedOutputMatrix.GetLength(0); relative++)
+                        for (int relative = 0;
+                            relative < generatedOutputMatrix.GetLength(0);
+                            relative++)
                         {
                             for (int probandsRelatioship = 0;
                                 probandsRelatioship < relationshipsMatrix.GetLength(1);
@@ -359,12 +364,13 @@ namespace FamilyMatrixCreator
                      */
                     Directory.CreateDirectory("output");
                     SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
-                }
+                });
 
                 /*
                  * Вывод статистики по родству.
                  */
                 int relationshipNumber = 0;
+
                 foreach (var quantity in quantityOfEachRelationship)
                 {
                     textBox2.Text += "Родство " + relationshipsMatrix[numberOfProband, relationshipNumber][0] + ": " + quantity + Environment.NewLine;
