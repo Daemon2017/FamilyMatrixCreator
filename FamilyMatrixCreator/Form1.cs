@@ -319,19 +319,45 @@ namespace FamilyMatrixCreator
                             }
                         }
                     }
-                                       
-                    Directory.CreateDirectory("input");
+
+                    /*
+                     * Преобразовываем матрицу так, 
+                     * чтобы не было разрывов между номерами степеней родства.
+                     */
+                    for (int person = 0;
+                        person < generatedOutputMatrix.GetLength(0);
+                        person++)
+                    {
+                        for (int relative = 0;
+                            relative < generatedOutputMatrix.GetLength(0);
+                            relative++)
+                        {
+                            for (int relationship = 0;
+                                relationship < relationshipsMatrix.GetLength(1);
+                                relationship++)
+                            {
+                                if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
+                                {
+                                    /*
+                                     * Делаем +1, чтобы нумерация значащих степеней родства шла с 1.
+                                     */
+                                    generatedOutputMatrix[person][relative] = relationship + 1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
 
                     /*
                      * Сохранение входной матрицы в файл.
                      */
+                    Directory.CreateDirectory("input");
                     SaveToFile(@"input\generated_input", generatedInputMatrix, matrixNumber);
-
-                    Directory.CreateDirectory("output");
 
                     /*
                      * Сохранение выходной матрицы в файл.
                      */
+                    Directory.CreateDirectory("output");
                     SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
                 }
 
