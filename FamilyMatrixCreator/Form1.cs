@@ -344,9 +344,14 @@ namespace FamilyMatrixCreator
                                 if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
                                 {
                                     /*
-                                     * Делаем +1, чтобы нумерация значащих степеней родства шла с 1.
+                                     * Делаем +2, чтобы нумерация значащих степеней родства шла с 2.
                                      */
-                                    generatedOutputMatrix[person][relative] = relationship + 1;
+                                    generatedOutputMatrix[person][relative] = relationship + 2;
+                                    break;
+                                }
+                                else if (0 == generatedOutputMatrix[person][relative])
+                                {
+                                    generatedOutputMatrix[person][relative] = 1;
                                     break;
                                 }
                             }
