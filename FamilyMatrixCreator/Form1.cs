@@ -83,6 +83,7 @@ namespace FamilyMatrixCreator
                                     if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[person][relative])
                                     {
                                         numberOfPerson = number;
+                                        break;
                                     }
                                 }
 
@@ -189,6 +190,7 @@ namespace FamilyMatrixCreator
                                                 if (allPossibleRelationships[m] == relationshipsMatrix[numberOfProband, n][0])
                                                 {
                                                     isRelationshipAllowed = true;
+                                                    break;
                                                 }
                                             }
 
@@ -220,6 +222,7 @@ namespace FamilyMatrixCreator
                                                 if (allPossibleRelationships[m] == currentPossibleRelationships[n])
                                                 {
                                                     isRelationshipAllowed = true;
+                                                    break;
                                                 }
                                             }
 
