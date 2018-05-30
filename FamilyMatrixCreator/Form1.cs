@@ -304,25 +304,28 @@ namespace FamilyMatrixCreator
                         }
                     }
 
-                    /*
-                     * Сбор статистики по родству осуществляем только сейчас, 
-                     * т.к. некоторые значения могут меняться из-за relative--.
-                     */
-                    for (int person = 0;
-                        person < generatedOutputMatrix.GetLength(0);
-                        person++)
+                    if (true == checkBox2.Checked)
                     {
-                        for (int relative = 0;
-                            relative < generatedOutputMatrix.GetLength(0);
-                            relative++)
+                        /*
+                         * Сбор статистики по родству осуществляем только сейчас, 
+                         * т.к. некоторые значения могут меняться из-за relative--.
+                         */
+                        for (int person = 0;
+                            person < generatedOutputMatrix.GetLength(0);
+                            person++)
                         {
-                            for (int probandsRelatioship = 0;
-                                probandsRelatioship < relationshipsMatrix.GetLength(1);
-                                probandsRelatioship++)
+                            for (int relative = 0;
+                                relative < generatedOutputMatrix.GetLength(0);
+                                relative++)
                             {
-                                if (generatedOutputMatrix[person][relative] == relationshipsMatrix[numberOfProband, probandsRelatioship][0])
+                                for (int probandsRelatioship = 0;
+                                    probandsRelatioship < relationshipsMatrix.GetLength(1);
+                                    probandsRelatioship++)
                                 {
-                                    quantityOfEachRelationship[probandsRelatioship]++;
+                                    if (generatedOutputMatrix[person][relative] == relationshipsMatrix[numberOfProband, probandsRelatioship][0])
+                                    {
+                                        quantityOfEachRelationship[probandsRelatioship]++;
+                                    }
                                 }
                             }
                         }
@@ -374,16 +377,19 @@ namespace FamilyMatrixCreator
                     SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
                 });
 
-                /*
-                 * Вывод статистики по родству.
-                 */
-                int relationshipNumber = 0;
-
-                foreach (var quantity in quantityOfEachRelationship)
+                if (true == checkBox2.Checked)
                 {
-                    textBox2.Text += "Родство " + relationshipsMatrix[numberOfProband, relationshipNumber][0] + ": " + quantity + Environment.NewLine;
+                    /*
+                     * Вывод статистики по родству.
+                     */
+                    int relationshipNumber = 0;
 
-                    relationshipNumber++;
+                    foreach (var quantity in quantityOfEachRelationship)
+                    {
+                        textBox2.Text += "Родство " + relationshipsMatrix[numberOfProband, relationshipNumber][0] + ": " + quantity + Environment.NewLine;
+
+                        relationshipNumber++;
+                    }
                 }
             }
         }
