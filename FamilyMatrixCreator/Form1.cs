@@ -38,7 +38,7 @@ namespace FamilyMatrixCreator
 
         private void Generate(object sender, EventArgs e)
         {
-            int quantityOfMatrixes = Convert.ToInt16(textBox1.Text);
+            int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
             int[] quantityOfEachRelationship = new int[relationshipsMatrix.GetLength(1)];
             textBox2.Text = "";
 
@@ -49,7 +49,7 @@ namespace FamilyMatrixCreator
                     /*
                      * Построение выходной матрицы (матрицы родственных отношений).
                      */
-                    int generatedMatrixSize = 100;
+                    int generatedMatrixSize = Int16.Parse(textBox3.Text);
                     float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
                     for (int person = 0;
@@ -331,34 +331,37 @@ namespace FamilyMatrixCreator
                         }
                     }
 
-                    /*
-                     * Преобразовываем матрицу так, 
-                     * чтобы не было разрывов между номерами степеней родства.
-                     */
-                    for (int person = 0;
-                        person < generatedOutputMatrix.GetLength(0);
-                        person++)
+                    if (true == checkBox3.Checked)
                     {
-                        for (int relative = 0;
-                            relative < generatedOutputMatrix.GetLength(0);
-                            relative++)
+                        /*
+                         * Преобразовываем матрицу так, 
+                         * чтобы не было разрывов между номерами степеней родства.
+                         */
+                        for (int person = 0;
+                            person < generatedOutputMatrix.GetLength(0);
+                            person++)
                         {
-                            for (int relationship = 0;
-                                relationship < relationshipsMatrix.GetLength(1);
-                                relationship++)
+                            for (int relative = 0;
+                                relative < generatedOutputMatrix.GetLength(0);
+                                relative++)
                             {
-                                if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
+                                for (int relationship = 0;
+                                    relationship < relationshipsMatrix.GetLength(1);
+                                    relationship++)
                                 {
-                                    /*
-                                     * Делаем +2, чтобы нумерация значащих степеней родства шла с 2.
-                                     */
-                                    generatedOutputMatrix[person][relative] = relationship + 2;
-                                    break;
-                                }
-                                else if (0 == generatedOutputMatrix[person][relative])
-                                {
-                                    generatedOutputMatrix[person][relative] = 1;
-                                    break;
+                                    if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
+                                    {
+                                        /*
+                                         * Делаем +2, чтобы нумерация значащих степеней родства шла с 2.
+                                         */
+                                        generatedOutputMatrix[person][relative] = relationship + 2;
+                                        break;
+                                    }
+                                    else if (0 == generatedOutputMatrix[person][relative])
+                                    {
+                                        generatedOutputMatrix[person][relative] = 1;
+                                        break;
+                                    }
                                 }
                             }
                         }
