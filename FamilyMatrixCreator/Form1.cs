@@ -48,7 +48,7 @@ namespace FamilyMatrixCreator
             {
                 generatedOutputMatrix[person] = new float[generatedOutputMatrix.GetLength(0)];
 
-                for (int relative = person;
+                for (int relative = person + 1;
                     relative < generatedOutputMatrix.GetLength(0);
                     relative++)
                 {
@@ -253,44 +253,55 @@ namespace FamilyMatrixCreator
                         int randomRelative = GetNextRnd(0, allPossibleRelationships.GetLength(0));
                         generatedOutputMatrix[person][relative] = allPossibleRelationships[randomRelative];
                     }
-
-                    /*
-                     * Заполнение диагонали единицами.
-                     */
-                    if (person >= 0 && relative >= 0)
-                    {
-                        if (person == relative)
-                        {
-                            generatedOutputMatrix[person][relative] = 1;
-                        }
-                    }
                 }
 
                 if (generatedOutputMatrix.GetLength(0) - 1 == person)
                 {
+                    int[] quantityOfEachRelationship = new int[relationshipsMatrix.GetLength(1)];
+
+                    quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, quantityOfEachRelationship);
+
                     int sumOfMeaningfulValues = 0;
 
-                    for (int x = 0;
-                        x < generatedOutputMatrix.GetLength(0);
-                        x++)
+                    foreach (var quantity in quantityOfEachRelationship)
                     {
-                        for (int y = 0;
-                        y < generatedOutputMatrix.GetLength(0);
-                        y++)
-                        {
-                            if (0 != generatedOutputMatrix[x][y])
-                            {
-                                sumOfMeaningfulValues++;
-                            }
-                        }
+                        sumOfMeaningfulValues += quantity;
                     }
 
-                    if ((100 * sumOfMeaningfulValues / (generatedMatrixSize * generatedMatrixSize)) < Convert.ToInt32(textBox4.Text))
+                    if (100 * ((generatedMatrixSize + ((float)sumOfMeaningfulValues * 2)) / (generatedMatrixSize * generatedMatrixSize))
+                        < Convert.ToInt32(textBox4.Text))
                     {
                         generatedOutputMatrix = new float[generatedMatrixSize][];
                         person = -1;
                     }
                 }
+            }
+
+            for (int person = 1;
+                person < generatedOutputMatrix.GetLength(0);
+                person++)
+            {
+                for (int relative = 0;
+                    relative < person;
+                    relative++)
+                {
+                    for (int relationship = 0;
+                        relationship < relationshipsMatrix.GetLength(1);
+                        relationship++)
+                    {
+                        if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[relative][person])
+                        {
+                            generatedOutputMatrix[person][relative] = relationshipsMatrix[relationship, numberOfProband][0];
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0;
+                i < generatedOutputMatrix.GetLength(0);
+                i++)
+            {
+                generatedOutputMatrix[i][i] = 1;
             }
 
             return generatedOutputMatrix;
@@ -409,7 +420,7 @@ namespace FamilyMatrixCreator
                     float[][] generatedOutputMatrix = GenerateOutputMatrix(generatedMatrixSize);
 
                     float[][] generatedInputMatrix = GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
-                    
+
                     if (true == checkBox2.Checked)
                     {
                         quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, quantityOfEachRelationship);
@@ -449,7 +460,8 @@ namespace FamilyMatrixCreator
                         relationshipNumber++;
                     }
 
-                    toolStripStatusLabel1.Text = "Значащих значений: " + 100 * (float)sumOfMeaningfulValues / (quantityOfMatrixes * generatedMatrixSize * generatedMatrixSize) + "%";
+                    toolStripStatusLabel1.Text = "Значащих значений: " +
+                        100 * ((float)sumOfMeaningfulValues / (quantityOfMatrixes * generatedMatrixSize * generatedMatrixSize)) + "%";
                 }
             }
         }
