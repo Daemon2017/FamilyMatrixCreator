@@ -22,7 +22,6 @@ namespace FamilyMatrixCreator
         int[][] ancestorsMatrix;
         int[][] descendantsMatrix;
         float[] centimorgansMatrix;
-        float[] clustersMatrix;
         int numberOfProband;
 
         private static int GetNextRnd(int min, int max)

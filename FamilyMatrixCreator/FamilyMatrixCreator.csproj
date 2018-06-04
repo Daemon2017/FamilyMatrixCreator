@@ -74,9 +74,6 @@
     <None Include="centimorgans.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="clusters.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="descendants.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

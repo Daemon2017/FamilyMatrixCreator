@@ -201,11 +201,6 @@ namespace FamilyMatrixCreator
             * Загрузка матрицы значений сантиморган.
             */
             centimorgansMatrix = LoadFromFile1D("centimorgans.csv");
-
-            /*
-             * Загрузка матрицы принадлежности к кластерам.
-             */
-            clustersMatrix = LoadFromFile1D("clusters.csv");
         }
 
     }
