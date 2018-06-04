@@ -38,6 +38,7 @@ namespace FamilyMatrixCreator
         private void Generate(object sender, EventArgs e)
         {
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
+            int generatedMatrixSize = Convert.ToInt32(textBox3.Text);
             int[] quantityOfEachRelationship = new int[relationshipsMatrix.GetLength(1)];
             textBox2.Text = "";
 
@@ -48,7 +49,6 @@ namespace FamilyMatrixCreator
                     /*
                      * Построение выходной матрицы (матрицы родственных отношений).
                      */
-                    int generatedMatrixSize = Int16.Parse(textBox3.Text);
                     float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
                     for (int person = 0;
@@ -274,6 +274,32 @@ namespace FamilyMatrixCreator
                                 }
                             }
                         }
+
+                        if (generatedOutputMatrix.GetLength(0) - 1 == person)
+                        {
+                            int sumOfMeaningfulValues = 0;
+
+                            for (int x = 0;
+                                x < generatedOutputMatrix.GetLength(0);
+                                x++)
+                            {
+                                for (int y = 0;
+                                y < generatedOutputMatrix.GetLength(0);
+                                y++)
+                                {
+                                    if (0 != generatedOutputMatrix[x][y])
+                                    {
+                                        sumOfMeaningfulValues++;
+                                    }
+                                }
+                            }
+
+                            if ((100 * sumOfMeaningfulValues / (quantityOfMatrixes * generatedMatrixSize * generatedMatrixSize)) < Convert.ToInt32(textBox4.Text))
+                            {
+                                generatedOutputMatrix = new float[generatedMatrixSize][];
+                                person = -1;
+                            }
+                        }
                     }
 
                     /*
@@ -385,13 +411,17 @@ namespace FamilyMatrixCreator
                      * Вывод статистики по родству.
                      */
                     int relationshipNumber = 0;
+                    int sumOfMeaningfulValues = 0;
 
                     foreach (var quantity in quantityOfEachRelationship)
                     {
                         textBox2.Text += "Родство " + relationshipsMatrix[numberOfProband, relationshipNumber][0] + ": " + quantity + Environment.NewLine;
+                        sumOfMeaningfulValues += quantity;
 
                         relationshipNumber++;
                     }
+
+                    toolStripStatusLabel1.Text = "Значащих значений: " + 100 * (float)sumOfMeaningfulValues / (quantityOfMatrixes * generatedMatrixSize * generatedMatrixSize) + "%";
                 }
             }
         }
