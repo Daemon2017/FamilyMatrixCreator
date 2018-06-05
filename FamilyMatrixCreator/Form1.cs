@@ -256,11 +256,6 @@ namespace FamilyMatrixCreator
                         int randomRelative = GetNextRnd(0, allPossibleRelationships.GetLength(0));
                         generatedOutputMatrix[person][relative] = allPossibleRelationships[randomRelative];
                     }
-
-                    if (person == relative)
-                    {
-                        generatedOutputMatrix[person][relative] = 1;
-                    }
                 }
 
                 if (generatedOutputMatrix.GetLength(0) - 1 == person)
@@ -286,6 +281,13 @@ namespace FamilyMatrixCreator
                                 }
                             }
                         }
+                    }
+
+                    for (int i = 0;
+                        i < generatedOutputMatrix.GetLength(0);
+                        i++)
+                    {
+                        generatedOutputMatrix[i][i] = 1;
                     }
 
                     int[] quantityOfEachRelationship = new int[relationshipsMatrix.GetLength(1)];
