@@ -338,6 +338,11 @@ namespace FamilyMatrixCreator
                         {
                             generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
                         }
+
+                        if (relationshipsMatrix[relationship, numberOfProband][0] == generatedOutputMatrix[person][relative])
+                        {
+                            generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
+                        }
                     }
                 }
             }
