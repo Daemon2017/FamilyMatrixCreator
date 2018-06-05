@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение выходной матрицы (матрицы родственных отношений).
          */
-        private float[][] GenerateOutputMatrix(int generatedMatrixSize)
+        private float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
@@ -290,8 +291,8 @@ namespace FamilyMatrixCreator
                         generatedOutputMatrix[i][i] = 1;
                     }
 
-                    int[] quantityOfEachRelationship = new int[relationshipsMatrix.GetLength(1)];
-                    quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, quantityOfEachRelationship);
+                    int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
+                    quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, quantityOfEachRelationship, existingRelationshipDegrees);
 
                     int sumOfMeaningfulValues = 0;
 
@@ -348,7 +349,7 @@ namespace FamilyMatrixCreator
         * Сбор статистики по родству осуществляем только сейчас, 
         * т.к. некоторые значения могут меняться из-за relative--.
         */
-        private int[] CollectStatistics(float[][] generatedOutputMatrix, int[] quantityOfEachRelationship)
+        private int[] CollectStatistics(float[][] generatedOutputMatrix, int[] quantityOfEachRelationship, List<int> existingRelationshipDegrees)
         {
             for (int person = 0;
                 person < generatedOutputMatrix.GetLength(0);
@@ -359,10 +360,10 @@ namespace FamilyMatrixCreator
                     relative++)
                 {
                     for (int probandsRelatioship = 0;
-                        probandsRelatioship < relationshipsMatrix.GetLength(1);
+                        probandsRelatioship < existingRelationshipDegrees.Count();
                         probandsRelatioship++)
                     {
-                        if (generatedOutputMatrix[person][relative] == relationshipsMatrix[numberOfProband, probandsRelatioship][0])
+                        if (generatedOutputMatrix[person][relative] == existingRelationshipDegrees[probandsRelatioship])
                         {
                             quantityOfEachRelationship[probandsRelatioship]++;
                         }
@@ -413,22 +414,38 @@ namespace FamilyMatrixCreator
 
         private void Generate(object sender, EventArgs e)
         {
+            List<int> existingRelationshipDegrees = new List<int>();
+            for (int i = 0;
+                i < relationshipsMatrix.GetLength(0);
+                i++)
+            {
+                if (!existingRelationshipDegrees.Contains(relationshipsMatrix[numberOfProband, i][0]))
+                {
+                    existingRelationshipDegrees.Add(relationshipsMatrix[numberOfProband, i][0]);
+                }
+
+                if (!existingRelationshipDegrees.Contains(relationshipsMatrix[i, numberOfProband][0]))
+                {
+                    existingRelationshipDegrees.Add(relationshipsMatrix[i, numberOfProband][0]);
+                }
+            }
+
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
             int generatedMatrixSize = Convert.ToInt32(textBox3.Text);
-            int[] quantityOfEachRelationship = new int[relationshipsMatrix.GetLength(1)];
+            int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
             textBox2.Text = "";
 
             if (quantityOfMatrixes > 0)
             {
                 Parallel.For(0, quantityOfMatrixes, matrixNumber =>
                 {
-                    float[][] generatedOutputMatrix = GenerateOutputMatrix(generatedMatrixSize);
+                    float[][] generatedOutputMatrix = GenerateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
 
                     float[][] generatedInputMatrix = GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
 
                     if (true == checkBox2.Checked)
                     {
-                        quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, quantityOfEachRelationship);
+                        quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, quantityOfEachRelationship, existingRelationshipDegrees);
                     }
 
                     if (true == checkBox3.Checked)
@@ -459,7 +476,7 @@ namespace FamilyMatrixCreator
 
                     foreach (var quantity in quantityOfEachRelationship)
                     {
-                        textBox2.Text += "Родство " + relationshipsMatrix[numberOfProband, relationshipNumber][0] + ": " + quantity + Environment.NewLine;
+                        textBox2.Text += "Родство " + existingRelationshipDegrees[relationshipNumber] + ": " + quantity + Environment.NewLine;
                         sumOfMeaningfulValues += quantity;
 
                         relationshipNumber++;
