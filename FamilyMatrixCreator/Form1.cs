@@ -42,6 +42,9 @@ namespace FamilyMatrixCreator
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
+            /*
+             * Построение правой (верхней) стороны.
+             */
             for (int person = 0;
                 person < generatedOutputMatrix.GetLength(0);
                 person++)
@@ -253,12 +256,39 @@ namespace FamilyMatrixCreator
                         int randomRelative = GetNextRnd(0, allPossibleRelationships.GetLength(0));
                         generatedOutputMatrix[person][relative] = allPossibleRelationships[randomRelative];
                     }
+
+                    if (person == relative)
+                    {
+                        generatedOutputMatrix[person][relative] = 1;
+                    }
                 }
 
                 if (generatedOutputMatrix.GetLength(0) - 1 == person)
                 {
-                    int[] quantityOfEachRelationship = new int[relationshipsMatrix.GetLength(1)];
+                    /*
+                     * Построение левой (нижней) стороны.
+                     */
+                    for (int genPerson = 1;
+                        genPerson < generatedOutputMatrix.GetLength(0);
+                        genPerson++)
+                    {
+                        for (int genRelative = 0;
+                            genRelative < genPerson;
+                            genRelative++)
+                        {
+                            for (int genRelationship = 0;
+                                genRelationship < relationshipsMatrix.GetLength(1);
+                                genRelationship++)
+                            {
+                                if (relationshipsMatrix[numberOfProband, genRelationship][0] == generatedOutputMatrix[genRelative][genPerson])
+                                {
+                                    generatedOutputMatrix[genPerson][genRelative] = relationshipsMatrix[genRelationship, numberOfProband][0];
+                                }
+                            }
+                        }
+                    }
 
+                    int[] quantityOfEachRelationship = new int[relationshipsMatrix.GetLength(1)];
                     quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, quantityOfEachRelationship);
 
                     int sumOfMeaningfulValues = 0;
@@ -268,40 +298,13 @@ namespace FamilyMatrixCreator
                         sumOfMeaningfulValues += quantity;
                     }
 
-                    if (100 * ((generatedMatrixSize + ((float)sumOfMeaningfulValues * 2)) / (generatedMatrixSize * generatedMatrixSize))
+                    if (100 * ((float)sumOfMeaningfulValues / (generatedMatrixSize * generatedMatrixSize))
                         < Convert.ToInt32(textBox4.Text))
                     {
                         generatedOutputMatrix = new float[generatedMatrixSize][];
                         person = -1;
                     }
                 }
-            }
-
-            for (int person = 1;
-                person < generatedOutputMatrix.GetLength(0);
-                person++)
-            {
-                for (int relative = 0;
-                    relative < person;
-                    relative++)
-                {
-                    for (int relationship = 0;
-                        relationship < relationshipsMatrix.GetLength(1);
-                        relationship++)
-                    {
-                        if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[relative][person])
-                        {
-                            generatedOutputMatrix[person][relative] = relationshipsMatrix[relationship, numberOfProband][0];
-                        }
-                    }
-                }
-            }
-
-            for (int i = 0;
-                i < generatedOutputMatrix.GetLength(0);
-                i++)
-            {
-                generatedOutputMatrix[i][i] = 1;
             }
 
             return generatedOutputMatrix;
