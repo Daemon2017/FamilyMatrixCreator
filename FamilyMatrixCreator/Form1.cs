@@ -383,7 +383,7 @@ namespace FamilyMatrixCreator
          * Преобразовываем матрицу так, 
          * чтобы не было разрывов между номерами степеней родства.
          */
-        private float[][] TransformMatrix(float[][] generatedOutputMatrix)
+        private float[][] TransformMatrix(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
         {
             for (int person = 0;
                 person < generatedOutputMatrix.GetLength(0);
@@ -394,10 +394,10 @@ namespace FamilyMatrixCreator
                     relative++)
                 {
                     for (int relationship = 0;
-                        relationship < relationshipsMatrix.GetLength(1);
+                        relationship < existingRelationshipDegrees.Count();
                         relationship++)
                     {
-                        if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
+                        if (existingRelationshipDegrees[relationship] == generatedOutputMatrix[person][relative])
                         {
                             /*
                              * Делаем +2, чтобы нумерация значащих степеней родства шла с 2.
@@ -455,7 +455,7 @@ namespace FamilyMatrixCreator
 
                     if (true == checkBox3.Checked)
                     {
-                        generatedOutputMatrix = TransformMatrix(generatedOutputMatrix);
+                        generatedOutputMatrix = TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
                     }
 
                     /*
