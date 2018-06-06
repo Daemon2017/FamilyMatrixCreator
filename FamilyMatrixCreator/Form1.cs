@@ -261,36 +261,6 @@ namespace FamilyMatrixCreator
 
                 if (generatedOutputMatrix.GetLength(0) - 1 == person)
                 {
-                    /*
-                     * Построение левой (нижней) стороны.
-                     */
-                    for (int genPerson = 1;
-                        genPerson < generatedOutputMatrix.GetLength(0);
-                        genPerson++)
-                    {
-                        for (int genRelative = 0;
-                            genRelative < genPerson;
-                            genRelative++)
-                        {
-                            for (int genRelationship = 0;
-                                genRelationship < relationshipsMatrix.GetLength(1);
-                                genRelationship++)
-                            {
-                                if (relationshipsMatrix[numberOfProband, genRelationship][0] == generatedOutputMatrix[genRelative][genPerson])
-                                {
-                                    generatedOutputMatrix[genPerson][genRelative] = relationshipsMatrix[genRelationship, numberOfProband][0];
-                                }
-                            }
-                        }
-                    }
-
-                    for (int i = 0;
-                        i < generatedOutputMatrix.GetLength(0);
-                        i++)
-                    {
-                        generatedOutputMatrix[i][i] = 1;
-                    }
-
                     int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
                     quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, quantityOfEachRelationship, existingRelationshipDegrees);
 
@@ -301,13 +271,47 @@ namespace FamilyMatrixCreator
                         sumOfMeaningfulValues += quantity;
                     }
 
-                    if (100 * ((float)sumOfMeaningfulValues / (generatedMatrixSize * generatedMatrixSize))
+                    if (100 * ((generatedMatrixSize + 2 * (float)sumOfMeaningfulValues) / (generatedMatrixSize * generatedMatrixSize))
                         < Convert.ToInt32(textBox4.Text))
                     {
                         generatedOutputMatrix = new float[generatedMatrixSize][];
                         person = -1;
                     }
+                    else
+                    {
+
+                    }
                 }
+            }
+
+            /*
+            * Построение левой (нижней) стороны.
+            */
+            for (int genPerson = 1;
+                genPerson < generatedOutputMatrix.GetLength(0);
+                genPerson++)
+            {
+                for (int genRelative = 0;
+                    genRelative < genPerson;
+                    genRelative++)
+                {
+                    for (int genRelationship = 0;
+                        genRelationship < relationshipsMatrix.GetLength(1);
+                        genRelationship++)
+                    {
+                        if (relationshipsMatrix[numberOfProband, genRelationship][0] == generatedOutputMatrix[genRelative][genPerson])
+                        {
+                            generatedOutputMatrix[genPerson][genRelative] = relationshipsMatrix[genRelationship, numberOfProband][0];
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0;
+                i < generatedOutputMatrix.GetLength(0);
+                i++)
+            {
+                generatedOutputMatrix[i][i] = 1;
             }
 
             return generatedOutputMatrix;
