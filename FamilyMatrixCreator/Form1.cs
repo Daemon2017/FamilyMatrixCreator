@@ -277,10 +277,6 @@ namespace FamilyMatrixCreator
                         generatedOutputMatrix = new float[generatedMatrixSize][];
                         person = -1;
                     }
-                    else
-                    {
-
-                    }
                 }
             }
 
