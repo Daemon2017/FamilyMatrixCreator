@@ -377,6 +377,34 @@ namespace FamilyMatrixCreator
             return quantityOfEachRelationship;
         }
 
+        private void CreateComplianceMatrix(List<int> existingRelationshipDegrees)
+        {
+            List<int[]> complianceMatrix = new List<int[]>
+            {
+                new int[2] {0, 1}
+            };
+
+            for (int relationship = 0;
+                relationship < existingRelationshipDegrees.Count();
+                relationship++)
+            {
+                int[] compliance = { existingRelationshipDegrees[relationship], relationship + 2 };
+                complianceMatrix.Add(compliance);
+            }
+
+            using (StreamWriter outfile = new StreamWriter("compliance.csv"))
+            {
+                foreach (var relationship in complianceMatrix)
+                {
+                    string content = "";
+
+                    content += relationship[0].ToString() + ", " + relationship[1].ToString();
+
+                    outfile.WriteLine(content);
+                }
+            }
+        }
+
         /*
          * Преобразовываем матрицу так, 
          * чтобы не было разрывов между номерами степеней родства.
@@ -432,6 +460,8 @@ namespace FamilyMatrixCreator
                     existingRelationshipDegrees.Add(relationshipsMatrix[i, numberOfProband][0]);
                 }
             }
+
+            CreateComplianceMatrix(existingRelationshipDegrees);
 
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
             int generatedMatrixSize = Convert.ToInt32(textBox3.Text);

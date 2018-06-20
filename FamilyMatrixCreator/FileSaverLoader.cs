@@ -142,6 +142,5 @@ namespace FamilyMatrixCreator
             */
             centimorgansMatrix = LoadFromFile1D("centimorgans.csv");
         }
-
     }
 }
