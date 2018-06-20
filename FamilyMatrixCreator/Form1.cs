@@ -20,8 +20,6 @@ namespace FamilyMatrixCreator
 
         private static RNGCryptoServiceProvider _RNG = new RNGCryptoServiceProvider();
         int[,][] relationshipsMatrix;
-        int[][] ancestorsMatrix;
-        int[][] descendantsMatrix;
         float[] centimorgansMatrix;
         int numberOfProband;
 
