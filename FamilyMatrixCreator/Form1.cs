@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics.Distributions;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -318,13 +319,16 @@ namespace FamilyMatrixCreator
         {
             float[][] generatedInputMatrix = new float[generatedMatrixSize][];
 
+            /*
+             * Построение правой (верхней) стороны.
+             */
             for (int person = 0;
                 person < generatedOutputMatrix.GetLength(0);
                 person++)
             {
                 generatedInputMatrix[person] = new float[generatedOutputMatrix.GetLength(0)];
 
-                for (int relative = 0;
+                for (int relative = person;
                     relative < generatedOutputMatrix.GetLength(0);
                     relative++)
                 {
@@ -334,14 +338,65 @@ namespace FamilyMatrixCreator
                     {
                         if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
                         {
-                            generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
+                            if (centimorgansMatrix[relationship] <= 3950)
+                            {
+                                double mean = centimorgansMatrix[relationship];
+                                double stdDev = (centimorgansMatrix[relationship] * (-0.2819 * Math.Log(centimorgansMatrix[relationship]) + 2.335)) / 3;
+
+                                Normal normalDist = new Normal(mean, stdDev);
+                                float normalyDistributedValue = (float)normalDist.Sample();
+
+                                if (normalyDistributedValue < 0)
+                                {
+                                    normalyDistributedValue = 0;
+                                }
+
+                                generatedInputMatrix[person][relative] = normalyDistributedValue;
+                            }
+                            else
+                            {
+                                generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
+                            }
                         }
 
                         if (relationshipsMatrix[relationship, numberOfProband][0] == generatedOutputMatrix[person][relative])
                         {
-                            generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
+                            if (centimorgansMatrix[relationship] <= 3950)
+                            {
+                                double mean = centimorgansMatrix[relationship];
+                                double stdDev = (centimorgansMatrix[relationship] * (-0.2819 * Math.Log(centimorgansMatrix[relationship]) + 2.335)) / 3;
+
+                                Normal normalDist = new Normal(mean, stdDev);
+                                float normalyDistributedValue = (float)normalDist.Sample();
+
+                                if (normalyDistributedValue < 0)
+                                {
+                                    normalyDistributedValue = 0;
+                                }
+
+                                generatedInputMatrix[person][relative] = normalyDistributedValue;
+                            }
+                            else
+                            {
+                                generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
+                            }
                         }
                     }
+                }
+            }
+
+            /*
+            * Построение левой (нижней) стороны.
+            */
+            for (int genPerson = 1;
+                genPerson < generatedOutputMatrix.GetLength(0);
+                genPerson++)
+            {
+                for (int genRelative = 0;
+                    genRelative < genPerson;
+                    genRelative++)
+                {
+                    generatedInputMatrix[genPerson][genRelative] = generatedInputMatrix[genRelative][genPerson];
                 }
             }
 
