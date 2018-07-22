@@ -43,7 +43,7 @@ namespace FamilyMatrixCreator
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
-            int[,] currentCountMatrix = new int[generatedMatrixSize, maxCountMatrix.Length];
+            int[][] currentCountMatrix = new int[generatedMatrixSize][];
 
             /*
              * Построение правой (верхней) стороны.
@@ -53,6 +53,7 @@ namespace FamilyMatrixCreator
                 person++)
             {
                 generatedOutputMatrix[person] = new float[generatedOutputMatrix.GetLength(0)];
+                currentCountMatrix[person] = new int[maxCountMatrix.Length];
 
                 for (int relative = person + 1;
                     relative < generatedOutputMatrix.GetLength(0);
@@ -140,7 +141,7 @@ namespace FamilyMatrixCreator
                             {
                                 if(maxCountMatrix[i][0] == generatedOutputMatrix[person][relative])
                                 {
-                                    currentCountMatrix[0, i]++;
+                                    currentCountMatrix[0][i]++;
                                 }
                             }
                         }
@@ -278,7 +279,7 @@ namespace FamilyMatrixCreator
                         {
                             if (maxCountMatrix[i][0] == generatedOutputMatrix[person][relative])
                             {
-                                currentCountMatrix[person, i]++;
+                                currentCountMatrix[person][i]++;
                             }
                         }
                     }
@@ -299,9 +300,9 @@ namespace FamilyMatrixCreator
                     if (100 * ((generatedMatrixSize + 2 * (float)sumOfMeaningfulValues) / (generatedMatrixSize * generatedMatrixSize))
                         < Convert.ToInt32(textBox4.Text))
                     {
+                        currentCountMatrix = new int[generatedMatrixSize][];
                         generatedOutputMatrix = new float[generatedMatrixSize][];
                         person = -1;
-                        currentCountMatrix = new int[generatedMatrixSize, maxCountMatrix.Length];
                     }
                 }
             }
