@@ -110,6 +110,35 @@ namespace FamilyMatrixCreator
             return matrix;
         }
 
+        private int[][] LoadFromFile2D(string inputFileName)
+        {
+            int relationship = 0;
+            string input = File.ReadAllText(inputFileName);
+            int numberOfLines = input.Split('\n').Length - 1;
+            int[][] matrix = new int[numberOfLines][];
+
+            foreach (var row in input.Split('\n'))
+            {
+                int count = 0;
+
+                if (!(row.Equals("")) && !(row.Equals("\r")))
+                {
+                    matrix[relationship] = new int[2];
+
+                    foreach (var column in row.Trim().Split(','))
+                    {
+                        matrix[relationship][count] = int.Parse(column.Trim());
+
+                        count++;
+                    }
+                }
+
+                relationship++;
+            }
+
+            return matrix;
+        }
+
         private float[] LoadFromFile1D(string inputFileName)
         {
             int person = 0;
@@ -141,6 +170,11 @@ namespace FamilyMatrixCreator
             * Загрузка матрицы значений сантиморган.
             */
             centimorgansMatrix = LoadFromFile1D("centimorgans.csv");
+
+            /*
+            * Загрузка матрицы максимального числа предков заданного вида.
+            */
+            maxCountMatrix = LoadFromFile2D("maxCount.csv");
         }
     }
 }

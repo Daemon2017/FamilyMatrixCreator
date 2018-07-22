@@ -22,6 +22,7 @@ namespace FamilyMatrixCreator
         private static RNGCryptoServiceProvider _RNG = new RNGCryptoServiceProvider();
         int[,][] relationshipsMatrix;
         float[] centimorgansMatrix;
+        int[][] maxCountMatrix;
         int numberOfProband;
 
         private static int GetNextRnd(int min, int max)
@@ -42,6 +43,8 @@ namespace FamilyMatrixCreator
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
+            int[,] currentCountMatrix = new int[generatedMatrixSize, maxCountMatrix.Length];
+
             /*
              * Построение правой (верхней) стороны.
              */
@@ -57,8 +60,13 @@ namespace FamilyMatrixCreator
                 {
                     if (0 == person)
                     {
+                        /* 
+                         * TODO: Переписать так, чтобы в начале работы строился список верных степеней родства 
+                         * и случайные степени родства выбирались из этого списка.
+                         */
+
                         /*
-                         * Создание случайных степеней родства для пробанда.
+                         * Создание родственника пробанда со случайной степенью родства.
                          */
                         int randomRelative = GetNextRnd(0, relationshipsMatrix.GetLength(1));
                         generatedOutputMatrix[person][relative] = relationshipsMatrix[numberOfProband, randomRelative][0];
@@ -125,6 +133,16 @@ namespace FamilyMatrixCreator
                         if (quantityOfPossibleRelatives == 0)
                         {
                             relative--;
+                        }
+                        else
+                        {
+                            for (int i = 0; i < maxCountMatrix.Length; i++)
+                            {
+                                if(maxCountMatrix[i][0] == generatedOutputMatrix[person][relative])
+                                {
+                                    currentCountMatrix[0, i]++;
+                                }
+                            }
                         }
                     }
                     else if (person > 0)
@@ -255,6 +273,14 @@ namespace FamilyMatrixCreator
 
                         int randomRelative = GetNextRnd(0, allPossibleRelationships.GetLength(0));
                         generatedOutputMatrix[person][relative] = allPossibleRelationships[randomRelative];
+
+                        for (int i = 0; i < maxCountMatrix.Length; i++)
+                        {
+                            if (maxCountMatrix[i][0] == generatedOutputMatrix[person][relative])
+                            {
+                                currentCountMatrix[person, i]++;
+                            }
+                        }
                     }
                 }
 
@@ -275,6 +301,7 @@ namespace FamilyMatrixCreator
                     {
                         generatedOutputMatrix = new float[generatedMatrixSize][];
                         person = -1;
+                        currentCountMatrix = new int[generatedMatrixSize, maxCountMatrix.Length];
                     }
                 }
             }
