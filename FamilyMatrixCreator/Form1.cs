@@ -61,8 +61,6 @@ namespace FamilyMatrixCreator
                 {
                     if (0 == person)
                     {
-                        bool allowToAddRelative = true;
-
                         /*
                          * Создание родственника пробанда со случайной степенью родства.
                          */
@@ -70,9 +68,11 @@ namespace FamilyMatrixCreator
                         generatedOutputMatrix[person][relative] = relationshipsMatrix[numberOfProband, numberOfPerson][0];
 
                         /*
-                         * Проверка того, что добавление родственник с такой степенью родства
-                         * не приведет к превышению допустимого предела числа таких степеней родства.
+                         * Проверка того, что добавление родственника с такой степенью родства
+                         * не приведет к превышению допустимого числа таких степеней родства.
                          */
+                        bool allowToAddRelative = true;
+
                         for (int i = 0; i < maxCountMatrix.Length; i++)
                         {
                             if (generatedOutputMatrix[person][relative] == maxCountMatrix[i][0])
@@ -84,7 +84,7 @@ namespace FamilyMatrixCreator
                             }
                         }
 
-                        if (allowToAddRelative == true)
+                        if (true == allowToAddRelative)
                         {
                             /*
                              * Исключение тех степеней родства, 
@@ -128,7 +128,7 @@ namespace FamilyMatrixCreator
                                 }
                             }
 
-                            if (quantityOfPossibleRelatives == 0)
+                            if (0 == quantityOfPossibleRelatives)
                             {
                                 relative--;
                             }
@@ -274,15 +274,42 @@ namespace FamilyMatrixCreator
                             }
                         }
 
+                        /*
+                         * Создание родственника со случайной степенью родства.
+                         */
                         int randomRelative = GetNextRnd(0, allPossibleRelationships.GetLength(0));
                         generatedOutputMatrix[person][relative] = allPossibleRelationships[randomRelative];
 
+                        /*
+                         * Проверка того, что добавление родственника с такой степенью родства
+                         * не приведет к превышению допустимого числа таких степеней родства.
+                         */
+                        bool allowToAddRelative = true;
+
                         for (int i = 0; i < maxCountMatrix.Length; i++)
                         {
-                            if (maxCountMatrix[i][0] == generatedOutputMatrix[person][relative])
+                            if (generatedOutputMatrix[person][relative] == maxCountMatrix[i][0])
                             {
-                                currentCountMatrix[person][i]++;
+                                if (currentCountMatrix[person][i] == maxCountMatrix[i][0])
+                                {
+                                    allowToAddRelative = false;
+                                }
                             }
+                        }
+
+                        if (true == allowToAddRelative)
+                        {
+                            for (int i = 0; i < maxCountMatrix.Length; i++)
+                            {
+                                if (maxCountMatrix[i][0] == generatedOutputMatrix[person][relative])
+                                {
+                                    currentCountMatrix[0][i]++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            relative--;
                         }
                     }
                 }
