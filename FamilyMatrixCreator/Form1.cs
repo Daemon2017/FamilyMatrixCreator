@@ -55,17 +55,27 @@ namespace FamilyMatrixCreator
                 generatedOutputMatrix[person] = new float[generatedOutputMatrix.GetLength(0)];
                 currentCountMatrix[person] = new int[maxCountMatrix.Length];
 
+                List<int> relatives = new List<int> { };
                 for (int relative = person + 1;
                     relative < generatedOutputMatrix.GetLength(0);
                     relative++)
                 {
+                    relatives.Add(relative);
+                }
+                var rand = new Random();
+                relatives = relatives.OrderBy(x => rand.Next()).ToList();
+
+                for (int relative = 0;
+                    relative < relatives.Count;
+                    relative++)
+                { 
                     if (0 == person)
                     {
                         /*
                          * Создание родственника пробанда со случайной степенью родства.
                          */
                         int numberOfPerson = GetNextRnd(0, relationshipsMatrix.GetLength(1));
-                        generatedOutputMatrix[person][relative] = relationshipsMatrix[numberOfProband, numberOfPerson][0];
+                        generatedOutputMatrix[person][relatives[relative]] = relationshipsMatrix[numberOfProband, numberOfPerson][0];
 
                         /*
                          * Проверка того, что добавление родственника с такой степенью родства
@@ -75,7 +85,7 @@ namespace FamilyMatrixCreator
 
                         for (int i = 0; i < maxCountMatrix.Length; i++)
                         {
-                            if (generatedOutputMatrix[person][relative] == maxCountMatrix[i][0])
+                            if (generatedOutputMatrix[person][relatives[relative]] == maxCountMatrix[i][0])
                             {
                                 if (currentCountMatrix[person][i] == maxCountMatrix[i][0])
                                 {
@@ -136,7 +146,7 @@ namespace FamilyMatrixCreator
                             {
                                 for (int i = 0; i < maxCountMatrix.Length; i++)
                                 {
-                                    if (maxCountMatrix[i][0] == generatedOutputMatrix[person][relative])
+                                    if (maxCountMatrix[i][0] == generatedOutputMatrix[person][relatives[relative]])
                                     {
                                         currentCountMatrix[0][i]++;
                                     }
@@ -175,7 +185,7 @@ namespace FamilyMatrixCreator
                                     numberOfI = number;
                                 }
 
-                                if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[k][relative])
+                                if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[k][relatives[relative]])
                                 {
                                     numberOfJ = number;
                                 }
@@ -278,7 +288,7 @@ namespace FamilyMatrixCreator
                          * Создание родственника со случайной степенью родства.
                          */
                         int randomRelative = GetNextRnd(0, allPossibleRelationships.GetLength(0));
-                        generatedOutputMatrix[person][relative] = allPossibleRelationships[randomRelative];
+                        generatedOutputMatrix[person][relatives[relative]] = allPossibleRelationships[randomRelative];
 
                         /*
                          * Проверка того, что добавление родственника с такой степенью родства
@@ -288,7 +298,7 @@ namespace FamilyMatrixCreator
 
                         for (int i = 0; i < maxCountMatrix.Length; i++)
                         {
-                            if (generatedOutputMatrix[person][relative] == maxCountMatrix[i][0])
+                            if (generatedOutputMatrix[person][relatives[relative]] == maxCountMatrix[i][0])
                             {
                                 if (currentCountMatrix[person][i] == maxCountMatrix[i][0])
                                 {
@@ -301,7 +311,7 @@ namespace FamilyMatrixCreator
                         {
                             for (int i = 0; i < maxCountMatrix.Length; i++)
                             {
-                                if (maxCountMatrix[i][0] == generatedOutputMatrix[person][relative])
+                                if (maxCountMatrix[i][0] == generatedOutputMatrix[person][relatives[relative]])
                                 {
                                     currentCountMatrix[0][i]++;
                                 }
