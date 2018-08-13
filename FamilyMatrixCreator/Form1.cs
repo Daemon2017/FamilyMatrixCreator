@@ -62,8 +62,8 @@ namespace FamilyMatrixCreator
                 {
                     relatives.Add(relative);
                 }
-                var rand = new Random();
-                relatives = relatives.OrderBy(x => rand.Next()).ToList();
+                ContinuousUniform continuousUniformDist = new ContinuousUniform();
+                relatives = relatives.OrderBy(x => continuousUniformDist.Sample()).ToList();
 
                 for (int relative = 0;
                     relative < relatives.Count;
@@ -324,6 +324,9 @@ namespace FamilyMatrixCreator
                     }
                 }
 
+                /*
+                 * Проверка того, что выполняется требование по проценту значащих значений
+                 */
                 if (generatedOutputMatrix.GetLength(0) - 1 == person)
                 {
                     int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
