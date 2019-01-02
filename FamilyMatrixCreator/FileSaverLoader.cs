@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -11,17 +12,13 @@ namespace FamilyMatrixCreator
         {
             using (StreamWriter outfile = new StreamWriter(outputFileName + matrixNumber + ".csv"))
             {
-                for (int person = 0;
-                    person < generatedMatrix.GetLength(0);
-                    person++)
+                foreach (float[] raw in generatedMatrix)
                 {
                     string content = "";
 
-                    for (int relative = 0;
-                        relative < generatedMatrix[person].GetLength(0);
-                        relative++)
+                    foreach (float column in raw)
                     {
-                        string temp = generatedMatrix[person][relative].ToString();
+                        string temp = column.ToString();
 
                         if (temp != null)
                         {
@@ -33,6 +30,21 @@ namespace FamilyMatrixCreator
                     {
                         content = content.Remove(content.Length - 1);
                     }
+
+                    outfile.WriteLine(content);
+                }
+            }
+        }
+
+        private void SaveToFile(string outputFileName, List<int[]> complianceMatrix)
+        {
+            using (StreamWriter outfile = new StreamWriter(outputFileName))
+            {
+                foreach (var relationship in complianceMatrix)
+                {
+                    string content = "";
+
+                    content += relationship[0].ToString() + ", " + relationship[1].ToString();
 
                     outfile.WriteLine(content);
                 }
