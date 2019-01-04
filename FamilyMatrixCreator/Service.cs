@@ -1,7 +1,6 @@
 ﻿using MathNet.Numerics.Distributions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -10,8 +9,7 @@ namespace FamilyMatrixCreator
     public partial class Form1 : Form
     {
         /*
-         * Проверка того, что на данное мгновение не превышено максимальное допустимое число
-         * родственников с таким видом родства.
+         * Проверка того, что на данное мгновение у данного лица не превышено MAX допустимое число родственников с таким видом родства.
          */
         private bool MaxNumberOfThisRelationshipTypeIsNotExceeded(float[][] generatedOutputMatrix, int[][] currentCountMatrix, int person, List<int> relatives, int relative)
         {
@@ -20,6 +18,24 @@ namespace FamilyMatrixCreator
             for (int i = 0; i < maxCountMatrix.Length; i++)
             {
                 if (generatedOutputMatrix[person][relatives[relative]] == maxCountMatrix[i][0])
+                {
+                    if (currentCountMatrix[person][i] == maxCountMatrix[i][0])
+                    {
+                        allowToAddRelative = false;
+                    }
+                }
+            }
+
+            return allowToAddRelative;
+        }
+
+        private bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix, int person)
+        {
+            bool allowToAddRelative = true;
+
+            for (int i = 0; i < maxCountMatrix.Length; i++)
+            {
+                if (relationship == maxCountMatrix[i][0])
                 {
                     if (currentCountMatrix[person][i] == maxCountMatrix[i][0])
                     {
@@ -58,7 +74,7 @@ namespace FamilyMatrixCreator
         }
 
         /*
-        * Сбор статистики по родству
+        * Сбор статистики по родству.
         */
         private int[] CollectStatistics(float[][] generatedOutputMatrix, int[] quantityOfEachRelationship, List<int> existingRelationshipDegrees)
         {
@@ -127,6 +143,33 @@ namespace FamilyMatrixCreator
             }
 
             return generatedOutputMatrix;
+        }
+
+        /*
+         * Перемешивание порядка значений в списке.
+         */
+        private static List<int> ShuffleSequence(float[][] generatedOutputMatrix, int person)
+        {
+            List<int> relatives = new List<int> { };
+            for (int relative = person + 1; relative < generatedOutputMatrix.GetLength(0); relative++)
+            {
+                relatives.Add(relative);
+            }
+            return relatives.OrderBy(x => new ContinuousUniform().Sample()).ToList();
+        }
+
+        /*
+         * Увеличение числа родственников данного вида у указанного лица.
+         */
+        private void IncreaseCurrentCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix, int person, List<int> relatives, int relative)
+        {
+            for (int i = 0; i < maxCountMatrix.Length; i++)
+            {
+                if (maxCountMatrix[i][0] == generatedOutputMatrix[person][relatives[relative]])
+                {
+                    currentCountMatrix[0][i]++;
+                }
+            }
         }
     }
 }
