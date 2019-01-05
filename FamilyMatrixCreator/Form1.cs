@@ -39,6 +39,8 @@ namespace FamilyMatrixCreator
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
             int[][] currentCountMatrix = new int[generatedMatrixSize][];
 
+            int[] allPossibleRelationshipsOfProband = FindAllPossibleRelationshipsOfProband();
+
             /*
              * Построение правой (верхней) стороны.
              */
@@ -54,64 +56,23 @@ namespace FamilyMatrixCreator
                     if (0 == person)
                     {
                         /*
-                         * Создание родственника пробанда со случайным видом родства.
+                         * Устранение видов родства из списка допустимых видов родства, 
+                         * добавление которых приведет к превышению допустимого числа родственников с таким видом родства.
                          */
-                        int numberOfPerson = GetNextRnd(0, relationshipsMatrix.GetLength(1));
-                        generatedOutputMatrix[person][relatives[relative]] = relationshipsMatrix[numberOfProband, numberOfPerson][0];
-
-                        if (true == MaxNumberOfThisRelationshipTypeIsNotExceeded(generatedOutputMatrix, currentCountMatrix, person, relatives, relative))
+                        foreach (int relationship in allPossibleRelationshipsOfProband)
                         {
-                            /*
-                             * Исключение тех видов родства, которые не имеют ни одного общего вида родства с теми, что доступны пробанду.
-                             */
-                            int quantityOfPossibleRelatives = 0;
-
-                            for (int possibleRelative = 0; possibleRelative < relationshipsMatrix.GetLength(1); possibleRelative++)
+                            if (false == MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, person))
                             {
-                                int quantityOfPossibleRelationships = 0;
-
-                                for (int possibleRelationship = 0;
-                                    possibleRelationship < relationshipsMatrix[numberOfPerson, possibleRelative].Length;
-                                    possibleRelationship++)
-                                {
-                                    int quantityOfPossibleProbandsRelationships = 0;
-
-                                    for (int possibleProbandsRelationship = 0;
-                                        possibleProbandsRelationship < relationshipsMatrix.GetLength(1);
-                                        possibleProbandsRelationship++)
-                                    {
-                                        if (relationshipsMatrix[numberOfProband, possibleProbandsRelationship][0] == relationshipsMatrix[numberOfPerson, possibleRelative][possibleRelationship]
-                                            || 0 == relationshipsMatrix[numberOfPerson, possibleRelative][possibleRelationship])
-                                        {
-                                            quantityOfPossibleProbandsRelationships++;
-                                        }
-                                    }
-
-                                    if (quantityOfPossibleProbandsRelationships == relationshipsMatrix.GetLength(1))
-                                    {
-                                        quantityOfPossibleRelationships++;
-                                    }
-                                }
-
-                                if (quantityOfPossibleRelationships > 0)
-                                {
-                                    quantityOfPossibleRelatives++;
-                                }
-                            }
-
-                            if (0 == quantityOfPossibleRelatives)
-                            {
-                                relative--;
-                            }
-                            else
-                            {
-                                IncreaseCurrentCount(generatedOutputMatrix, currentCountMatrix, person, relatives, relative);
+                                allPossibleRelationshipsOfProband = allPossibleRelationshipsOfProband.Where(val => val != relationship).ToArray();
                             }
                         }
-                        else
-                        {
-                            relative--;
-                        }
+
+                        /*
+                        * Создание родственника со случайным видом родства.
+                        */
+                        generatedOutputMatrix[person][relatives[relative]] = allPossibleRelationshipsOfProband[GetNextRnd(0, allPossibleRelationshipsOfProband.GetLength(0))];
+
+                        IncreaseCurrentCount(generatedOutputMatrix, currentCountMatrix, person, relatives, relative);
                     }
                     else if (person > 0)
                     {

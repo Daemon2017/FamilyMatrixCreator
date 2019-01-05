@@ -11,24 +11,6 @@ namespace FamilyMatrixCreator
         /*
          * Проверка того, что на данное мгновение у данного лица не превышено MAX допустимое число родственников с таким видом родства.
          */
-        private bool MaxNumberOfThisRelationshipTypeIsNotExceeded(float[][] generatedOutputMatrix, int[][] currentCountMatrix, int person, List<int> relatives, int relative)
-        {
-            bool allowToAddRelative = true;
-
-            for (int i = 0; i < maxCountMatrix.Length; i++)
-            {
-                if (generatedOutputMatrix[person][relatives[relative]] == maxCountMatrix[i][0])
-                {
-                    if (currentCountMatrix[person][i] == maxCountMatrix[i][0])
-                    {
-                        allowToAddRelative = false;
-                    }
-                }
-            }
-
-            return allowToAddRelative;
-        }
-
         private bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix, int person)
         {
             bool allowToAddRelative = true;
@@ -170,6 +152,59 @@ namespace FamilyMatrixCreator
                     currentCountMatrix[0][i]++;
                 }
             }
+        }
+
+        /*
+         * Построение списка возможных степеней родства пробанда.
+         */
+        private int[] FindAllPossibleRelationshipsOfProband()
+        {
+            int[] allPossibleRelationshipsOfProband = new int[relationshipsMatrix.GetLength(1)];
+
+            for (int i = 0; i < relationshipsMatrix.GetLength(1); i++)
+            {
+                int quantityOfPossibleRelatives = 0;
+
+                for (int possibleRelative = 0; possibleRelative < relationshipsMatrix.GetLength(1); possibleRelative++)
+                {
+                    int quantityOfPossibleRelationships = 0;
+
+                    for (int possibleRelationship = 0;
+                        possibleRelationship < relationshipsMatrix[i, possibleRelative].Length;
+                        possibleRelationship++)
+                    {
+                        int quantityOfPossibleProbandsRelationships = 0;
+
+                        for (int possibleProbandsRelationship = 0;
+                            possibleProbandsRelationship < relationshipsMatrix.GetLength(1);
+                            possibleProbandsRelationship++)
+                        {
+                            if (relationshipsMatrix[numberOfProband, possibleProbandsRelationship][0] == relationshipsMatrix[i, possibleRelative][possibleRelationship]
+                                || 0 == relationshipsMatrix[i, possibleRelative][possibleRelationship])
+                            {
+                                quantityOfPossibleProbandsRelationships++;
+                            }
+                        }
+
+                        if (quantityOfPossibleProbandsRelationships == relationshipsMatrix.GetLength(1))
+                        {
+                            quantityOfPossibleRelationships++;
+                        }
+                    }
+
+                    if (quantityOfPossibleRelationships > 0)
+                    {
+                        quantityOfPossibleRelatives++;
+                    }
+                }
+
+                if (0 < quantityOfPossibleRelatives)
+                {
+                    allPossibleRelationshipsOfProband[i] = relationshipsMatrix[numberOfProband, i][0];
+                }
+            }
+
+            return allPossibleRelationshipsOfProband.Where(val => val != 0).ToArray();
         }
     }
 }
