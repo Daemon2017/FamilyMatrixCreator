@@ -36,20 +36,23 @@ namespace FamilyMatrixCreator
          */
         private float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
         {
+            int[] allPossibleRelationshipsOfProband = FindAllPossibleRelationshipsOfProband();
+
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
             int[][] currentCountMatrix = new int[generatedMatrixSize][];
 
-            int[] allPossibleRelationshipsOfProband = FindAllPossibleRelationshipsOfProband();
+            List<int> persons = ShuffleSequence(1, generatedOutputMatrix.GetLength(0));
+            persons.Insert(0, 0);
 
             /*
              * Построение правой (верхней) стороны.
              */
-            for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
+            for (int person = 0; person < persons.Count; person++)
             {
-                generatedOutputMatrix[person] = new float[generatedOutputMatrix.GetLength(0)];
-                currentCountMatrix[person] = new int[maxCountMatrix.Length];
+                generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
+                currentCountMatrix[persons[person]] = new int[maxCountMatrix.Length];
 
-                List<int> relatives = ShuffleSequence(generatedOutputMatrix, person);
+                List<int> relatives = ShuffleSequence(person + 1, generatedOutputMatrix.GetLength(0));
 
                 for (int relative = 0; relative < relatives.Count; relative++)
                 {
@@ -61,7 +64,7 @@ namespace FamilyMatrixCreator
                          */
                         foreach (int relationship in allPossibleRelationshipsOfProband)
                         {
-                            if (false == MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, person))
+                            if (false == MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person))
                             {
                                 allPossibleRelationshipsOfProband = allPossibleRelationshipsOfProband.Where(val => val != relationship).ToArray();
                             }
@@ -70,9 +73,9 @@ namespace FamilyMatrixCreator
                         /*
                         * Создание родственника со случайным видом родства.
                         */
-                        generatedOutputMatrix[person][relatives[relative]] = allPossibleRelationshipsOfProband[GetNextRnd(0, allPossibleRelationshipsOfProband.GetLength(0))];
+                        generatedOutputMatrix[persons[person]][relatives[relative]] = allPossibleRelationshipsOfProband[GetNextRnd(0, allPossibleRelationshipsOfProband.GetLength(0))];
 
-                        IncreaseCurrentCount(generatedOutputMatrix, currentCountMatrix, person, relatives, relative);
+                        IncreaseCurrentCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative);
                     }
                     else if (person > 0)
                     {
@@ -91,12 +94,12 @@ namespace FamilyMatrixCreator
                              */
                             for (int number = 0; number < relationshipsMatrix.GetLength(1); number++)
                             {
-                                if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[previousPerson][person])
+                                if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[persons[previousPerson]][persons[person]])
                                 {
                                     numberOfI = number;
                                 }
 
-                                if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[previousPerson][relatives[relative]])
+                                if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[persons[previousPerson]][relatives[relative]])
                                 {
                                     numberOfJ = number;
                                 }
@@ -158,19 +161,19 @@ namespace FamilyMatrixCreator
                             }
                         }
 
-                        /*
-                         * Устранение вида родства "0" из списка допустимых видов родства, если помимо "0" в нем присутствует, как минимум, еще один вид родства.
-                         */
-                        foreach (var relationship in allPossibleRelationships)
-                        {
-                            if (0 == relationship)
-                            {
-                                if (allPossibleRelationships.GetLength(0) > 1)
-                                {
-                                    allPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToArray();
-                                }
-                            }
-                        }
+                        ///*
+                        // * Устранение вида родства "0" из списка допустимых видов родства, если помимо "0" в нем присутствует, как минимум, еще один вид родства.
+                        // */
+                        //foreach (var relationship in allPossibleRelationships)
+                        //{
+                        //    if (0 == relationship)
+                        //    {
+                        //        if (allPossibleRelationships.GetLength(0) > 1)
+                        //        {
+                        //            allPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToArray();
+                        //        }
+                        //    }
+                        //}
 
                         /*
                          * Устранение видов родства из списка допустимых видов родства, 
@@ -178,7 +181,7 @@ namespace FamilyMatrixCreator
                          */
                         foreach (int relationship in allPossibleRelationships)
                         {
-                            if (false == MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, person))
+                            if (false == MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person))
                             {
                                 allPossibleRelationships = allPossibleRelationships.Where(val => val != relationship).ToArray();
                             }
@@ -187,9 +190,9 @@ namespace FamilyMatrixCreator
                         /*
                         * Создание родственника со случайным видом родства.
                         */
-                        generatedOutputMatrix[person][relatives[relative]] = allPossibleRelationships[GetNextRnd(0, allPossibleRelationships.GetLength(0))];
+                        generatedOutputMatrix[persons[person]][relatives[relative]] = allPossibleRelationships[GetNextRnd(0, allPossibleRelationships.GetLength(0))];
 
-                        IncreaseCurrentCount(generatedOutputMatrix, currentCountMatrix, person, relatives, relative);
+                        IncreaseCurrentCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative);
                     }
                 }
 
@@ -218,22 +221,22 @@ namespace FamilyMatrixCreator
                 }
             }
 
-            /*
-            * Построение левой (нижней) стороны.
-            */
-            for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
-            {
-                for (int genRelative = 0; genRelative < genPerson; genRelative++)
-                {
-                    for (int genRelationship = 0; genRelationship < relationshipsMatrix.GetLength(1); genRelationship++)
-                    {
-                        if (relationshipsMatrix[numberOfProband, genRelationship][0] == generatedOutputMatrix[genRelative][genPerson])
-                        {
-                            generatedOutputMatrix[genPerson][genRelative] = relationshipsMatrix[genRelationship, numberOfProband][0];
-                        }
-                    }
-                }
-            }
+            ///*
+            //* Построение левой (нижней) стороны.
+            //*/
+            //for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
+            //{
+            //    for (int genRelative = 0; genRelative < genPerson; genRelative++)
+            //    {
+            //        for (int genRelationship = 0; genRelationship < relationshipsMatrix.GetLength(1); genRelationship++)
+            //        {
+            //            if (relationshipsMatrix[numberOfProband, genRelationship][0] == generatedOutputMatrix[genRelative][genPerson])
+            //            {
+            //                generatedOutputMatrix[genPerson][genRelative] = relationshipsMatrix[genRelationship, numberOfProband][0];
+            //            }
+            //        }
+            //    }
+            //}
 
             for (int i = 0; i < generatedOutputMatrix.GetLength(0); i++)
             {
