@@ -11,7 +11,7 @@ namespace FamilyMatrixCreator
         /*
          * Проверка того, что на данное мгновение у данного лица не превышено MAX допустимое число родственников с таким видом родства.
          */
-        private bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix, int person)
+        private bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix, List<int> persons, int person)
         {
             bool allowToAddRelative = true;
 
@@ -19,7 +19,7 @@ namespace FamilyMatrixCreator
             {
                 if (relationship == maxCountMatrix[i][0])
                 {
-                    if (currentCountMatrix[person][i] == maxCountMatrix[i][0])
+                    if (currentCountMatrix[persons[person]][i] == maxCountMatrix[i][0])
                     {
                         allowToAddRelative = false;
                     }
@@ -130,10 +130,10 @@ namespace FamilyMatrixCreator
         /*
          * Перемешивание порядка значений в списке.
          */
-        private static List<int> ShuffleSequence(float[][] generatedOutputMatrix, int person)
+        private static List<int> ShuffleSequence(int startValue, int endValue)
         {
             List<int> relatives = new List<int> { };
-            for (int relative = person + 1; relative < generatedOutputMatrix.GetLength(0); relative++)
+            for (int relative = startValue; relative < endValue; relative++)
             {
                 relatives.Add(relative);
             }
@@ -143,11 +143,11 @@ namespace FamilyMatrixCreator
         /*
          * Увеличение числа родственников данного вида у указанного лица.
          */
-        private void IncreaseCurrentCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix, int person, List<int> relatives, int relative)
+        private void IncreaseCurrentCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative)
         {
             for (int i = 0; i < maxCountMatrix.Length; i++)
             {
-                if (maxCountMatrix[i][0] == generatedOutputMatrix[person][relatives[relative]])
+                if (maxCountMatrix[i][0] == generatedOutputMatrix[persons[person]][relatives[relative]])
                 {
                     currentCountMatrix[0][i]++;
                 }
