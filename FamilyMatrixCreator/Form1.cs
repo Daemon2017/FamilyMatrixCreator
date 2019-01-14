@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace FamilyMatrixCreator
         private float[] centimorgansMatrix;
         private int[][] maxCountMatrix;
         private int numberOfProband;
+        private int numberOfConstructedMatrices;
 
         private static int GetNextRnd(int min, int max)
         {
@@ -161,20 +163,6 @@ namespace FamilyMatrixCreator
                         }
 
                         /*
-                         * Устранение вида родства "0" из списка допустимых видов родства, если помимо "0" в нем присутствует, как минимум, еще один вид родства.
-                         */
-                        foreach (var relationship in allPossibleRelationships)
-                        {
-                            if (0 == relationship)
-                            {
-                                if (allPossibleRelationships.GetLength(0) > 1)
-                                {
-                                    allPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToArray();
-                                }
-                            }
-                        }
-
-                        /*
                          * Устранение видов родства из списка допустимых видов родства, 
                          * добавление которых приведет к превышению допустимого числа родственников с таким видом родства.
                          */
@@ -199,6 +187,8 @@ namespace FamilyMatrixCreator
                  */
                 if (generatedOutputMatrix.GetLength(0) - 1 == person)
                 {
+                    numberOfConstructedMatrices++;
+
                     int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
                     quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, quantityOfEachRelationship, existingRelationshipDegrees);
 
@@ -209,8 +199,8 @@ namespace FamilyMatrixCreator
                         sumOfMeaningfulValues += quantity;
                     }
 
-                    if ((100 * ((generatedMatrixSize + 2 * (float)sumOfMeaningfulValues) / (generatedMatrixSize * generatedMatrixSize))) < Convert.ToInt32(textBox4.Text)
-                        || (100 * ((generatedMatrixSize + 2 * (float)sumOfMeaningfulValues) / (generatedMatrixSize * generatedMatrixSize))) > Convert.ToInt32(textBox5.Text))
+                    if ((100 * ((2 * (float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2))) < Convert.ToInt32(textBox4.Text)
+                        || (100 * ((2 * (float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2))) > Convert.ToInt32(textBox5.Text))
                     {
                         allPossibleRelationshipsOfProband = FindAllPossibleRelationshipsOfProband();
 
@@ -314,7 +304,11 @@ namespace FamilyMatrixCreator
             CreateComplianceMatrix(existingRelationshipDegrees);
 
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
+            numberOfConstructedMatrices = 0;
             textBox2.Text = "";
+
+            Stopwatch myStopwatch = new Stopwatch();
+            myStopwatch.Start();
 
             if (quantityOfMatrixes > 0)
             {
@@ -343,6 +337,8 @@ namespace FamilyMatrixCreator
                     SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
                 });
 
+                myStopwatch.Stop();
+
                 /*
                  * Вывод статистики по родству.
                  */
@@ -357,8 +353,10 @@ namespace FamilyMatrixCreator
                     relationshipNumber++;
                 }
 
-                toolStripStatusLabel1.Text = "Значащих значений: "
-                    + 100 * ((float)sumOfMeaningfulValues / (quantityOfMatrixes * generatedMatrixSize * generatedMatrixSize)) + "%";
+                label5.Text = "Значащих значений: "
+                    + 100 * ((float)(sumOfMeaningfulValues - (quantityOfMatrixes * generatedMatrixSize)) / (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%";
+                label6.Text = "Затрачено: " + (((float)myStopwatch.ElapsedMilliseconds) / 1000).ToString() + " сек";
+                label7.Text = "Построено (включая отклоненные): " + numberOfConstructedMatrices;
             }
         }
     }

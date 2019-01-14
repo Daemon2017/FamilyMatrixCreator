@@ -34,18 +34,18 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.label3 = new System.Windows.Forms.Label();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.statusStrip1.SuspendLayout();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 91);
+            this.button1.Location = new System.Drawing.Point(12, 130);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(460, 25);
             this.button1.TabIndex = 0;
@@ -72,16 +72,16 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(12, 122);
+            this.textBox2.Location = new System.Drawing.Point(12, 161);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox2.Size = new System.Drawing.Size(459, 514);
+            this.textBox2.Size = new System.Drawing.Size(459, 488);
             this.textBox2.TabIndex = 3;
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(127, 25);
+            this.textBox3.Location = new System.Drawing.Point(12, 104);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 20);
             this.textBox3.TabIndex = 6;
@@ -90,27 +90,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(127, 9);
+            this.label2.Location = new System.Drawing.Point(12, 88);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Сторона матрицы:";
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 639);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(484, 22);
-            this.statusStrip1.TabIndex = 9;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(124, 17);
-            this.toolStripStatusLabel1.Text = "Значащих значений: ";
             // 
             // label3
             // 
@@ -127,7 +111,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(100, 20);
             this.textBox4.TabIndex = 11;
-            this.textBox4.Text = "20";
+            this.textBox4.Text = "10";
             // 
             // textBox5
             // 
@@ -146,16 +130,45 @@
             this.label4.TabIndex = 12;
             this.label4.Text = "MAX % значащих:";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(233, 68);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(113, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Значащих значений: ";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(233, 107);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(66, 13);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Затрачено: ";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(233, 29);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(190, 13);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "Построено (включая отклоненные): ";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 661);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.textBox2);
@@ -165,8 +178,6 @@
             this.Name = "Form1";
             this.Text = "FamilyMatrixCreator v2019.1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -180,12 +191,13 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
     }
 }
 
