@@ -91,7 +91,8 @@ namespace FamilyMatrixCreator
                             if (0 == persons[previousPerson])
                             {
                                 allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToArray();
-                                int[] currentPossibleRelationships = Enumerable.Range(0, relationshipsMatrix.GetLength(1)).Select(j => relationshipsMatrix[numberOfProband, j][0]).ToArray();
+                                int[] currentPossibleRelationships = Enumerable.Range(0, relationshipsMatrix.GetLength(1))
+                                                                               .Select(j => relationshipsMatrix[numberOfProband, j][0]).ToArray();
 
                                 allPossibleRelationships = RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
                             }
@@ -140,8 +141,8 @@ namespace FamilyMatrixCreator
                         sumOfMeaningfulValues += quantity;
                     }
 
-                    if ((100 * ((2 * (float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2))) < Convert.ToInt32(textBox4.Text)
-                        || (100 * ((2 * (float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2))) > Convert.ToInt32(textBox5.Text))
+                    double percentOfMeaningfulValues = (100 * ((2 * (float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2)));
+                    if (percentOfMeaningfulValues < Convert.ToInt32(textBox4.Text) || percentOfMeaningfulValues > Convert.ToInt32(textBox5.Text))
                     {
                         generatedOutputMatrix = new float[generatedMatrixSize][];
                         currentCountMatrix = new int[generatedMatrixSize][];

@@ -212,27 +212,20 @@ namespace FamilyMatrixCreator
          */
         private static int[] RemoveImpossibleRelations(int[] allPossibleRelationships, int[] currentPossibleRelationships)
         {
+            List<int> allCurrentPossibleRelations = new List<int> { 0 };
+
             for (int m = 0; m < allPossibleRelationships.GetLength(0); m++)
             {
-                bool isRelationshipAllowed = false;
-
                 for (int n = 0; n < currentPossibleRelationships.GetLength(0); n++)
                 {
                     if (allPossibleRelationships[m] == currentPossibleRelationships[n])
                     {
-                        isRelationshipAllowed = true;
-                        break;
+                        allCurrentPossibleRelations.Add(allPossibleRelationships[m]);
                     }
-                }
-
-                if (false == isRelationshipAllowed && 0 != allPossibleRelationships[m])
-                {
-                    allPossibleRelationships = allPossibleRelationships.Where(val => val != allPossibleRelationships[m]).ToArray();
-                    m--;
                 }
             }
 
-            return allPossibleRelationships;
+            return allCurrentPossibleRelations.ToArray();
         }
     }
 }
