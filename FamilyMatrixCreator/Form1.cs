@@ -91,56 +91,15 @@ namespace FamilyMatrixCreator
                             if (0 == persons[previousPerson])
                             {
                                 allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToArray();
+                                int[] currentPossibleRelationships = Enumerable.Range(0, relationshipsMatrix.GetLength(1)).Select(j => relationshipsMatrix[numberOfProband, j][0]).ToArray();
 
-                                /*
-                                 * Исключение возможных видов родства, которые невозможно сгенерировать.
-                                 */
-                                for (int m = 0; m < allPossibleRelationships.GetLength(0); m++)
-                                {
-                                    bool isRelationshipAllowed = false;
-
-                                    for (int n = 0; n < relationshipsMatrix.GetLength(0); n++)
-                                    {
-                                        if (allPossibleRelationships[m] == relationshipsMatrix[numberOfProband, n][0])
-                                        {
-                                            isRelationshipAllowed = true;
-                                            break;
-                                        }
-                                    }
-
-                                    if (false == isRelationshipAllowed && 0 != allPossibleRelationships[m])
-                                    {
-                                        allPossibleRelationships = allPossibleRelationships.Where(val => val != allPossibleRelationships[m]).ToArray();
-                                        m--;
-                                    }
-                                }
+                                allPossibleRelationships = RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
                             }
                             else
                             {
                                 int[] currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToArray();
 
-                                /*
-                                 * Исключение возможных видов родства, которые могут вызвать конфликт с уже существующими родственниками.
-                                 */
-                                for (int m = 0; m < allPossibleRelationships.GetLength(0); m++)
-                                {
-                                    bool isRelationshipAllowed = false;
-
-                                    for (int n = 0; n < currentPossibleRelationships.GetLength(0); n++)
-                                    {
-                                        if (allPossibleRelationships[m] == currentPossibleRelationships[n])
-                                        {
-                                            isRelationshipAllowed = true;
-                                            break;
-                                        }
-                                    }
-
-                                    if (false == isRelationshipAllowed && 0 != allPossibleRelationships[m])
-                                    {
-                                        allPossibleRelationships = allPossibleRelationships.Where(val => val != allPossibleRelationships[m]).ToArray();
-                                        m--;
-                                    }
-                                }
+                                allPossibleRelationships = RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
                             }
                         }                        
                     }
@@ -218,7 +177,7 @@ namespace FamilyMatrixCreator
             }
 
             return generatedOutputMatrix;
-        }
+        }        
 
         /*
          * Построение входной матрицы (матрицы сМ).

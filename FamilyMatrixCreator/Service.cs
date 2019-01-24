@@ -206,5 +206,33 @@ namespace FamilyMatrixCreator
 
             return allPossibleRelationshipsOfProband.Where(val => val != 0).ToArray();
         }
+
+        /*
+         * Исключение возможных видов родства, которые невозможно сгенерировать.
+         */
+        private static int[] RemoveImpossibleRelations(int[] allPossibleRelationships, int[] currentPossibleRelationships)
+        {
+            for (int m = 0; m < allPossibleRelationships.GetLength(0); m++)
+            {
+                bool isRelationshipAllowed = false;
+
+                for (int n = 0; n < currentPossibleRelationships.GetLength(0); n++)
+                {
+                    if (allPossibleRelationships[m] == currentPossibleRelationships[n])
+                    {
+                        isRelationshipAllowed = true;
+                        break;
+                    }
+                }
+
+                if (false == isRelationshipAllowed && 0 != allPossibleRelationships[m])
+                {
+                    allPossibleRelationships = allPossibleRelationships.Where(val => val != allPossibleRelationships[m]).ToArray();
+                    m--;
+                }
+            }
+
+            return allPossibleRelationships;
+        }
     }
 }
