@@ -63,13 +63,13 @@ namespace FamilyMatrixCreator
 
             float[][] generatedOutputMatrix = new float[][]
             {
-                new float[] {1, 8, 3 },
-                new float[] {9, 1, 0 },
-                new float[] {2, 0, 1 }
+                new float[] { 1, 8, 3 },
+                new float[] { 9, 1, 0 },
+                new float[] { 2, 0, 1 }
             };
 
-            Assert.That(new int[] { 1, 1, 1, 1, 3 },
-                Is.EqualTo(modules.CollectStatistics(generatedOutputMatrix, new List<int> { 9, 8, 3, 2, 1 })));
+            Assert.That(new int[] { 2, 3, 4, 5, 8 },
+                Is.EqualTo(modules.CollectStatistics(generatedOutputMatrix, new List<int> { 9, 8, 3, 2, 1 }, new int[] { 1, 2, 3, 4, 5 })));
         }
 
         [TestCase]
@@ -115,6 +115,46 @@ namespace FamilyMatrixCreator
         }
 
         [TestCase]
+        public void IncreaseCurrentRelationshipCountTest()
+        {
+            Modules modules = new Modules();
+
+            float[][] generatedOutputMatrix = new float[][]
+            {
+                new float[] { 1, 8, 3 },
+                new float[] { 9, 1, 0 },
+                new float[] { 2, 0, 1 }
+            };
+            int[][] currentCountMatrix = new int[][]
+            {
+                new int[]{ 0, 1, 0, 1, 1, 0 },
+                new int[]{ 1, 1, 0, 0, 0, 1 },
+                new int[]{ 1, 1, 1, 0, 0, 0 }
+            };
+            int[][] maxCountMatrix = new int[][]
+            {
+                new int[]{ 0, 2 },
+                new int[]{ 1, 4 },
+                new int[]{ 2, 4 },
+                new int[]{ 3, 4 },
+                new int[]{ 8, 4 },
+                new int[]{ 9, 8 }
+            };
+
+            int[][] model = new int[][]
+            {
+                new int[]{ 0, 1, 0, 2, 1, 0 },
+                new int[]{ 1, 1, 0, 0, 0, 1 },
+                new int[]{ 1, 1, 1, 0, 0, 0 }
+            };
+
+            int[][] result = modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, new List<int> { 0, 1, 2 }, 0, new List<int> { 1, 2 }, 1, maxCountMatrix);
+
+            Assert.That(model,
+                Is.EqualTo(result));
+        }
+
+        [TestCase]
         public void RemoveImpossibleRelationsTest()
         {
             Modules modules = new Modules();
@@ -146,16 +186,16 @@ namespace FamilyMatrixCreator
 
             float[][] generatedInputMatrix = new float[][]
             {
-                new float[] {6800, 3200, 1800 },
-                new float[] {0, 6800, 0 },
-                new float[] {0, 0, 6800 }
+                new float[] { 6800, 3200, 1800 },
+                new float[] { 0, 6800, 0 },
+                new float[] { 0, 0, 6800 }
             };
 
             float[][] model = new float[][]
             {
-                new float[] {6800, 3200, 1800 },
-                new float[] {3200, 6800, 0 },
-                new float[] {1800, 0, 6800 }
+                new float[] { 6800, 3200, 1800 },
+                new float[] { 3200, 6800, 0 },
+                new float[] { 1800, 0, 6800 }
             };
 
             Assert.That(model,
@@ -169,16 +209,16 @@ namespace FamilyMatrixCreator
 
             float[][] generatedOutputMatrix = new float[][]
             {
-                new float[] {0, 8, 3 },
-                new float[] {9, 0, 0 },
-                new float[] {2, 0, 0 }
+                new float[] { 0, 8, 3 },
+                new float[] { 9, 0, 0 },
+                new float[] { 2, 0, 0 }
             };
 
             float[][] model = new float[][]
             {
-                new float[] {1, 8, 3 },
-                new float[] {9, 1, 0 },
-                new float[] {2, 0, 1 }
+                new float[] { 1, 8, 3 },
+                new float[] { 9, 1, 0 },
+                new float[] { 2, 0, 1 }
             };
 
             Assert.That(model,

@@ -58,10 +58,8 @@ namespace FamilyMatrixCreator
         /*
         * Сбор статистики по родству.
         */
-        public int[] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
+        public int[] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees, int[] quantityOfEachRelationship)
         {
-            int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
-
             foreach (float[] raw in generatedOutputMatrix)
             {
                 foreach (float column in raw)

@@ -133,7 +133,8 @@ namespace FamilyMatrixCreator
                 {
                     numberOfConstructedMatrices++;
 
-                    int[] quantityOfEachRelationship = modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
+                    int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
+                    quantityOfEachRelationship = modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship);
 
                     int sumOfMeaningfulValues = 0;
 
@@ -223,9 +224,9 @@ namespace FamilyMatrixCreator
                     float[][] generatedOutputMatrix = GenerateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
                     float[][] generatedInputMatrix = GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
 
-                    quantityOfEachRelationship = modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
+                    quantityOfEachRelationship = modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship);
 
-                    //generatedOutputMatrix = TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
+                    //generatedOutputMatrix = modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
 
                     /*
                      * Сохранение входной матрицы в файл.
