@@ -7,6 +7,56 @@ namespace FamilyMatrixCreator
     class ModulesTests
     {
         [TestCase]
+        public void MaxNumberOfThisRelationshipTypeIsNotExceededPositiveTest()
+        {
+            Modules modules = new Modules();
+
+            int[][] currentCountMatrix = new int[][]
+            {
+                new int[]{ 2, 4, 8 },
+                new int[]{ 1, 3, 7 },
+                new int[]{ 0, 2, 6 },
+                new int[]{ 0, 1, 5 },
+                new int[]{ 0, 0, 4 }
+            };
+            int[][] maxCountMatrix = new int[][]
+            {
+                new int[]{ 0, 2 },
+                new int[]{ 1, 4 },
+                new int[]{ 2, 8 }
+            };
+
+            bool result = modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(1, currentCountMatrix, new List<int> { 0, 1, 2, 3, 4 }, 2, maxCountMatrix);
+
+            Assert.True(result);
+        }
+
+        [TestCase]
+        public void MaxNumberOfThisRelationshipTypeIsNotExceededNegativeTest()
+        {
+            Modules modules = new Modules();
+
+            int[][] currentCountMatrix = new int[][]
+            {
+                new int[]{ 2, 4, 8 },
+                new int[]{ 1, 3, 7 },
+                new int[]{ 0, 2, 6 },
+                new int[]{ 0, 1, 5 },
+                new int[]{ 0, 0, 4 }
+            };
+            int[][] maxCountMatrix = new int[][]
+            {
+                new int[]{ 0, 2 },
+                new int[]{ 1, 4 },
+                new int[]{ 2, 8 }
+            };
+
+            bool result = modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(1, currentCountMatrix, new List<int> { 0, 1, 2, 3, 4 }, 0, maxCountMatrix);
+
+            Assert.False(result);
+        }
+
+        [TestCase]
         public void CollectStatisticsTest()
         {
             Modules modules = new Modules();

@@ -19,7 +19,7 @@ namespace FamilyMatrixCreator
             {
                 if (relationship == maxCountMatrix[i][0])
                 {
-                    if (currentCountMatrix[persons[person]][i] == maxCountMatrix[i][0])
+                    if (currentCountMatrix[persons[person]][i] == maxCountMatrix[i][1])
                     {
                         allowToAddRelative = false;
                     }
