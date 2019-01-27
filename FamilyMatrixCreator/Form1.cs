@@ -104,7 +104,7 @@ namespace FamilyMatrixCreator
 
                                 allPossibleRelationships = modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
                             }
-                        }                        
+                        }
                     }
 
                     /*
@@ -156,30 +156,12 @@ namespace FamilyMatrixCreator
                 }
             }
 
-            /*
-            * Построение левой (нижней) стороны.
-            */
-            for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
-            {
-                for (int genRelative = 0; genRelative < genPerson; genRelative++)
-                {
-                    for (int genRelationship = 0; genRelationship < relationshipsMatrix.GetLength(1); genRelationship++)
-                    {
-                        if (relationshipsMatrix[numberOfProband, genRelationship][0] == generatedOutputMatrix[genRelative][genPerson])
-                        {
-                            generatedOutputMatrix[genPerson][genRelative] = relationshipsMatrix[genRelationship, numberOfProband][0];
-                        }
-                    }
-                }
-            }
+            generatedOutputMatrix = modules.BuildLeftBottomPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband);
 
-            for (int i = 0; i < generatedOutputMatrix.GetLength(0); i++)
-            {
-                generatedOutputMatrix[i][i] = 1;
-            }
+            generatedOutputMatrix = modules.FillMainDiagonal(generatedOutputMatrix);
 
             return generatedOutputMatrix;
-        }        
+        }
 
         /*
          * Построение входной матрицы (матрицы сМ).
@@ -212,36 +194,14 @@ namespace FamilyMatrixCreator
                 }
             }
 
-            /*
-            * Построение левой (нижней) стороны.
-            */
-            for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
-            {
-                for (int genRelative = 0; genRelative < genPerson; genRelative++)
-                {
-                    generatedInputMatrix[genPerson][genRelative] = generatedInputMatrix[genRelative][genPerson];
-                }
-            }
+            generatedInputMatrix = modules.BuildLeftBottomPart(generatedOutputMatrix, generatedInputMatrix);
 
             return generatedInputMatrix;
         }
 
         private void Generate(object sender, EventArgs e)
         {
-            List<int> existingRelationshipDegrees = new List<int>();
-
-            for (int i = 0; i < relationshipsMatrix.GetLength(0); i++)
-            {
-                if (!existingRelationshipDegrees.Contains(relationshipsMatrix[numberOfProband, i][0]))
-                {
-                    existingRelationshipDegrees.Add(relationshipsMatrix[numberOfProband, i][0]);
-                }
-
-                if (!existingRelationshipDegrees.Contains(relationshipsMatrix[i, numberOfProband][0]))
-                {
-                    existingRelationshipDegrees.Add(relationshipsMatrix[i, numberOfProband][0]);
-                }
-            }
+            List<int> existingRelationshipDegrees = modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband);
 
             List<int[]> complianceMatrix = modules.CreateComplianceMatrix(existingRelationshipDegrees);
             SaveToFile("compliance.csv", complianceMatrix);

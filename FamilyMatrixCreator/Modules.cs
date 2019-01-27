@@ -235,5 +235,79 @@ namespace FamilyMatrixCreator
 
             return allCurrentPossibleRelations.ToArray();
         }
+
+        /*
+         * Нахождение всех существующих степеней родства.
+         */
+        public List<int> FindAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)
+        {
+            List<int> existingRelationshipDegrees = new List<int>();
+
+            for (int i = 0; i < relationshipsMatrix.GetLength(0); i++)
+            {
+                if (!existingRelationshipDegrees.Contains(relationshipsMatrix[numberOfProband, i][0]))
+                {
+                    existingRelationshipDegrees.Add(relationshipsMatrix[numberOfProband, i][0]);
+                }
+
+                if (!existingRelationshipDegrees.Contains(relationshipsMatrix[i, numberOfProband][0]))
+                {
+                    existingRelationshipDegrees.Add(relationshipsMatrix[i, numberOfProband][0]);
+                }
+            }
+
+            return existingRelationshipDegrees;
+        }
+
+        /*
+         * Построение левой (нижней) стороны.
+         */
+        public float[][] BuildLeftBottomPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix, int numberOfProband)
+        {
+            for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
+            {
+                for (int genRelative = 0; genRelative < genPerson; genRelative++)
+                {
+                    for (int genRelationship = 0; genRelationship < relationshipsMatrix.GetLength(1); genRelationship++)
+                    {
+                        if (relationshipsMatrix[numberOfProband, genRelationship][0] == generatedOutputMatrix[genRelative][genPerson])
+                        {
+                            generatedOutputMatrix[genPerson][genRelative] = relationshipsMatrix[genRelationship, numberOfProband][0];
+                        }
+                    }
+                }
+            }
+
+            return generatedOutputMatrix;
+        }
+
+        /*
+         * Построение левой (нижней) стороны.
+         */
+        public float[][] BuildLeftBottomPart(float[][] generatedOutputMatrix, float[][] generatedInputMatrix)
+        {
+            for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
+            {
+                for (int genRelative = 0; genRelative < genPerson; genRelative++)
+                {
+                    generatedInputMatrix[genPerson][genRelative] = generatedInputMatrix[genRelative][genPerson];
+                }
+            }
+
+            return generatedInputMatrix;
+        }
+
+        /*
+         * Заполнение главной диагонали.
+         */
+        public float[][] FillMainDiagonal(float[][] generatedOutputMatrix)
+        {
+            for (int i = 0; i < generatedOutputMatrix.GetLength(0); i++)
+            {
+                generatedOutputMatrix[i][i] = 1;
+            }
+
+            return generatedOutputMatrix;
+        }
     }
 }

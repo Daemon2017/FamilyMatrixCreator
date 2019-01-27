@@ -15,11 +15,8 @@ namespace FamilyMatrixCreator
                                                               new float[] {9, 1, 0 },
                                                               new float[] {2, 0, 1 }};
             
-            int[] model = { 1, 1, 1, 1, 3 };
-
-            int[] result = modules.CollectStatistics(generatedOutputMatrix, new List<int> { 9, 8, 3, 2, 1 });
-
-            Assert.That(model, Is.EqualTo(result));
+            Assert.That(new int[] { 1, 1, 1, 1, 3 }, 
+                Is.EqualTo(modules.CollectStatistics(generatedOutputMatrix, new List<int> { 9, 8, 3, 2, 1 })));
         }
 
         [TestCase]
@@ -33,10 +30,9 @@ namespace FamilyMatrixCreator
                                                   new int[2] { 3, 4 },
                                                   new int[2] { 4, 5 },
                                                   new int[2] { 5, 6 }};
-
-            List<int[]> result = modules.CreateComplianceMatrix(new List<int> { 1, 2, 3, 4, 5 });
-
-            Assert.That(model, Is.EqualTo(result));
+            
+            Assert.That(model, 
+                Is.EqualTo(modules.CreateComplianceMatrix(new List<int> { 1, 2, 3, 4, 5 })));
         }
 
         [TestCase]
@@ -51,10 +47,9 @@ namespace FamilyMatrixCreator
             float[][] model = new float[][] { new float[] {6, 3, 4 },
                                               new float[] {2, 6, 1 },
                                               new float[] {5, 1, 6 }};
-
-            float[][] result = modules.TransformMatrix(generatedOutputMatrix, new List<int> { 9, 8, 3, 2, 1 });
-
-            Assert.That(model, Is.EqualTo(result));
+            
+            Assert.That(model, 
+                Is.EqualTo(modules.TransformMatrix(generatedOutputMatrix, new List<int> { 9, 8, 3, 2, 1 })));
         }
 
         [TestCase]
@@ -62,11 +57,25 @@ namespace FamilyMatrixCreator
         {
             Modules modules = new Modules();
 
-            int[] model = new int[] { 0, 2, 4 };
+            Assert.That(new int[] { 0, 2, 4 }, 
+                Is.EqualTo(modules.RemoveImpossibleRelations(new int[] { 0, 1, 2, 3, 4 }, new int[] { 2, 4, 5 })));
+        }
 
-            int[] result = modules.RemoveImpossibleRelations(new int[] { 0, 1, 2, 3, 4 }, new int[] { 2, 4, 5 });
+        [TestCase]
+        public void FillMainDiagonalTest()
+        {
+            Modules modules = new Modules();
 
-            Assert.That(model, Is.EqualTo(result));
+            float[][] generatedOutputMatrix = new float[][] { new float[] {0, 8, 3 },
+                                                              new float[] {9, 0, 0 },
+                                                              new float[] {2, 0, 0 }};
+
+            float[][] model = new float[][] { new float[] {1, 8, 3 },
+                                              new float[] {9, 1, 0 },
+                                              new float[] {2, 0, 1 }};
+        
+            Assert.That(model,
+                Is.EqualTo(modules.FillMainDiagonal(generatedOutputMatrix)));
         }
     }
 }
