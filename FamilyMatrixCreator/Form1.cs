@@ -19,6 +19,8 @@ namespace FamilyMatrixCreator
             InitializeComponent();
         }
 
+        Modules modules = new Modules();
+
         private static RNGCryptoServiceProvider _RNG = new RNGCryptoServiceProvider();
         private int[,][] relationshipsMatrix;
         private float[] centimorgansMatrix;
@@ -41,7 +43,7 @@ namespace FamilyMatrixCreator
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
             int[][] currentCountMatrix = new int[generatedMatrixSize][];
 
-            List<int> persons = ShuffleSequence(1, generatedOutputMatrix.GetLength(0));
+            List<int> persons = modules.ShuffleSequence(1, generatedOutputMatrix.GetLength(0));
             persons.Insert(0, 0);
 
             /*
@@ -52,7 +54,7 @@ namespace FamilyMatrixCreator
                 generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
                 currentCountMatrix[persons[person]] = new int[maxCountMatrix.Length];
 
-                List<int> relatives = ShuffleSequence(persons[person] + 1, generatedOutputMatrix.GetLength(0));
+                List<int> relatives = modules.ShuffleSequence(persons[person] + 1, generatedOutputMatrix.GetLength(0));
 
                 for (int relative = 0; relative < relatives.Count; relative++)
                 {
@@ -60,7 +62,7 @@ namespace FamilyMatrixCreator
 
                     if (0 == persons[person])
                     {
-                        allPossibleRelationships = FindAllPossibleRelationshipsOfProband();
+                        allPossibleRelationships = modules.FindAllPossibleRelationshipsOfProband(relationshipsMatrix, numberOfProband);
                     }
                     else
                     {
@@ -94,13 +96,13 @@ namespace FamilyMatrixCreator
                                 int[] currentPossibleRelationships = Enumerable.Range(0, relationshipsMatrix.GetLength(1))
                                                                                .Select(j => relationshipsMatrix[numberOfProband, j][0]).ToArray();
 
-                                allPossibleRelationships = RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
+                                allPossibleRelationships = modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
                             }
                             else
                             {
                                 int[] currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToArray();
 
-                                allPossibleRelationships = RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
+                                allPossibleRelationships = modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
                             }
                         }                        
                     }
@@ -111,7 +113,7 @@ namespace FamilyMatrixCreator
                      */
                     foreach (int relationship in allPossibleRelationships)
                     {
-                        if (false == MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person))
+                        if (false == modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix))
                         {
                             allPossibleRelationships = allPossibleRelationships.Where(val => val != relationship).ToArray();
                         }
@@ -121,7 +123,7 @@ namespace FamilyMatrixCreator
                      * Создание родственника со случайным видом родства.
                      */
                     generatedOutputMatrix[persons[person]][relatives[relative]] = allPossibleRelationships[GetNextRnd(0, allPossibleRelationships.GetLength(0))];
-                    currentCountMatrix = IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative);
+                    currentCountMatrix = modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
                 }
 
                 /*
@@ -131,7 +133,7 @@ namespace FamilyMatrixCreator
                 {
                     numberOfConstructedMatrices++;
 
-                    int[] quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
+                    int[] quantityOfEachRelationship = modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
 
                     int sumOfMeaningfulValues = 0;
 
@@ -146,7 +148,7 @@ namespace FamilyMatrixCreator
                         generatedOutputMatrix = new float[generatedMatrixSize][];
                         currentCountMatrix = new int[generatedMatrixSize][];
 
-                        persons = ShuffleSequence(1, generatedOutputMatrix.GetLength(0));
+                        persons = modules.ShuffleSequence(1, generatedOutputMatrix.GetLength(0));
                         persons.Insert(0, 0);
 
                         person = -1;
@@ -199,12 +201,12 @@ namespace FamilyMatrixCreator
                     {
                         if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
                         {
-                            generatedInputMatrix[person][relative] = TransformRelationshipTypeToCm(generatedInputMatrix, person, relative, relationship);
+                            generatedInputMatrix[person][relative] = modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative, relationship, centimorgansMatrix);
                         }
 
                         if (relationshipsMatrix[relationship, numberOfProband][0] == generatedOutputMatrix[person][relative])
                         {
-                            generatedInputMatrix[person][relative] = TransformRelationshipTypeToCm(generatedInputMatrix, person, relative, relationship);
+                            generatedInputMatrix[person][relative] = modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative, relationship, centimorgansMatrix);
                         }
                     }
                 }
@@ -241,7 +243,7 @@ namespace FamilyMatrixCreator
                 }
             }
 
-            List<int[]> complianceMatrix = CreateComplianceMatrix(existingRelationshipDegrees);
+            List<int[]> complianceMatrix = modules.CreateComplianceMatrix(existingRelationshipDegrees);
             SaveToFile("compliance.csv", complianceMatrix);
 
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
@@ -261,7 +263,7 @@ namespace FamilyMatrixCreator
                     float[][] generatedOutputMatrix = GenerateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
                     float[][] generatedInputMatrix = GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
 
-                    quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
+                    quantityOfEachRelationship = modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
 
                     //generatedOutputMatrix = TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
 

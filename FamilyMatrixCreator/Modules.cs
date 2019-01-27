@@ -6,12 +6,12 @@ using System.Windows.Forms;
 
 namespace FamilyMatrixCreator
 {
-    public partial class Form1 : Form
+    public class Modules
     {
         /*
          * Проверка того, что на данное мгновение у данного лица не превышено MAX допустимое число родственников с таким видом родства.
          */
-        public bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix, List<int> persons, int person)
+        public bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix, List<int> persons, int person, int[][] maxCountMatrix)
         {
             bool allowToAddRelative = true;
 
@@ -32,7 +32,7 @@ namespace FamilyMatrixCreator
         /*
          * Преобразование видов родства в сантиморганы.
          */
-        public float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative, int relationship)
+        public float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative, int relationship, float[] centimorgansMatrix)
         {
             if (centimorgansMatrix[relationship] <= 3950)
             {
@@ -147,7 +147,7 @@ namespace FamilyMatrixCreator
         /*
          * Увеличение числа родственников данного вида у указанного лица.
          */
-        public int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative)
+        public int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative, int[][] maxCountMatrix)
         {
             int[][] newCurrentCountMatrix = currentCountMatrix;
 
@@ -165,7 +165,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение списка возможных степеней родства пробанда.
          */
-        public int[] FindAllPossibleRelationshipsOfProband()
+        public int[] FindAllPossibleRelationshipsOfProband(int[,][] relationshipsMatrix, int numberOfProband)
         {
             int[] allPossibleRelationshipsOfProband = new int[relationshipsMatrix.GetLength(1)];
 
