@@ -26,9 +26,11 @@ namespace FamilyMatrixCreator
                 new int[]{ 2, 8 }
             };
 
-            bool result = modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(1, currentCountMatrix, new List<int> { 0, 1, 2, 3, 4 }, 2, maxCountMatrix);
-
-            Assert.True(result);
+            Assert.True(modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship: 1,
+                                                                             currentCountMatrix: currentCountMatrix,
+                                                                             persons: new List<int> { 0, 1, 2, 3, 4 },
+                                                                             person: 2,
+                                                                             maxCountMatrix: maxCountMatrix));
         }
 
         [TestCase]
@@ -51,9 +53,11 @@ namespace FamilyMatrixCreator
                 new int[]{ 2, 8 }
             };
 
-            bool result = modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(1, currentCountMatrix, new List<int> { 0, 1, 2, 3, 4 }, 0, maxCountMatrix);
-
-            Assert.False(result);
+            Assert.False(modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship: 1,
+                                                                              currentCountMatrix: currentCountMatrix,
+                                                                              persons: new List<int> { 0, 1, 2, 3, 4 },
+                                                                              person: 0,
+                                                                              maxCountMatrix: maxCountMatrix));
         }
 
         [TestCase]
@@ -69,7 +73,9 @@ namespace FamilyMatrixCreator
             };
 
             Assert.That(new int[] { 2, 3, 4, 5, 8 },
-                Is.EqualTo(modules.CollectStatistics(generatedOutputMatrix, new List<int> { 9, 8, 3, 2, 1 }, new int[] { 1, 2, 3, 4, 5 })));
+                Is.EqualTo(modules.CollectStatistics(generatedOutputMatrix: generatedOutputMatrix,
+                                                     existingRelationshipDegrees: new List<int> { 9, 8, 3, 2, 1 },
+                                                     quantityOfEachRelationship: new int[] { 1, 2, 3, 4, 5 })));
         }
 
         [TestCase]
@@ -88,7 +94,7 @@ namespace FamilyMatrixCreator
             };
 
             Assert.That(model,
-                Is.EqualTo(modules.CreateComplianceMatrix(new List<int> { 1, 2, 3, 4, 5 })));
+                Is.EqualTo(modules.CreateComplianceMatrix(existingRelationshipDegrees: new List<int> { 1, 2, 3, 4, 5 })));
         }
 
         [TestCase]
@@ -111,7 +117,7 @@ namespace FamilyMatrixCreator
             };
 
             Assert.That(model,
-                Is.EqualTo(modules.TransformMatrix(generatedOutputMatrix, new List<int> { 9, 8, 3, 2, 1 })));
+                Is.EqualTo(modules.TransformMatrix(generatedOutputMatrix: generatedOutputMatrix, existingRelationshipDegrees: new List<int> { 9, 8, 3, 2, 1 })));
         }
 
         [TestCase]
@@ -148,10 +154,14 @@ namespace FamilyMatrixCreator
                 new int[]{ 1, 1, 1, 0, 0, 0 }
             };
 
-            int[][] result = modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, new List<int> { 0, 1, 2 }, 0, new List<int> { 1, 2 }, 1, maxCountMatrix);
-
             Assert.That(model,
-                Is.EqualTo(result));
+                Is.EqualTo(modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix: generatedOutputMatrix,
+                                                                    currentCountMatrix: currentCountMatrix,
+                                                                    persons: new List<int> { 0, 1, 2 },
+                                                                    person: 0,
+                                                                    relatives: new List<int> { 1, 2 },
+                                                                    relative: 1,
+                                                                    maxCountMatrix: maxCountMatrix)));
         }
 
         [TestCase]
@@ -160,7 +170,8 @@ namespace FamilyMatrixCreator
             Modules modules = new Modules();
 
             Assert.That(new int[] { 0, 2, 4 },
-                Is.EqualTo(modules.RemoveImpossibleRelations(new int[] { 0, 1, 2, 3, 4 }, new int[] { 2, 4, 5 })));
+                Is.EqualTo(modules.RemoveImpossibleRelations(allPossibleRelationships: new int[] { 0, 1, 2, 3, 4 },
+                                                             currentPossibleRelationships: new int[] { 2, 4, 5 })));
         }
 
         [TestCase]
@@ -176,11 +187,40 @@ namespace FamilyMatrixCreator
             };
 
             Assert.That(new List<int> { 1, 6, 7, 2, 3 },
-                Is.EqualTo(modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, 0)));
+                Is.EqualTo(modules.FindAllExistingRelationshipDegrees(relationshipsMatrix: relationshipsMatrix, numberOfProband: 0)));
         }
 
         [TestCase]
-        public void BuildLeftBottomPartTest()
+        public void OutputBuildLeftBottomPartTest()
+        {
+            Modules modules = new Modules();
+
+            float[][] generatedOutputMatrix = new float[][]
+            {
+                new float[] { 1, 8, 3 },
+                new float[] { 0, 1, 0 },
+                new float[] { 0, 0, 1 }
+            };
+            int[,][] relationshipsMatrix = new int[3, 3][]
+            {
+                { new int[] { 1 }, new int[] { 8 }, new int[] { 3 } },
+                { new int[] { 7 }, new int[] { 1 }, new int[] { 5 } },
+                { new int[] { 2 }, new int[] { 4 }, new int[] { 1 } }
+            };
+
+            float[][] model = new float[][]
+            {
+                new float[] { 1, 8, 3 },
+                new float[] { 7, 1, 0 },
+                new float[] { 2, 0, 1 }
+            };
+
+            Assert.That(model,
+                Is.EqualTo(modules.BuildLeftBottomPart(generatedOutputMatrix: generatedOutputMatrix, relationshipsMatrix: relationshipsMatrix, numberOfProband: 0)));
+        }
+
+        [TestCase]
+        public void InputBuildLeftBottomPartTest()
         {
             Modules modules = new Modules();
 
@@ -199,7 +239,7 @@ namespace FamilyMatrixCreator
             };
 
             Assert.That(model,
-                Is.EqualTo(modules.BuildLeftBottomPart(generatedInputMatrix)));
+                Is.EqualTo(modules.BuildLeftBottomPart(generatedInputMatrix: generatedInputMatrix)));
         }
 
         [TestCase]
@@ -222,7 +262,7 @@ namespace FamilyMatrixCreator
             };
 
             Assert.That(model,
-                Is.EqualTo(modules.FillMainDiagonal(generatedOutputMatrix)));
+                Is.EqualTo(modules.FillMainDiagonal(generatedOutputMatrix: generatedOutputMatrix)));
         }
     }
 }
