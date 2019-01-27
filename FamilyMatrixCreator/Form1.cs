@@ -194,7 +194,7 @@ namespace FamilyMatrixCreator
                 }
             }
 
-            generatedInputMatrix = modules.BuildLeftBottomPart(generatedOutputMatrix, generatedInputMatrix);
+            generatedInputMatrix = modules.BuildLeftBottomPart(generatedInputMatrix);
 
             return generatedInputMatrix;
         }

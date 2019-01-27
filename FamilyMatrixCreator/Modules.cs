@@ -80,7 +80,7 @@ namespace FamilyMatrixCreator
         }
 
         /*
-         * Создание матрицы соответствий и ее сохранение в файл.
+         * Создание матрицы соответствий.
          */
         public List<int[]> CreateComplianceMatrix(List<int> existingRelationshipDegrees)
         {
@@ -284,9 +284,9 @@ namespace FamilyMatrixCreator
         /*
          * Построение левой (нижней) стороны.
          */
-        public float[][] BuildLeftBottomPart(float[][] generatedOutputMatrix, float[][] generatedInputMatrix)
+        public float[][] BuildLeftBottomPart(float[][] generatedInputMatrix)
         {
-            for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
+            for (int genPerson = 1; genPerson < generatedInputMatrix.GetLength(0); genPerson++)
             {
                 for (int genRelative = 0; genRelative < genPerson; genRelative++)
                 {
