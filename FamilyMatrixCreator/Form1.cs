@@ -131,8 +131,7 @@ namespace FamilyMatrixCreator
                 {
                     numberOfConstructedMatrices++;
 
-                    int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
-                    quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, quantityOfEachRelationship, existingRelationshipDegrees);
+                    int[] quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
 
                     int sumOfMeaningfulValues = 0;
 
@@ -262,7 +261,7 @@ namespace FamilyMatrixCreator
                     float[][] generatedOutputMatrix = GenerateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
                     float[][] generatedInputMatrix = GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
 
-                    quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, quantityOfEachRelationship, existingRelationshipDegrees);
+                    quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
 
                     //generatedOutputMatrix = TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
 

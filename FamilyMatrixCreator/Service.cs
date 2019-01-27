@@ -11,7 +11,7 @@ namespace FamilyMatrixCreator
         /*
          * Проверка того, что на данное мгновение у данного лица не превышено MAX допустимое число родственников с таким видом родства.
          */
-        private bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix, List<int> persons, int person)
+        public bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix, List<int> persons, int person)
         {
             bool allowToAddRelative = true;
 
@@ -32,7 +32,7 @@ namespace FamilyMatrixCreator
         /*
          * Преобразование видов родства в сантиморганы.
          */
-        private float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative, int relationship)
+        public float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative, int relationship)
         {
             if (centimorgansMatrix[relationship] <= 3950)
             {
@@ -58,8 +58,10 @@ namespace FamilyMatrixCreator
         /*
         * Сбор статистики по родству.
         */
-        private int[] CollectStatistics(float[][] generatedOutputMatrix, int[] quantityOfEachRelationship, List<int> existingRelationshipDegrees)
+        public int[] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
         {
+            int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
+
             foreach (float[] raw in generatedOutputMatrix)
             {
                 foreach (float column in raw)
@@ -99,7 +101,7 @@ namespace FamilyMatrixCreator
         /*
          * Устранение разрывов между номерами видов родства.
          */
-        private float[][] TransformMatrix(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
+        public float[][] TransformMatrix(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
         {
             for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
             {
@@ -130,7 +132,7 @@ namespace FamilyMatrixCreator
         /*
          * Перемешивание порядка значений в списке.
          */
-        private static List<int> ShuffleSequence(int startValue, int endValue)
+        public List<int> ShuffleSequence(int startValue, int endValue)
         {
             List<int> relatives = new List<int> { };
 
@@ -145,7 +147,7 @@ namespace FamilyMatrixCreator
         /*
          * Увеличение числа родственников данного вида у указанного лица.
          */
-        private int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative)
+        public int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative)
         {
             int[][] newCurrentCountMatrix = currentCountMatrix;
 
@@ -163,7 +165,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение списка возможных степеней родства пробанда.
          */
-        private int[] FindAllPossibleRelationshipsOfProband()
+        public int[] FindAllPossibleRelationshipsOfProband()
         {
             int[] allPossibleRelationshipsOfProband = new int[relationshipsMatrix.GetLength(1)];
 
@@ -216,7 +218,7 @@ namespace FamilyMatrixCreator
         /*
          * Исключение возможных видов родства, которые невозможно сгенерировать.
          */
-        private static int[] RemoveImpossibleRelations(int[] allPossibleRelationships, int[] currentPossibleRelationships)
+        public int[] RemoveImpossibleRelations(int[] allPossibleRelationships, int[] currentPossibleRelationships)
         {
             List<int> allCurrentPossibleRelations = new List<int> { 0 };
 
