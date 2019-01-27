@@ -80,7 +80,7 @@ namespace FamilyMatrixCreator
         /*
          * Создание матрицы соответствий и ее сохранение в файл.
          */
-        private void CreateComplianceMatrix(List<int> existingRelationshipDegrees)
+        public List<int[]> CreateComplianceMatrix(List<int> existingRelationshipDegrees)
         {
             List<int[]> complianceMatrix = new List<int[]>
             {
@@ -93,7 +93,7 @@ namespace FamilyMatrixCreator
                 complianceMatrix.Add(compliance);
             }
 
-            SaveToFile("compliance.csv", complianceMatrix);
+            return complianceMatrix;
         }
 
         /*
@@ -133,25 +133,31 @@ namespace FamilyMatrixCreator
         private static List<int> ShuffleSequence(int startValue, int endValue)
         {
             List<int> relatives = new List<int> { };
+
             for (int relative = startValue; relative < endValue; relative++)
             {
                 relatives.Add(relative);
             }
+
             return relatives.OrderBy(x => new ContinuousUniform().Sample()).ToList();
         }
 
         /*
          * Увеличение числа родственников данного вида у указанного лица.
          */
-        private void IncreaseCurrentCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative)
+        private int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative)
         {
+            int[][] newCurrentCountMatrix = currentCountMatrix;
+
             for (int i = 0; i < maxCountMatrix.Length; i++)
             {
                 if (maxCountMatrix[i][0] == generatedOutputMatrix[persons[person]][relatives[relative]])
                 {
-                    currentCountMatrix[0][i]++;
+                    newCurrentCountMatrix[0][i]++;
                 }
             }
+
+            return newCurrentCountMatrix;
         }
 
         /*

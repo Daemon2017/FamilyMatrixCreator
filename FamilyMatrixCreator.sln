@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27428.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyMatrixCreator", "FamilyMatrixCreator\FamilyMatrixCreator.csproj", "{DAD6BB32-7925-434D-AAF0-E7C1B5D5086F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyMatrixCreatorTest", "FamilyMatrixCreatorTest\FamilyMatrixCreatorTest.csproj", "{A90528EE-C173-4C1B-BA63-AB33A3A8D678}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{DAD6BB32-7925-434D-AAF0-E7C1B5D5086F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAD6BB32-7925-434D-AAF0-E7C1B5D5086F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAD6BB32-7925-434D-AAF0-E7C1B5D5086F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A90528EE-C173-4C1B-BA63-AB33A3A8D678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A90528EE-C173-4C1B-BA63-AB33A3A8D678}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A90528EE-C173-4C1B-BA63-AB33A3A8D678}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A90528EE-C173-4C1B-BA63-AB33A3A8D678}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -121,7 +121,7 @@ namespace FamilyMatrixCreator
                      * Создание родственника со случайным видом родства.
                      */
                     generatedOutputMatrix[persons[person]][relatives[relative]] = allPossibleRelationships[GetNextRnd(0, allPossibleRelationships.GetLength(0))];
-                    IncreaseCurrentCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative);
+                    currentCountMatrix = IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative);
                 }
 
                 /*
@@ -242,7 +242,8 @@ namespace FamilyMatrixCreator
                 }
             }
 
-            CreateComplianceMatrix(existingRelationshipDegrees);
+            List<int[]> complianceMatrix = CreateComplianceMatrix(existingRelationshipDegrees);
+            SaveToFile("compliance.csv", complianceMatrix);
 
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
             numberOfConstructedMatrices = 0;
