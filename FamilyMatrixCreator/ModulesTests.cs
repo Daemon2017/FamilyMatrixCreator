@@ -53,7 +53,7 @@ namespace FamilyMatrixCreator
         };
 
         [TestCaseSource("MaxNumberOfThisRelationshipTypeIsNotExceeded_DataProvider")]
-        private void MaxNumberOfThisRelationshipTypeIsNotExceeded_Test(int relationship, int[][] currentCountMatrix, List<int> persons, int person, int[][] maxCountMatrix, bool result)
+        public void MaxNumberOfThisRelationshipTypeIsNotExceeded_Test(int relationship, int[][] currentCountMatrix, List<int> persons, int person, int[][] maxCountMatrix, bool result)
         {
             Assert.That(result, Is.EqualTo(modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix)));
         }
@@ -65,7 +65,7 @@ namespace FamilyMatrixCreator
         };
 
         [TestCaseSource("CollectStatistics_DataProvider")]
-        private void CollectStatistics_Test(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees, int[] quantityOfEachRelationship, int[] result)
+        public void CollectStatistics_Test(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees, int[] quantityOfEachRelationship, int[] result)
         {
             Assert.That(result, Is.EqualTo(modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship)));
         }
@@ -79,7 +79,7 @@ namespace FamilyMatrixCreator
         };
 
         [TestCaseSource("CreateComplianceMatrix_DataProvider")]
-        private void CreateComplianceMatrix_Test(List<int> existingRelationshipDegrees, List<int[]> result)
+        public void CreateComplianceMatrix_Test(List<int> existingRelationshipDegrees, List<int[]> result)
         {
             Assert.That(result, Is.EqualTo(modules.CreateComplianceMatrix(existingRelationshipDegrees)));
         }
@@ -91,13 +91,13 @@ namespace FamilyMatrixCreator
         };
 
         [TestCaseSource("TransformMatrix_DataProvider")]
-        private void TransformMatrix_Test(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees, float[][] result)
+        public void TransformMatrix_Test(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees, float[][] result)
         {
             Assert.That(result, Is.EqualTo(modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees)));
         }
 
         [Test]
-        private void IncreaseCurrentRelationshipCount_Test()
+        public void IncreaseCurrentRelationshipCount_Test()
         {
             int[][] currentCountMatrix = new int[][]
             {
@@ -138,7 +138,7 @@ namespace FamilyMatrixCreator
         };
 
         [TestCaseSource("RemoveImpossibleRelations_DataProvider")]
-        private void RemoveImpossibleRelations_Test(int[] allPossibleRelationships, int[] currentPossibleRelationships, int[] result)
+        public void RemoveImpossibleRelations_Test(int[] allPossibleRelationships, int[] currentPossibleRelationships, int[] result)
         {
             Assert.That(result, Is.EqualTo(modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships)));
         }
@@ -150,13 +150,13 @@ namespace FamilyMatrixCreator
         };
 
         [TestCaseSource("FindAllExistingRelationshipDegrees_DataProvider")]
-        private void FindAllExistingRelationshipDegrees_Test(int[,][] relationshipsMatrix, int numberOfProband, List<int> result)
+        public void FindAllExistingRelationshipDegrees_Test(int[,][] relationshipsMatrix, int numberOfProband, List<int> result)
         {
             Assert.That(result, Is.EqualTo(modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband)));
         }
 
         [Test]
-        private void OutputBuildLeftBottomPart_Test()
+        public void OutputBuildLeftBottomPart_Test()
         {
             float[][] generatedOutputMatrix = new float[][]
             {
@@ -189,13 +189,13 @@ namespace FamilyMatrixCreator
         };
 
         [TestCaseSource("InputBuildLeftBottomPart_DataProvider")]
-        private void InputBuildLeftBottomPart_Test(float[][] generatedInputMatrix, float[][] result)
+        public void InputBuildLeftBottomPart_Test(float[][] generatedInputMatrix, float[][] result)
         {
             Assert.That(result, Is.EqualTo(modules.BuildLeftBottomPart(generatedInputMatrix)));
         }
 
         [Test]
-        private void FillMainDiagonal_Test()
+        public void FillMainDiagonal_Test()
         {
             float[][] generatedOutputMatrix = new float[][]
             {
