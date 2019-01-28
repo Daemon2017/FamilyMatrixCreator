@@ -4,82 +4,68 @@ using System.Collections.Generic;
 namespace FamilyMatrixCreator
 {
     [TestFixture]
-    class ModulesTests
+    public class ModulesTests
     {
-        [TestCase]
-        public void MaxNumberOfThisRelationshipTypeIsNotExceededPositiveTest()
+        Modules modules = new Modules();
+
+        static int[,][] relationshipsMatrix = new int[3, 3][]
         {
-            Modules modules = new Modules();
+            { new int[] { 1 }, new int[] { 6 }, new int[] { 2 } },
+            { new int[] { 7 }, new int[] { 1 }, new int[] { 8 } },
+            { new int[] { 3 }, new int[] { 9 }, new int[] { 1 } }
+        };
+        static int[][] currentCountMatrix = new int[][]
+        {
+            new int[]{ 2, 4, 8 },
+            new int[]{ 1, 3, 7 },
+            new int[]{ 0, 2, 6 },
+            new int[]{ 0, 1, 5 },
+            new int[]{ 0, 0, 4 }
+        };
+        static int[][] maxCountMatrix = new int[][]
+        {
+            new int[]{ 0, 2 },
+            new int[]{ 1, 4 },
+            new int[]{ 2, 8 }
+        };
+        static float[][] generatedOutputMatrix = new float[][]
+        {
+            new float[] { 1, 8, 3 },
+            new float[] { 9, 1, 0 },
+            new float[] { 2, 0, 1 }
+        };
+        static int[] allPossibleRelationships = new int[] { 0, 1, 2, 3, 4 };
+        static int[] currentPossibleRelationships = new int[] { 2, 4, 5 };
+        static List<int> persons = new List<int> { 0, 1, 2, 3, 4 };
 
-            int[][] currentCountMatrix = new int[][]
-            {
-                new int[]{ 2, 4, 8 },
-                new int[]{ 1, 3, 7 },
-                new int[]{ 0, 2, 6 },
-                new int[]{ 0, 1, 5 },
-                new int[]{ 0, 0, 4 }
-            };
-            int[][] maxCountMatrix = new int[][]
-            {
-                new int[]{ 0, 2 },
-                new int[]{ 1, 4 },
-                new int[]{ 2, 8 }
-            };
+        static object[] MaxNumberOfThisRelationshipTypeIsNotExceeded_DataProvider =
+        {
+            new object[] { 1, currentCountMatrix, persons, 2, maxCountMatrix, true },
+            new object[] { 1, currentCountMatrix, persons, 0, maxCountMatrix, false },
+            new object[] { 2, currentCountMatrix, persons, 2, maxCountMatrix, true },
+            new object[] { 2, currentCountMatrix, persons, 0, maxCountMatrix, false }
+        };
 
-            Assert.True(modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship: 1,
-                                                                             currentCountMatrix: currentCountMatrix,
-                                                                             persons: new List<int> { 0, 1, 2, 3, 4 },
-                                                                             person: 2,
-                                                                             maxCountMatrix: maxCountMatrix));
+        [TestCaseSource("MaxNumberOfThisRelationshipTypeIsNotExceeded_DataProvider")]
+        public void MaxNumberOfThisRelationshipTypeIsNotExceeded_Test(int relationship, int[][] currentCountMatrix, List<int> persons, int person, int[][] maxCountMatrix, bool result)
+        {
+            Assert.That(result, Is.EqualTo(modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix)));
         }
 
-        [TestCase]
-        public void MaxNumberOfThisRelationshipTypeIsNotExceededNegativeTest()
+        static object[] CollectStatistics_DataProvider =
         {
-            Modules modules = new Modules();
+            new object[] { generatedOutputMatrix, new List<int> { 9, 8, 3, 2, 1 }, new int[] { 0, 0, 0, 0, 0 }, new int[] { 1, 1, 1, 1, 3 } },
+            new object[] { generatedOutputMatrix, new List<int> { 9, 8, 3, 2, 1 }, new int[] { 1, 2, 3, 4, 5 }, new int[] { 2, 3, 4, 5, 8 } }
+        };
 
-            int[][] currentCountMatrix = new int[][]
-            {
-                new int[]{ 2, 4, 8 },
-                new int[]{ 1, 3, 7 },
-                new int[]{ 0, 2, 6 },
-                new int[]{ 0, 1, 5 },
-                new int[]{ 0, 0, 4 }
-            };
-            int[][] maxCountMatrix = new int[][]
-            {
-                new int[]{ 0, 2 },
-                new int[]{ 1, 4 },
-                new int[]{ 2, 8 }
-            };
-
-            Assert.False(modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship: 1,
-                                                                              currentCountMatrix: currentCountMatrix,
-                                                                              persons: new List<int> { 0, 1, 2, 3, 4 },
-                                                                              person: 0,
-                                                                              maxCountMatrix: maxCountMatrix));
+        [TestCaseSource("CollectStatistics_DataProvider")]
+        public void CollectStatistics_Test(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees, int[] quantityOfEachRelationship, int[] result)
+        {
+            Assert.That(result, Is.EqualTo(modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship)));
         }
 
-        [TestCase]
-        public void CollectStatisticsTest()
-        {
-            Modules modules = new Modules();
-
-            float[][] generatedOutputMatrix = new float[][]
-            {
-                new float[] { 1, 8, 3 },
-                new float[] { 9, 1, 0 },
-                new float[] { 2, 0, 1 }
-            };
-
-            Assert.That(new int[] { 2, 3, 4, 5, 8 },
-                Is.EqualTo(modules.CollectStatistics(generatedOutputMatrix: generatedOutputMatrix,
-                                                     existingRelationshipDegrees: new List<int> { 9, 8, 3, 2, 1 },
-                                                     quantityOfEachRelationship: new int[] { 1, 2, 3, 4, 5 })));
-        }
-
-        [TestCase]
-        public void CreateComplianceMatrixTest()
+        [Test]
+        public void CreateComplianceMatrix_Test()
         {
             Modules modules = new Modules();
 
@@ -97,8 +83,8 @@ namespace FamilyMatrixCreator
                 Is.EqualTo(modules.CreateComplianceMatrix(existingRelationshipDegrees: new List<int> { 1, 2, 3, 4, 5 })));
         }
 
-        [TestCase]
-        public void TransformMatrixTest()
+        [Test]
+        public void TransformMatrix_Test()
         {
             Modules modules = new Modules();
 
@@ -120,8 +106,8 @@ namespace FamilyMatrixCreator
                 Is.EqualTo(modules.TransformMatrix(generatedOutputMatrix: generatedOutputMatrix, existingRelationshipDegrees: new List<int> { 9, 8, 3, 2, 1 })));
         }
 
-        [TestCase]
-        public void IncreaseCurrentRelationshipCountTest()
+        [Test]
+        public void IncreaseCurrentRelationshipCount_Test()
         {
             Modules modules = new Modules();
 
@@ -164,34 +150,31 @@ namespace FamilyMatrixCreator
                                                                     maxCountMatrix: maxCountMatrix)));
         }
 
-        [TestCase]
-        public void RemoveImpossibleRelationsTest()
+        static object[] RemoveImpossibleRelations_DataProvider =
         {
-            Modules modules = new Modules();
+            new object[] { allPossibleRelationships, currentPossibleRelationships, new int[] { 0, 2, 4 } }
+        };
 
-            Assert.That(new int[] { 0, 2, 4 },
-                Is.EqualTo(modules.RemoveImpossibleRelations(allPossibleRelationships: new int[] { 0, 1, 2, 3, 4 },
-                                                             currentPossibleRelationships: new int[] { 2, 4, 5 })));
+        [TestCaseSource("RemoveImpossibleRelations_DataProvider")]
+        public void RemoveImpossibleRelations_Test(int[] allPossibleRelationships, int[] currentPossibleRelationships, int[] result)
+        {
+            Assert.That(result,Is.EqualTo(modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships)));
         }
 
-        [TestCase]
-        public void FindAllExistingRelationshipDegreesTest()
+        static object[] FindAllExistingRelationshipDegrees_DataProvider =
         {
-            Modules modules = new Modules();
+            new object[] { relationshipsMatrix, 0, new List<int> { 1, 6, 7, 2, 3 } },
+            new object[] { relationshipsMatrix, 1, new List<int> { 7, 6, 1, 8, 9 } }
+        };
 
-            int[,][] relationshipsMatrix = new int[3, 3][]
-            {
-                { new int[] { 1 }, new int[] { 6 }, new int[] { 2 } },
-                { new int[] { 7 }, new int[] { 1 }, new int[] { 8 } },
-                { new int[] { 3 }, new int[] { 9 }, new int[] { 1 } }
-            };
-
-            Assert.That(new List<int> { 1, 6, 7, 2, 3 },
-                Is.EqualTo(modules.FindAllExistingRelationshipDegrees(relationshipsMatrix: relationshipsMatrix, numberOfProband: 0)));
+        [TestCaseSource("FindAllExistingRelationshipDegrees_DataProvider")]
+        public void FindAllExistingRelationshipDegrees_Test(int[,][] relationshipsMatrix, int numberOfProband, List<int> result)
+        {
+            Assert.That(result, Is.EqualTo(modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband)));
         }
 
-        [TestCase]
-        public void OutputBuildLeftBottomPartTest()
+        [Test]
+        public void OutputBuildLeftBottomPart_Test()
         {
             Modules modules = new Modules();
 
@@ -219,8 +202,8 @@ namespace FamilyMatrixCreator
                 Is.EqualTo(modules.BuildLeftBottomPart(generatedOutputMatrix: generatedOutputMatrix, relationshipsMatrix: relationshipsMatrix, numberOfProband: 0)));
         }
 
-        [TestCase]
-        public void InputBuildLeftBottomPartTest()
+        [Test]
+        public void InputBuildLeftBottomPart_Test()
         {
             Modules modules = new Modules();
 
@@ -242,8 +225,8 @@ namespace FamilyMatrixCreator
                 Is.EqualTo(modules.BuildLeftBottomPart(generatedInputMatrix: generatedInputMatrix)));
         }
 
-        [TestCase]
-        public void FillMainDiagonalTest()
+        [Test]
+        public void FillMainDiagonal_Test()
         {
             Modules modules = new Modules();
 
