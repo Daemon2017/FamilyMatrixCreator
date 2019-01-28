@@ -67,7 +67,7 @@ namespace FamilyMatrixCreator
                     }
                     else
                     {
-                        allPossibleRelationships = integrations.RemoveImpossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, allPossibleRelationships, relationshipsMatrix, numberOfProband);
+                        allPossibleRelationships = integrations.FindAppPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, allPossibleRelationships, relationshipsMatrix, numberOfProband);
                     }
 
                     /*
@@ -96,17 +96,8 @@ namespace FamilyMatrixCreator
                 {
                     numberOfConstructedMatrices++;
 
-                    int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
-                    quantityOfEachRelationship = modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship);
+                    double percentOfMeaningfulValues = integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix);
 
-                    int sumOfMeaningfulValues = 0;
-
-                    foreach (var quantity in quantityOfEachRelationship)
-                    {
-                        sumOfMeaningfulValues += quantity;
-                    }
-
-                    double percentOfMeaningfulValues = (100 * ((2 * (float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2)));
                     if (percentOfMeaningfulValues < Convert.ToInt32(textBox4.Text) || percentOfMeaningfulValues > Convert.ToInt32(textBox5.Text))
                     {
                         generatedOutputMatrix = new float[generatedMatrixSize][];
@@ -121,11 +112,10 @@ namespace FamilyMatrixCreator
             }
 
             generatedOutputMatrix = modules.BuildLeftBottomPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband);
-
             generatedOutputMatrix = modules.FillMainDiagonal(generatedOutputMatrix);
 
             return generatedOutputMatrix;
-        }       
+        }
 
         /*
          * Построение входной матрицы (матрицы сМ).
@@ -134,30 +124,7 @@ namespace FamilyMatrixCreator
         {
             float[][] generatedInputMatrix = new float[generatedMatrixSize][];
 
-            /*
-             * Построение правой (верхней) стороны.
-             */
-            for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
-            {
-                generatedInputMatrix[person] = new float[generatedOutputMatrix.GetLength(0)];
-
-                for (int relative = person; relative < generatedOutputMatrix.GetLength(0); relative++)
-                {
-                    for (int relationship = 0; relationship < relationshipsMatrix.GetLength(1); relationship++)
-                    {
-                        if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
-                        {
-                            generatedInputMatrix[person][relative] = modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative, relationship, centimorgansMatrix);
-                        }
-
-                        if (relationshipsMatrix[relationship, numberOfProband][0] == generatedOutputMatrix[person][relative])
-                        {
-                            generatedInputMatrix[person][relative] = modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative, relationship, centimorgansMatrix);
-                        }
-                    }
-                }
-            }
-
+            generatedInputMatrix = integrations.BuildRightTopPart(generatedOutputMatrix, generatedInputMatrix, relationshipsMatrix, centimorgansMatrix, numberOfProband);
             generatedInputMatrix = modules.BuildLeftBottomPart(generatedInputMatrix);
 
             return generatedInputMatrix;
