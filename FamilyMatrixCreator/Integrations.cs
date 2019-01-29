@@ -68,7 +68,7 @@ namespace FamilyMatrixCreator
                 sumOfMeaningfulValues += quantity;
             }
 
-            return (100 * ((2 * (float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2)));
+            return (100 * (((float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2)));
         }
 
         /*
@@ -157,7 +157,7 @@ namespace FamilyMatrixCreator
                  */
                 if (generatedOutputMatrix.GetLength(0) - 1 == person)
                 {
-                    double percentOfMeaningfulValues = CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix);
+                    double percentOfMeaningfulValues = 2 * CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix);
 
                     if (percentOfMeaningfulValues < minPercent || percentOfMeaningfulValues > maxPercent)
                     {

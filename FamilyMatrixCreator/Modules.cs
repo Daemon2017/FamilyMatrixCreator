@@ -310,6 +310,9 @@ namespace FamilyMatrixCreator
             return generatedOutputMatrix;
         }
 
+        /*
+         * Создание случайного значения.
+         */
         public int GetNextRnd(int min, int max)
         {
             byte[] rndBytes = new byte[4];

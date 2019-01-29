@@ -158,7 +158,7 @@ namespace FamilyMatrixCreator
         [Test]
         public void OutputBuildLeftBottomPart_Test()
         {
-            float[][] generatedOutputMatrix = new float[][]
+            float[][] generatedOutputMatrix_RightTopAndMainDiagonal = new float[][]
             {
                 new float[] { 1, 8, 3 },
                 new float[] { 0, 1, 0 },
@@ -179,7 +179,7 @@ namespace FamilyMatrixCreator
             };
 
             Assert.That(model,
-                Is.EqualTo(modules.BuildLeftBottomPart(generatedOutputMatrix: generatedOutputMatrix, relationshipsMatrix: relationshipsMatrix, numberOfProband: 0)));
+                Is.EqualTo(modules.BuildLeftBottomPart(generatedOutputMatrix_RightTopAndMainDiagonal, relationshipsMatrix, 0)));
         }
 
         private static object[] InputBuildLeftBottomPart_DataProvider =
@@ -211,7 +211,7 @@ namespace FamilyMatrixCreator
                 new float[] { 2, 0, 1 }
             };
 
-            Assert.That(model, Is.EqualTo(modules.FillMainDiagonal(generatedOutputMatrix: generatedOutputMatrix)));
+            Assert.That(model, Is.EqualTo(modules.FillMainDiagonal(generatedOutputMatrix)));
         }
 
         private static object[] GetNextRnd_DataProvider =
