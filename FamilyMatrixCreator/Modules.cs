@@ -2,11 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace FamilyMatrixCreator
 {
     public class Modules
     {
+        private static RNGCryptoServiceProvider _RNG = new RNGCryptoServiceProvider();
+
         /*
          * Проверка того, что на данное мгновение у данного лица не превышено MAX допустимое число родственников с таким видом родства.
          */
@@ -305,6 +308,14 @@ namespace FamilyMatrixCreator
             }
 
             return generatedOutputMatrix;
+        }
+
+        public int GetNextRnd(int min, int max)
+        {
+            byte[] rndBytes = new byte[4];
+            _RNG.GetBytes(rndBytes);
+
+            return (int)((BitConverter.ToInt32(rndBytes, 0) - (Decimal)int.MinValue) / (int.MaxValue - (Decimal)int.MinValue) * (max - min) + min);
         }
     }
 }

@@ -67,14 +67,14 @@ namespace FamilyMatrixCreator
             {
                 sumOfMeaningfulValues += quantity;
             }
-            
+
             return (100 * ((2 * (float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2)));
         }
 
         /*
          * Построение правой (верхней) стороны.
          */
-        public float[][] BuildRightTopPart(float[][] generatedOutputMatrix, float[][] generatedInputMatrix, int[,][] relationshipsMatrix, float[] centimorgansMatrix, int numberOfProband)
+        public float[][] BuildRightTopPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix, int numberOfProband, float[][] generatedInputMatrix, float[] centimorgansMatrix)
         {
             for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
             {
@@ -99,5 +99,81 @@ namespace FamilyMatrixCreator
 
             return generatedInputMatrix;
         }
+
+        /*
+         * Построение правой (верхней) стороны.
+         */
+        public float[][] BuildRightTopPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix, int numberOfProband, int generatedMatrixSize, List<int> existingRelationshipDegrees, int[][] maxCountMatrix, int minPercent, int maxPercent)
+        {
+            int[][] currentCountMatrix = new int[generatedMatrixSize][];
+
+            List<int> persons = modules.ShuffleSequence(1, generatedOutputMatrix.GetLength(0));
+            persons.Insert(0, 0);
+
+            /*
+             * Построение правой (верхней) стороны.
+             */
+            for (int person = 0; person < persons.Count; person++)
+            {
+                generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
+                currentCountMatrix[persons[person]] = new int[maxCountMatrix.Length];
+
+                List<int> relatives = modules.ShuffleSequence(persons[person] + 1, generatedOutputMatrix.GetLength(0));
+
+                for (int relative = 0; relative < relatives.Count; relative++)
+                {
+                    int[] allPossibleRelationships = { };
+
+                    if (0 == persons[person])
+                    {
+                        allPossibleRelationships = modules.FindAllPossibleRelationshipsOfProband(relationshipsMatrix, numberOfProband);
+                    }
+                    else
+                    {
+                        allPossibleRelationships = FindAppPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, allPossibleRelationships, relationshipsMatrix, numberOfProband);
+                    }
+
+                    /*
+                     * Устранение видов родства из списка допустимых видов родства, 
+                     * добавление которых приведет к превышению допустимого числа родственников с таким видом родства.
+                     */
+                    foreach (int relationship in allPossibleRelationships)
+                    {
+                        if (false == modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix))
+                        {
+                            allPossibleRelationships = allPossibleRelationships.Where(val => val != relationship).ToArray();
+                        }
+                    }
+
+                    /*
+                     * Создание родственника со случайным видом родства.
+                     */
+                    generatedOutputMatrix[persons[person]][relatives[relative]] = allPossibleRelationships[modules.GetNextRnd(0, allPossibleRelationships.GetLength(0))];
+                    currentCountMatrix = modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
+                }
+
+                /*
+                 * Проверка того, что выполняется требование по проценту значащих значений
+                 */
+                if (generatedOutputMatrix.GetLength(0) - 1 == person)
+                {
+                    double percentOfMeaningfulValues = CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix);
+
+                    if (percentOfMeaningfulValues < minPercent || percentOfMeaningfulValues > maxPercent)
+                    {
+                        generatedOutputMatrix = new float[generatedMatrixSize][];
+                        currentCountMatrix = new int[generatedMatrixSize][];
+
+                        persons = modules.ShuffleSequence(1, generatedOutputMatrix.GetLength(0));
+                        persons.Insert(0, 0);
+
+                        person = -1;
+                    }
+                }
+            }
+
+            return generatedOutputMatrix;
+        }
+
     }
 }

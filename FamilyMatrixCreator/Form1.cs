@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -22,19 +21,10 @@ namespace FamilyMatrixCreator
         Modules modules = new Modules();
         Integrations integrations = new Integrations();
 
-        private static RNGCryptoServiceProvider _RNG = new RNGCryptoServiceProvider();
         private int[,][] relationshipsMatrix;
         private float[] centimorgansMatrix;
         private int[][] maxCountMatrix;
         private int numberOfProband;
-        private int numberOfConstructedMatrices;
-
-        private static int GetNextRnd(int min, int max)
-        {
-            byte[] rndBytes = new byte[4];
-            _RNG.GetBytes(rndBytes);
-            return (int)((BitConverter.ToInt32(rndBytes, 0) - (Decimal)int.MinValue) / (int.MaxValue - (Decimal)int.MinValue) * (max - min) + min);
-        }
 
         /*
          * Построение выходной матрицы (матрицы родственных отношений).
@@ -42,76 +32,10 @@ namespace FamilyMatrixCreator
         private float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
-            int[][] currentCountMatrix = new int[generatedMatrixSize][];
 
-            List<int> persons = modules.ShuffleSequence(1, generatedOutputMatrix.GetLength(0));
-            persons.Insert(0, 0);
-
-            /*
-             * Построение правой (верхней) стороны.
-             */
-            for (int person = 0; person < persons.Count; person++)
-            {
-                generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
-                currentCountMatrix[persons[person]] = new int[maxCountMatrix.Length];
-
-                List<int> relatives = modules.ShuffleSequence(persons[person] + 1, generatedOutputMatrix.GetLength(0));
-
-                for (int relative = 0; relative < relatives.Count; relative++)
-                {
-                    int[] allPossibleRelationships = { };
-
-                    if (0 == persons[person])
-                    {
-                        allPossibleRelationships = modules.FindAllPossibleRelationshipsOfProband(relationshipsMatrix, numberOfProband);
-                    }
-                    else
-                    {
-                        allPossibleRelationships = integrations.FindAppPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, allPossibleRelationships, relationshipsMatrix, numberOfProband);
-                    }
-
-                    /*
-                     * Устранение видов родства из списка допустимых видов родства, 
-                     * добавление которых приведет к превышению допустимого числа родственников с таким видом родства.
-                     */
-                    foreach (int relationship in allPossibleRelationships)
-                    {
-                        if (false == modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix))
-                        {
-                            allPossibleRelationships = allPossibleRelationships.Where(val => val != relationship).ToArray();
-                        }
-                    }
-
-                    /*
-                     * Создание родственника со случайным видом родства.
-                     */
-                    generatedOutputMatrix[persons[person]][relatives[relative]] = allPossibleRelationships[GetNextRnd(0, allPossibleRelationships.GetLength(0))];
-                    currentCountMatrix = modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
-                }
-
-                /*
-                 * Проверка того, что выполняется требование по проценту значащих значений
-                 */
-                if (generatedOutputMatrix.GetLength(0) - 1 == person)
-                {
-                    numberOfConstructedMatrices++;
-
-                    double percentOfMeaningfulValues = integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix);
-
-                    if (percentOfMeaningfulValues < Convert.ToInt32(textBox4.Text) || percentOfMeaningfulValues > Convert.ToInt32(textBox5.Text))
-                    {
-                        generatedOutputMatrix = new float[generatedMatrixSize][];
-                        currentCountMatrix = new int[generatedMatrixSize][];
-
-                        persons = modules.ShuffleSequence(1, generatedOutputMatrix.GetLength(0));
-                        persons.Insert(0, 0);
-
-                        person = -1;
-                    }
-                }
-            }
-
+            generatedOutputMatrix = integrations.BuildRightTopPart(generatedOutputMatrix, relationshipsMatrix,numberOfProband, generatedMatrixSize, existingRelationshipDegrees, maxCountMatrix, Convert.ToInt32(textBox4.Text), Convert.ToInt32(textBox5.Text));
             generatedOutputMatrix = modules.BuildLeftBottomPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband);
+
             generatedOutputMatrix = modules.FillMainDiagonal(generatedOutputMatrix);
 
             return generatedOutputMatrix;
@@ -124,7 +48,7 @@ namespace FamilyMatrixCreator
         {
             float[][] generatedInputMatrix = new float[generatedMatrixSize][];
 
-            generatedInputMatrix = integrations.BuildRightTopPart(generatedOutputMatrix, generatedInputMatrix, relationshipsMatrix, centimorgansMatrix, numberOfProband);
+            generatedInputMatrix = integrations.BuildRightTopPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband, generatedInputMatrix, centimorgansMatrix);
             generatedInputMatrix = modules.BuildLeftBottomPart(generatedInputMatrix);
 
             return generatedInputMatrix;
@@ -138,7 +62,6 @@ namespace FamilyMatrixCreator
             SaveToFile("compliance.csv", complianceMatrix);
 
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
-            numberOfConstructedMatrices = 0;
             textBox2.Text = "";
 
             Stopwatch myStopwatch = new Stopwatch();
@@ -190,7 +113,6 @@ namespace FamilyMatrixCreator
                 label5.Text = "Значащих значений: "
                     + 100 * ((float)(sumOfMeaningfulValues - (quantityOfMatrixes * generatedMatrixSize)) / (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%";
                 label6.Text = "Затрачено: " + (((float)myStopwatch.ElapsedMilliseconds) / 1000).ToString() + " сек";
-                label7.Text = "Построено (включая отклоненные): " + numberOfConstructedMatrices;
             }
         }
     }

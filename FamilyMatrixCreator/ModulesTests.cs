@@ -213,5 +213,18 @@ namespace FamilyMatrixCreator
 
             Assert.That(model, Is.EqualTo(modules.FillMainDiagonal(generatedOutputMatrix: generatedOutputMatrix)));
         }
+
+        private static object[] GetNextRnd_DataProvider =
+        {
+            new object[] { 5, 10 },
+            new object[] { 6, 8 },
+            new object[] { 7, 7 }
+        };
+
+        [TestCaseSource("GetNextRnd_DataProvider")]
+        public void GetNextRnd_Test(int min, int max)
+        {
+            Assert.That(modules.GetNextRnd(min, max), Is.GreaterThan(min - 1).And.LessThan(max + 1));
+        }
     }
 }
