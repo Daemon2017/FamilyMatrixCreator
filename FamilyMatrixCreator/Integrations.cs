@@ -46,7 +46,7 @@ namespace FamilyMatrixCreator
                 {
                     int[] currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToArray();
 
-                    allPossibleRelationships = modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
+                    //allPossibleRelationships = modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
                 }
             }
 
