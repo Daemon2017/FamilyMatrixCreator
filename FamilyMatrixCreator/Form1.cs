@@ -79,7 +79,7 @@ namespace FamilyMatrixCreator
 
                     quantityOfEachRelationship = modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship);
 
-                    //generatedOutputMatrix = modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
+                    generatedOutputMatrix = modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
 
                     /*
                      * Сохранение входной матрицы в файл.
