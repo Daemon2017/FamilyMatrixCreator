@@ -226,7 +226,7 @@ namespace FamilyMatrixCreator
             {
                 for (int n = 0; n < currentPossibleRelationships.GetLength(0); n++)
                 {
-                    if (allPossibleRelationships[m] == currentPossibleRelationships[n])
+                    if (allPossibleRelationships[m] == currentPossibleRelationships[n] && allPossibleRelationships[m] != 0)
                     {
                         allCurrentPossibleRelations.Add(allPossibleRelationships[m]);
                     }

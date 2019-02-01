@@ -31,9 +31,7 @@ namespace FamilyMatrixCreator
          */
         private float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
         {
-            float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
-
-            generatedOutputMatrix = integrations.BuildRightTopPart(generatedOutputMatrix, relationshipsMatrix,numberOfProband, generatedMatrixSize, existingRelationshipDegrees, maxCountMatrix, Convert.ToInt32(textBox4.Text), Convert.ToInt32(textBox5.Text));
+            float[][] generatedOutputMatrix = integrations.BuildRightTopPart(relationshipsMatrix,numberOfProband, generatedMatrixSize, existingRelationshipDegrees, maxCountMatrix, Convert.ToInt32(textBox4.Text), Convert.ToInt32(textBox5.Text));
             generatedOutputMatrix = modules.BuildLeftBottomPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband);
 
             generatedOutputMatrix = modules.FillMainDiagonal(generatedOutputMatrix);

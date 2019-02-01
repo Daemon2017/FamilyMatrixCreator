@@ -11,8 +11,10 @@ namespace FamilyMatrixCreator
         /*
          * Исключение невозможных видов родства.
          */
-        public int[] FindAppPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[] allPossibleRelationships, int[,][] relationshipsMatrix, int numberOfProband)
+        public int[] FindAllPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[,][] relationshipsMatrix, int numberOfProband)
         {
+            int[] allPossibleRelationships = { 0 };
+
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
                 int numberOfI = 0,
@@ -103,8 +105,9 @@ namespace FamilyMatrixCreator
         /*
          * Построение правой (верхней) стороны.
          */
-        public float[][] BuildRightTopPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix, int numberOfProband, int generatedMatrixSize, List<int> existingRelationshipDegrees, int[][] maxCountMatrix, int minPercent, int maxPercent)
+        public float[][] BuildRightTopPart(int[,][] relationshipsMatrix, int numberOfProband, int generatedMatrixSize, List<int> existingRelationshipDegrees, int[][] maxCountMatrix, int minPercent, int maxPercent)
         {
+            float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
             int[][] currentCountMatrix = new int[generatedMatrixSize][];
 
             List<int> persons = modules.ShuffleSequence(1, generatedOutputMatrix.GetLength(0));
@@ -130,7 +133,7 @@ namespace FamilyMatrixCreator
                     }
                     else
                     {
-                        allPossibleRelationships = FindAppPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, allPossibleRelationships, relationshipsMatrix, numberOfProband);
+                        allPossibleRelationships = FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband);
                     }
 
                     /*

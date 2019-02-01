@@ -184,6 +184,18 @@ namespace FamilyMatrixCreator
                 new int[] { 0, 1, 2, 3, 4 },
                 new int[] { 2, 4, 5 },
                 new int[] { 0, 2, 4 }
+            },
+            new object[]
+            {
+                new int[] { 0, 1, 2, 3, 4 },
+                new int[] { 0 },
+                new int[] { 0 }
+            },
+            new object[]
+            {
+                new int[] { 0 },
+                new int[] { 2, 4, 5 },
+                new int[] { 0 }
             }
         };
 
