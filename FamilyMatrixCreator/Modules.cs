@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Windows.Forms;
 
 namespace FamilyMatrixCreator
 {
@@ -319,6 +320,37 @@ namespace FamilyMatrixCreator
             _RNG.GetBytes(rndBytes);
 
             return (int)((BitConverter.ToInt32(rndBytes, 0) - (Decimal)int.MinValue) / (int.MaxValue - (Decimal)int.MinValue) * (max - min) + min);
+        }
+
+        /*
+         * Определение номера строки, содержащей возможные степени родства пробанда.
+         */
+        public int FindNumberOfProband(int[,][] relationshipsMatrix)
+        {
+            int onlyOneRelationshipCount = 0;
+
+            for (int x = 0; x < relationshipsMatrix.GetLength(0); x++)
+            {
+                for (int y = 0; y < relationshipsMatrix.GetLength(0); y++)
+                {
+                    if (relationshipsMatrix[x, y].GetLength(0) == 1)
+                    {
+                        onlyOneRelationshipCount++;
+
+                        if (relationshipsMatrix.GetLength(0) == onlyOneRelationshipCount)
+                        {
+                            return x;
+                        }
+                    }
+                }
+
+                onlyOneRelationshipCount = 0;
+            }
+
+            MessageBox.Show("Не удалось найти номер строки с возможными степенями родства пробанда.");
+            Application.Exit();
+
+            return 0;
         }
     }
 }

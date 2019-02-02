@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace FamilyMatrixCreator
 {
-    public partial class Form1 : Form
+    public class FileSaverLoader
     {
-        private void SaveToFile(string outputFileName, float[][] generatedMatrix, int matrixNumber)
+        public void SaveToFile(string outputFileName, float[][] generatedMatrix, int matrixNumber)
         {
             using (StreamWriter outfile = new StreamWriter(outputFileName + matrixNumber + ".csv"))
             {
@@ -36,7 +34,7 @@ namespace FamilyMatrixCreator
             }
         }
 
-        private void SaveToFile(string outputFileName, List<int[]> complianceMatrix)
+        public void SaveToFile(string outputFileName, List<int[]> complianceMatrix)
         {
             using (StreamWriter outfile = new StreamWriter(outputFileName))
             {
@@ -51,7 +49,7 @@ namespace FamilyMatrixCreator
             }
         }
 
-        private int[,][] LoadFromFile2DJagged(string inputFileName)
+        public int[,][] LoadFromFile2DJagged(string inputFileName)
         {
             int person = 0,
                 relative = 0,
@@ -68,19 +66,6 @@ namespace FamilyMatrixCreator
 
                 if (!(row.Equals("")) && !(row.Equals("\r")))
                 {
-                    /*
-                     * Определение номера строки, содержащей возможные степени родства пробанда.
-                     */
-                    foreach (Match m in Regex.Matches(row, ";"))
-                    {
-                        counter++;
-                    }
-
-                    if (0 == counter)
-                    {
-                        numberOfProband = person;
-                    }
-
                     foreach (var column in row.Trim().Split(','))
                     {
                         relationship = 0;
@@ -122,7 +107,7 @@ namespace FamilyMatrixCreator
             return matrix;
         }
 
-        private int[][] LoadFromFile2D(string inputFileName)
+        public int[][] LoadFromFile2D(string inputFileName)
         {
             int relationship = 0;
             string input = File.ReadAllText(inputFileName);
@@ -151,7 +136,7 @@ namespace FamilyMatrixCreator
             return matrix;
         }
 
-        private float[] LoadFromFile1D(string inputFileName)
+        public float[] LoadFromFile1D(string inputFileName)
         {
             int person = 0;
             string input = File.ReadAllText(inputFileName);
@@ -169,24 +154,6 @@ namespace FamilyMatrixCreator
             }
 
             return matrix;
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            /*
-             * Загрузка матрицы возможных степеней родства.
-             */
-            relationshipsMatrix = LoadFromFile2DJagged("relationships.csv");
-
-            /*
-            * Загрузка матрицы значений сантиморган.
-            */
-            centimorgansMatrix = LoadFromFile1D("centimorgans.csv");
-
-            /*
-            * Загрузка матрицы максимального числа предков заданного вида.
-            */
-            maxCountMatrix = LoadFromFile2D("maxCount.csv");
         }
     }
 }

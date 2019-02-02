@@ -20,11 +20,31 @@ namespace FamilyMatrixCreator
 
         Modules modules = new Modules();
         Integrations integrations = new Integrations();
+        FileSaverLoader fileSaverLoader = new FileSaverLoader();
 
         private int[,][] relationshipsMatrix;
         private float[] centimorgansMatrix;
         private int[][] maxCountMatrix;
         private int numberOfProband;
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            /*
+             * Загрузка матрицы возможных степеней родства.
+             */
+            relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged("relationships.csv");
+            numberOfProband = modules.FindNumberOfProband(relationshipsMatrix);
+
+            /*
+            * Загрузка матрицы значений сантиморган.
+            */
+            centimorgansMatrix = fileSaverLoader.LoadFromFile1D("centimorgans.csv");
+
+            /*
+            * Загрузка матрицы максимального числа предков заданного вида.
+            */
+            maxCountMatrix = fileSaverLoader.LoadFromFile2D("maxCount.csv");
+        }
 
         /*
          * Построение выходной матрицы (матрицы родственных отношений).
@@ -57,7 +77,7 @@ namespace FamilyMatrixCreator
             List<int> existingRelationshipDegrees = modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband);
 
             List<int[]> complianceMatrix = modules.CreateComplianceMatrix(existingRelationshipDegrees);
-            SaveToFile("compliance.csv", complianceMatrix);
+            fileSaverLoader.SaveToFile("compliance.csv", complianceMatrix);
 
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
             textBox2.Text = "";
@@ -77,19 +97,19 @@ namespace FamilyMatrixCreator
 
                     quantityOfEachRelationship = modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship);
 
-                    generatedOutputMatrix = modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
+                    //generatedOutputMatrix = modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
 
                     /*
                      * Сохранение входной матрицы в файл.
                      */
                     Directory.CreateDirectory("input");
-                    SaveToFile(@"input\generated_input", generatedInputMatrix, matrixNumber);
+                    fileSaverLoader.SaveToFile(@"input\generated_input", generatedInputMatrix, matrixNumber);
 
                     /*
                      * Сохранение выходной матрицы в файл.
                      */
                     Directory.CreateDirectory("output");
-                    SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
+                    fileSaverLoader.SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
                 });
 
                 myStopwatch.Stop();
