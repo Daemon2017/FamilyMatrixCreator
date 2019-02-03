@@ -25,6 +25,8 @@ namespace FamilyMatrixCreator
                     if (currentCountMatrix[persons[person]][i] == maxCountMatrix[i][1])
                     {
                         allowToAddRelative = false;
+
+                        return allowToAddRelative;
                     }
                 }
             }
@@ -150,17 +152,17 @@ namespace FamilyMatrixCreator
          */
         public int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative, int[][] maxCountMatrix)
         {
-            int[][] newCurrentCountMatrix = currentCountMatrix;
-
             for (int i = 0; i < maxCountMatrix.Length; i++)
             {
                 if (maxCountMatrix[i][0] == generatedOutputMatrix[persons[person]][relatives[relative]])
                 {
-                    newCurrentCountMatrix[0][i]++;
+                    currentCountMatrix[person][i]++;
+
+                    return currentCountMatrix;
                 }
             }
 
-            return newCurrentCountMatrix;
+            return currentCountMatrix;
         }
 
         /*
