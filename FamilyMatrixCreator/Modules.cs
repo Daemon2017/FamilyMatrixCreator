@@ -156,7 +156,7 @@ namespace FamilyMatrixCreator
             {
                 if (maxCountMatrix[i][0] == generatedOutputMatrix[persons[person]][relatives[relative]])
                 {
-                    currentCountMatrix[person][i]++;
+                    currentCountMatrix[persons[person]][i]++;
 
                     return currentCountMatrix;
                 }
