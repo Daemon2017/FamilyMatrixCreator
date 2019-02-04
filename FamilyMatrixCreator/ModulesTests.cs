@@ -150,8 +150,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource("TransformMatrix_DataProvider")]
         public void TransformMatrix_Test(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees, float[][] result)
         {
-            float[][] a = modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
-            Assert.That(result, Is.EqualTo(a));
+            Assert.That(result, Is.EqualTo(modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees)));
         }
 
         private static object[] IncreaseCurrentRelationshipCount_DataProvider =
@@ -212,7 +211,7 @@ namespace FamilyMatrixCreator
             {
                 new int[] { 0, 1, 2, 3, 4 },
                 new int[] { 2, 4, 5 },
-                new int[] { 0, 2, 4 }
+                new int[] { 2, 4 }
             },
             new object[]
             {
@@ -224,14 +223,15 @@ namespace FamilyMatrixCreator
             {
                 new int[] { 0 },
                 new int[] { 2, 4, 5 },
-                new int[] { 0 }
+                new int[] {  }
             }
         };
 
         [TestCaseSource("RemoveImpossibleRelations_DataProvider")]
         public void RemoveImpossibleRelations_Test(int[] allPossibleRelationships, int[] currentPossibleRelationships, int[] result)
         {
-            Assert.That(result, Is.EqualTo(modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships)));
+            int[] a = modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
+            Assert.That(result, Is.EqualTo(a));
         }
 
         private static object[] FindAllExistingRelationshipDegrees_DataProvider =
