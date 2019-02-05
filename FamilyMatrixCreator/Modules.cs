@@ -219,27 +219,6 @@ namespace FamilyMatrixCreator
         }
 
         /*
-         * Исключение возможных видов родства, которые невозможно сгенерировать.
-         */
-        public int[] RemoveImpossibleRelations(int[] allPossibleRelationships, int[] currentPossibleRelationships)
-        {
-            List<int> allCurrentPossibleRelations = new List<int> { };
-
-            for (int m = 0; m < allPossibleRelationships.GetLength(0); m++)
-            {
-                for (int n = 0; n < currentPossibleRelationships.GetLength(0); n++)
-                {
-                    if (allPossibleRelationships[m] == currentPossibleRelationships[n])
-                    {
-                        allCurrentPossibleRelations.Add(allPossibleRelationships[m]);
-                    }
-                }
-            }
-
-            return allCurrentPossibleRelations.ToArray();
-        }
-
-        /*
          * Нахождение всех существующих степеней родства.
          */
         public List<int> FindAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)

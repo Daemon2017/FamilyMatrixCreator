@@ -29,20 +29,11 @@ namespace FamilyMatrixCreator
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            /*
-             * Загрузка матрицы возможных степеней родства.
-             */
             relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged("relationships.csv");
             numberOfProband = modules.FindNumberOfProband(relationshipsMatrix);
 
-            /*
-            * Загрузка матрицы значений сантиморган.
-            */
             centimorgansMatrix = fileSaverLoader.LoadFromFile1D("centimorgans.csv");
 
-            /*
-            * Загрузка матрицы максимального числа предков заданного вида.
-            */
             maxCountMatrix = fileSaverLoader.LoadFromFile2D("maxCount.csv");
         }
 

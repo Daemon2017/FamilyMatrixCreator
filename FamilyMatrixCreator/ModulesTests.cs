@@ -131,19 +131,19 @@ namespace FamilyMatrixCreator
             {
                 new float[][] { new float[] { 1, 8, 3 }, new float[] { 9, 1, 0 }, new float[] { 2, 0, 1 } },
                 new List<int> { 9, 8, 3, 2, 1 },
-                new float[][] { new float[] {6, 3, 4 }, new float[] {2, 6, 1 }, new float[] {5, 1, 6 } }
+                new float[][] { new float[] { 6, 3, 4 }, new float[] { 2, 6, 1 }, new float[] { 5, 1, 6 } }
             },
             new object[]
             {
                 new float[][] { new float[] { 1, 8, 3 }, new float[] { 0, 1, 0 }, new float[] { 0, 0, 1 } },
                 new List<int> { 9, 8, 3, 2, 1 },
-                new float[][] { new float[] {6, 3, 4 }, new float[] {1, 6, 1 }, new float[] {1, 1, 6 } }
+                new float[][] { new float[] { 6, 3, 4 }, new float[] { 1, 6, 1 }, new float[] { 1, 1, 6 } }
             },
             new object[]
             {
                 new float[][] { new float[] { 0, 8, 3 }, new float[] { 9, 0, 0 }, new float[] { 2, 0, 0 } },
                 new List<int> { 9, 8, 3, 2, 1 },
-                new float[][] { new float[] {1, 3, 4 }, new float[] {2, 1, 1 }, new float[] {5, 1, 1 } }
+                new float[][] { new float[] { 1, 3, 4 }, new float[] { 2, 1, 1 }, new float[] { 5, 1, 1 } }
             }
         };
 
@@ -203,36 +203,7 @@ namespace FamilyMatrixCreator
             int[][] maxCountMatrix = fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
 
             Assert.That(result, Is.EqualTo(modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative, maxCountMatrix)));
-        }
-
-        private static object[] RemoveImpossibleRelations_DataProvider =
-        {
-            new object[]
-            {
-                new int[] { 0, 1, 2, 3, 4 },
-                new int[] { 2, 4, 5 },
-                new int[] { 2, 4 }
-            },
-            new object[]
-            {
-                new int[] { 0, 1, 2, 3, 4 },
-                new int[] { 0 },
-                new int[] { 0 }
-            },
-            new object[]
-            {
-                new int[] { 0 },
-                new int[] { 2, 4, 5 },
-                new int[] {  }
-            }
-        };
-
-        [TestCaseSource("RemoveImpossibleRelations_DataProvider")]
-        public void RemoveImpossibleRelations_Test(int[] allPossibleRelationships, int[] currentPossibleRelationships, int[] result)
-        {
-            int[] a = modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
-            Assert.That(result, Is.EqualTo(a));
-        }
+        }       
 
         private static object[] FindAllExistingRelationshipDegrees_DataProvider =
         {

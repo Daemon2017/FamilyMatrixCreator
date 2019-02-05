@@ -9,7 +9,7 @@ namespace FamilyMatrixCreator
         Modules modules = new Modules();
 
         /*
-         * Исключение невозможных видов родства.
+         * Поиск всех возможных видов родства.
          */
         public int[] FindAllPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[,][] relationshipsMatrix, int numberOfProband)
         {
@@ -42,13 +42,19 @@ namespace FamilyMatrixCreator
                     int[] currentPossibleRelationships = Enumerable.Range(0, relationshipsMatrix.GetLength(1))
                                                                    .Select(j => relationshipsMatrix[numberOfProband, j][0]).ToArray();
 
-                    allPossibleRelationships = modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
+                    /*
+                     * Исключение возможных видов родства, которые невозможно сгенерировать.
+                     */
+                    allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
                 }
                 else
                 {
                     int[] currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToArray();
 
-                    allPossibleRelationships = modules.RemoveImpossibleRelations(allPossibleRelationships, currentPossibleRelationships);
+                    /*
+                     * Исключение возможных видов родства, которые невозможно сгенерировать.
+                     */
+                    allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
                 }
             }
 
@@ -74,7 +80,7 @@ namespace FamilyMatrixCreator
         }
 
         /*
-         * Построение правой (верхней) стороны.
+         * Построение правой (верхней) стороны  (сМ).
          */
         public float[][] BuildRightTopPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix, int numberOfProband, float[][] generatedInputMatrix, float[] centimorgansMatrix)
         {
@@ -113,9 +119,6 @@ namespace FamilyMatrixCreator
             List<int> persons = modules.ShuffleSequence(1, generatedOutputMatrix.GetLength(0));
             persons.Insert(0, 0);
 
-            /*
-             * Построение правой (верхней) стороны.
-             */
             for (int person = 0; person < persons.Count; person++)
             {
                 generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];

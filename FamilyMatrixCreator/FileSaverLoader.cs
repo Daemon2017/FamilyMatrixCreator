@@ -49,6 +49,9 @@ namespace FamilyMatrixCreator
             }
         }
 
+        /*
+         * Загрузка матрицы возможных степеней родства.
+         */
         public int[,][] LoadFromFile2DJagged(string inputFileName)
         {
             int person = 0,
@@ -107,6 +110,9 @@ namespace FamilyMatrixCreator
             return matrix;
         }
 
+        /*
+        * Загрузка матрицы максимального числа предков заданного вида.
+        */
         public int[][] LoadFromFile2D(string inputFileName)
         {
             int relationship = 0;
@@ -136,6 +142,9 @@ namespace FamilyMatrixCreator
             return matrix;
         }
 
+        /*
+        * Загрузка матрицы значений сантиморган.
+        */
         public float[] LoadFromFile1D(string inputFileName)
         {
             int person = 0;

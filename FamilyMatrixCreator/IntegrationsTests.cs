@@ -10,30 +10,6 @@ namespace FamilyMatrixCreator
         Modules modules = new Modules();
         FileSaverLoader fileSaverLoader = new FileSaverLoader();
 
-        private static object[] CalculatePercentOfMeaningfulValues_DataProvider =
-        {
-            new object[] 
-            {
-                3,
-                new List<int> { 8, 3 },
-                new float[][] { new float[] { 0, 8, 3 }, new float[] { 0, 0, 0 }, new float[] { 0, 0, 0 } },
-                100 * (double)2 / 9
-            },
-            new object[] 
-            {
-                3,
-                new List<int> { 8 },
-                new float[][] { new float[] { 0, 8, 3 }, new float[] { 0, 0, 0 }, new float[] { 0, 0, 0 } },
-                100 * (double)1 / 9
-            }
-        };
-
-        [TestCaseSource("CalculatePercentOfMeaningfulValues_DataProvider")]
-        public void CalculatePercentOfMeaningfulValues_Test(int generatedMatrixSize, List<int> existingRelationshipDegrees, float[][] generatedOutputMatrix, double result)
-        {
-            Assert.That(result, Is.EqualTo(integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix)));
-        }
-
         private static object[] FindAllPossibleRelationships_DataProvider =
         {
             new object[]
@@ -54,6 +30,30 @@ namespace FamilyMatrixCreator
             int[,][] relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
 
             Assert.That(result, Is.EqualTo(integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband)));
+        }
+
+        private static object[] CalculatePercentOfMeaningfulValues_DataProvider =
+        {
+            new object[]
+            {
+                3,
+                new List<int> { 8, 3 },
+                new float[][] { new float[] { 0, 8, 3 }, new float[] { 0, 0, 0 }, new float[] { 0, 0, 0 } },
+                100 * (double)2 / 9
+            },
+            new object[]
+            {
+                3,
+                new List<int> { 8 },
+                new float[][] { new float[] { 0, 8, 3 }, new float[] { 0, 0, 0 }, new float[] { 0, 0, 0 } },
+                100 * (double)1 / 9
+            }
+        };
+
+        [TestCaseSource("CalculatePercentOfMeaningfulValues_DataProvider")]
+        public void CalculatePercentOfMeaningfulValues_Test(int generatedMatrixSize, List<int> existingRelationshipDegrees, float[][] generatedOutputMatrix, double result)
+        {
+            Assert.That(result, Is.EqualTo(integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix)));
         }
     }
 }
