@@ -39,8 +39,9 @@ namespace FamilyMatrixCreator
                 if (0 == persons[previousPerson])
                 {
                     allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToArray();
-                    int[] currentPossibleRelationships = Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                                                                   .Select(j => relationshipsMatrix[numberOfProband, j][0]).ToArray();
+                    List<int> currentPossibleRelationships = Enumerable.Range(0, relationshipsMatrix.GetLength(1))
+                                                                   .Select(j => relationshipsMatrix[numberOfProband, j][0]).ToList();
+                    currentPossibleRelationships.Add(0);
 
                     /*
                      * Исключение возможных видов родства, которые невозможно сгенерировать.
@@ -49,7 +50,11 @@ namespace FamilyMatrixCreator
                 }
                 else
                 {
-                    int[] currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToArray();
+                    List<int> currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
+                    if (0 == numberOfI || 0 == numberOfJ)
+                    {
+                        currentPossibleRelationships.Add(0);
+                    }
 
                     /*
                      * Исключение возможных видов родства, которые невозможно сгенерировать.

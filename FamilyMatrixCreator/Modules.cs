@@ -333,5 +333,18 @@ namespace FamilyMatrixCreator
 
             return 0;
         }
+
+        public int[,][] RemoveDuplicatesFromRelationshipsMatrix(int[,][] relationshipsMatrix)
+        {
+            for (int person = 0; person < relationshipsMatrix.GetLength(0); person++)
+            {
+                for (int relative = 0; relative < relationshipsMatrix.GetLength(0); relative++)
+                {
+                    relationshipsMatrix[person, relative] = relationshipsMatrix[person, relative].Distinct().ToArray();
+                }
+            }
+
+            return relationshipsMatrix;
+        }
     }
 }

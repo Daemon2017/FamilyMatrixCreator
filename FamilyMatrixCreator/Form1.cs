@@ -31,6 +31,7 @@ namespace FamilyMatrixCreator
         {
             relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged("relationships.csv");
             numberOfProband = modules.FindNumberOfProband(relationshipsMatrix);
+            relationshipsMatrix = modules.RemoveDuplicatesFromRelationshipsMatrix(relationshipsMatrix);
 
             centimorgansMatrix = fileSaverLoader.LoadFromFile1D("centimorgans.csv");
 
