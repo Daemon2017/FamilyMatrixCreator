@@ -9,64 +9,6 @@ namespace FamilyMatrixCreator
         Modules modules = new Modules();
 
         /*
-         * Поиск всех возможных видов родства.
-         */
-        public int[] FindAllPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[,][] relationshipsMatrix, int numberOfProband)
-        {
-            int[] allPossibleRelationships = { };
-
-            for (int previousPerson = 0; previousPerson < person; previousPerson++)
-            {
-                int numberOfI = 0,
-                    numberOfJ = 0;
-
-                /*
-                 * Среди возможных видов родства пробанда ищутся порядковые номера тех, что содержат выбранные виды родства.
-                 */
-                for (int number = 0; number < relationshipsMatrix.GetLength(1); number++)
-                {
-                    if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[persons[previousPerson]][persons[person]])
-                    {
-                        numberOfI = number;
-                    }
-
-                    if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[persons[previousPerson]][relatives[relative]])
-                    {
-                        numberOfJ = number;
-                    }
-                }
-
-                if (0 == persons[previousPerson])
-                {
-                    allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToArray();
-                    List<int> currentPossibleRelationships = Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                                                                   .Select(j => relationshipsMatrix[numberOfProband, j][0]).ToList();
-                    currentPossibleRelationships.Add(0);
-
-                    /*
-                     * Исключение возможных видов родства, которые невозможно сгенерировать.
-                     */
-                    allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
-                }
-                else
-                {
-                    List<int> currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
-                    if (0 == numberOfI || 0 == numberOfJ)
-                    {
-                        currentPossibleRelationships.Add(0);
-                    }
-
-                    /*
-                     * Исключение возможных видов родства, которые невозможно сгенерировать.
-                     */
-                    allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
-                }
-            }
-
-            return allPossibleRelationships;
-        }
-
-        /*
          * Подсчет процента значащих значений
          */
         public double CalculatePercentOfMeaningfulValues(int generatedMatrixSize, List<int> existingRelationshipDegrees, float[][] generatedOutputMatrix)
@@ -133,36 +75,11 @@ namespace FamilyMatrixCreator
 
                 for (int relative = 0; relative < relatives.Count; relative++)
                 {
-                    int[] allPossibleRelationships = { };
-
-                    if (0 == persons[person])
-                    {
-                        allPossibleRelationships = modules.FindAllPossibleRelationshipsOfProband(relationshipsMatrix, numberOfProband);
-                    }
-                    else
-                    {
-                        allPossibleRelationships = FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband);
-                    }
-
-                    /*
-                     * Устранение видов родства из списка допустимых видов родства, 
-                     * добавление которых приведет к превышению допустимого числа родственников с таким видом родства.
-                     */
-                    foreach (int relationship in allPossibleRelationships)
-                    {
-                        if (false == modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix))
-                        {
-                            allPossibleRelationships = allPossibleRelationships.Where(val => val != relationship).ToArray();
-                        }
-                    }
+                    int[] allPossibleRelationships = DetectAllPossibleRelationships(relationshipsMatrix, numberOfProband, maxCountMatrix, generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative);
 
                     /*
                      * Создание родственника со случайным видом родства.
                      */
-                    if (allPossibleRelationships.GetLength(0) == 0)
-                    {
-                        allPossibleRelationships = new int[] { 0 };
-                    }
                     generatedOutputMatrix[persons[person]][relatives[relative]] = allPossibleRelationships[modules.GetNextRnd(0, allPossibleRelationships.GetLength(0))];
                     currentCountMatrix = modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
                 }
@@ -190,5 +107,93 @@ namespace FamilyMatrixCreator
             return generatedOutputMatrix;
         }
 
+        public int[] DetectAllPossibleRelationships(int[,][] relationshipsMatrix, int numberOfProband, int[][] maxCountMatrix, float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative)
+        {
+            int[] allPossibleRelationships;
+
+            if (0 == persons[person])
+            {
+                allPossibleRelationships = modules.FindAllPossibleRelationshipsOfProband(relationshipsMatrix, numberOfProband);
+            }
+            else
+            {
+                allPossibleRelationships = FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband);
+            }
+
+            /*
+             * Устранение видов родства из списка допустимых видов родства, 
+             * добавление которых приведет к превышению допустимого числа родственников с таким видом родства.
+             */
+            foreach (int relationship in allPossibleRelationships)
+            {
+                if (false == modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix))
+                {
+                    allPossibleRelationships = allPossibleRelationships.Where(val => val != relationship).ToArray();
+                }
+            }
+
+            return allPossibleRelationships;
+        }
+
+        /*
+         * Поиск всех возможных видов родства.
+         */
+        public int[] FindAllPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[,][] relationshipsMatrix, int numberOfProband)
+        {
+            int[] allPossibleRelationships = { };
+
+            for (int previousPerson = 0; previousPerson < person; previousPerson++)
+            {
+                int numberOfI = 0,
+                    numberOfJ = 0;
+
+                /*
+                 * Среди возможных видов родства пробанда ищутся порядковые номера тех, что содержат выбранные виды родства.
+                 */
+                for (int number = 0; number < relationshipsMatrix.GetLength(1); number++)
+                {
+                    if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[persons[previousPerson]][persons[person]])
+                    {
+                        numberOfI = number;
+                    }
+
+                    if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[persons[previousPerson]][relatives[relative]])
+                    {
+                        numberOfJ = number;
+                    }
+                }
+
+                if (0 == persons[previousPerson])
+                {
+                    allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToArray();
+                    List<int> currentPossibleRelationships = Enumerable.Range(0, relationshipsMatrix.GetLength(1)).Select(j => relationshipsMatrix[numberOfProband, j][0]).ToList();
+                    currentPossibleRelationships.Add(0);
+
+                    /*
+                     * Исключение возможных видов родства, которые невозможно сгенерировать.
+                     */
+                    allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
+                }
+                else if(person - 1 == previousPerson && persons.Count - 1 == person)
+                {
+
+                }
+                else
+                {
+                    List<int> currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
+                    if (0 == numberOfI || 0 == numberOfJ)
+                    {
+                        currentPossibleRelationships.Add(0);
+                    }
+
+                    /*
+                     * Исключение возможных видов родства, которые невозможно сгенерировать.
+                     */
+                    allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
+                }
+            }
+
+            return allPossibleRelationships;
+        }
     }
 }

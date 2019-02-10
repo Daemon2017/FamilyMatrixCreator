@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace FamilyMatrixCreator
@@ -9,6 +10,98 @@ namespace FamilyMatrixCreator
         Integrations integrations = new Integrations();
         Modules modules = new Modules();
         FileSaverLoader fileSaverLoader = new FileSaverLoader();
+
+        private static object[] CalculatePercentOfMeaningfulValues_DataProvider =
+        {
+            new object[]
+            {
+                3,
+                new List<int> { 8, 3 },
+                new float[][] { new float[] { 0, 8, 3 }, new float[] { 0, 0, 0 }, new float[] { 0, 0, 0 } },
+                100 * (double)2 / 9
+            },
+            new object[]
+            {
+                3,
+                new List<int> { 8 },
+                new float[][] { new float[] { 0, 8, 3 }, new float[] { 0, 0, 0 }, new float[] { 0, 0, 0 } },
+                100 * (double)1 / 9
+            }
+        };
+
+        [TestCaseSource("CalculatePercentOfMeaningfulValues_DataProvider")]
+        public void CalculatePercentOfMeaningfulValues_Test(int generatedMatrixSize, List<int> existingRelationshipDegrees, float[][] generatedOutputMatrix, double result)
+        {
+            Assert.That(result, Is.EqualTo(integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix)));
+        }
+
+        private static object[] DetectAllPossibleRelationships_DataProvider =
+        {
+            new object[]
+            {
+                3,
+                new float[][] { new float[] { 0, 15, 30, 38 }, new float[] { 0, 0, 12, 17 }, new float[] { 0, 0, 0, 0 }, null },
+                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+                new List<int> { 0, 1, 2, 3 },
+                2,
+                new List<int> { 3 },
+                0,
+                new int[] { 30 }
+            },
+            new object[]
+            {
+                3,
+                new float[][] { new float[] { 0, 15, 30, 38 }, new float[] { 0, 0, 12, 17 }, null, new float[] { 0, 0, 0, 0 } },
+                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+                new List<int> { 0, 1, 3, 2 },
+                3,
+                new List<int> { 3 },
+                0,
+                new int[] { 30 }
+            },
+            new object[]
+            {
+                3,
+                new float[][] { new float[] { 0, 15, 30, 38 }, new float[] { 0, 0, 0, 17 }, new float[] { 0, 0, 0, 0 }, null },
+                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+                new List<int> { 0, 1, 2, 3 },
+                2,
+                new List<int> { 3 },
+                0,
+                new int[] { 30, 0 }
+            },
+            new object[]
+            {
+                3,
+                new float[][] { new float[] { 0, 15, 30, 38 }, new float[] { 0, 0, 12, 0 }, new float[] { 0, 0, 0, 0 }, null },
+                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+                new List<int> { 0, 1, 2, 3 },
+                2,
+                new List<int> { 3 },
+                0,
+                new int[] { 30, 0 }
+            },
+            new object[]
+            {
+                3,
+                new float[][] { new float[] { 0, 23, 16 }, new float[] { 0, 0, 0 }, null },
+                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+                new List<int> { 0, 1, 2 },
+                1,
+                new List<int> { 2 },
+                0,
+                new int[] { 2, 6, 16, 0 }
+            }
+        };
+
+        [TestCaseSource("DetectAllPossibleRelationships_DataProvider")]
+        public void DetectAllPossibleRelationships_Test(int numberOfProband, float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative, int[] result)
+        {
+            int[,][] relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+            int[][] maxCountMatrix = fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
+
+            Assert.That(result, Is.EqualTo(integrations.DetectAllPossibleRelationships(relationshipsMatrix, numberOfProband, maxCountMatrix, generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative)));
+        }
 
         private static object[] FindAllPossibleRelationships_DataProvider =
         {
@@ -70,30 +163,6 @@ namespace FamilyMatrixCreator
             int[,][] relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
 
             Assert.That(result, Is.EqualTo(integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband)));
-        }
-
-        private static object[] CalculatePercentOfMeaningfulValues_DataProvider =
-        {
-            new object[]
-            {
-                3,
-                new List<int> { 8, 3 },
-                new float[][] { new float[] { 0, 8, 3 }, new float[] { 0, 0, 0 }, new float[] { 0, 0, 0 } },
-                100 * (double)2 / 9
-            },
-            new object[]
-            {
-                3,
-                new List<int> { 8 },
-                new float[][] { new float[] { 0, 8, 3 }, new float[] { 0, 0, 0 }, new float[] { 0, 0, 0 } },
-                100 * (double)1 / 9
-            }
-        };
-
-        [TestCaseSource("CalculatePercentOfMeaningfulValues_DataProvider")]
-        public void CalculatePercentOfMeaningfulValues_Test(int generatedMatrixSize, List<int> existingRelationshipDegrees, float[][] generatedOutputMatrix, double result)
-        {
-            Assert.That(result, Is.EqualTo(integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix)));
         }
     }
 }

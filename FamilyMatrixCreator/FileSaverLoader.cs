@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace FamilyMatrixCreator
@@ -54,57 +55,68 @@ namespace FamilyMatrixCreator
          */
         public int[,][] LoadFromFile2DJagged(string inputFileName)
         {
-            int person = 0,
-                relative = 0,
-                relationship = 0;
             string input = File.ReadAllText(inputFileName);
             int numberOfLines = input.Split('\n').Length - 1;
             int quantityOfCells = 0;
             int[,][] matrix = new int[numberOfLines, numberOfLines][];
 
-            foreach (var row in input.Split('\n'))
             {
-                relative = 0;
-                int counter = 0;
+                int person = 0,
+                    relative = 0,
+                    relationship = 0;
 
-                if (!(row.Equals("")) && !(row.Equals("\r")))
+                foreach (var row in input.Split('\n'))
                 {
-                    foreach (var column in row.Trim().Split(','))
+                    relative = 0;
+                    int counter = 0;
+
+                    if (!(row.Equals("")) && !(row.Equals("\r")))
                     {
-                        relationship = 0;
-                        counter = 0;
-
-                        /*
-                         * Определение числа возможных степеней родства. 
-                         */
-                        foreach (Match m in Regex.Matches(column, ";"))
+                        foreach (var column in row.Trim().Split(','))
                         {
-                            counter++;
-                        }
+                            relationship = 0;
+                            counter = 0;
 
-                        if (counter > quantityOfCells)
-                        {
-                            quantityOfCells = counter;
-                        }
-
-                        matrix[person, relative] = new int[quantityOfCells + 1];
-                        quantityOfCells = 0;
-
-                        foreach (var cell in column.Trim().Split(';'))
-                        {
-                            if (cell != "")
+                            /*
+                             * Определение числа возможных степеней родства. 
+                             */
+                            foreach (Match m in Regex.Matches(column, ";"))
                             {
-                                matrix[person, relative][relationship] = int.Parse(cell.Trim());
+                                counter++;
                             }
 
-                            relationship++;
+                            if (counter > quantityOfCells)
+                            {
+                                quantityOfCells = counter;
+                            }
+
+                            matrix[person, relative] = new int[quantityOfCells + 1];
+                            quantityOfCells = 0;
+
+                            foreach (var cell in column.Trim().Split(';'))
+                            {
+                                if (cell != "")
+                                {
+                                    matrix[person, relative][relationship] = int.Parse(cell.Trim());
+                                }
+
+                                relationship++;
+                            }
+
+                            relative++;
                         }
-
-                        relative++;
                     }
-                }
 
-                person++;
+                    person++;
+                }
+            }
+
+            for (int person = 0; person < matrix.GetLength(0); person++)
+            {
+                for (int relative = 0; relative < matrix.GetLength(0); relative++)
+                {
+                    matrix[person, relative] = matrix[person, relative].Distinct().ToArray();
+                }
             }
 
             return matrix;

@@ -110,12 +110,12 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new List<int> { 1, 2, 3, 4, 5 },
-                new List<int[]> { new int[2] { 0, 1 }, new int[2] { 1, 2 }, new int[2] { 2, 3 }, new int[2] { 3, 4 }, new int[2] { 4, 5 }, new int[2] { 5, 6 } }
+                new List<int[]> { new int[2] { 1, 0 }, new int[2] { 2, 1 }, new int[2] { 3, 2 }, new int[2] { 4, 3 }, new int[2] { 5, 4 } }
             },
             new object[]
             {
                 new List<int> { 5, 3, 6, 1, 2 },
-                new List<int[]> { new int[2] { 0, 1 }, new int[2] { 5, 2 }, new int[2] { 3, 3 }, new int[2] { 6, 4 }, new int[2] { 1, 5 }, new int[2] { 2, 6 } }
+                new List<int[]> { new int[2] { 5, 0 }, new int[2] { 3, 1 }, new int[2] { 6, 2 }, new int[2] { 1, 3 }, new int[2] { 2, 4 } }
             }
         };
 
@@ -210,7 +210,7 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 3,
-                new List<int> { 13, 9, 8, 5, 3, 2, 1, 18, 15, 12, 10, 7, 6, 4, 32, 29, 24, 22, 17, 16, 11, 50, 47, 40, 38, 31, 30, 23, 72, 69, 60, 58, 49, 48, 39, 98, 95, 84, 82, 71, 70, 59, 128, 125, 112, 110, 97, 96, 83 }
+                new List<int> { 0, 13, 9, 8, 5, 3, 2, 1, 18, 15, 12, 10, 7, 6, 4, 32, 29, 24, 22, 17, 16, 11, 50, 47, 40, 38, 31, 30, 23, 72, 69, 60, 58, 49, 48, 39, 98, 95, 84, 82, 71, 70, 59, 128, 125, 112, 110, 97, 96, 83 }
             }
         };
 

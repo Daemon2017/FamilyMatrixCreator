@@ -31,10 +31,7 @@ namespace FamilyMatrixCreator
         {
             relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged("relationships.csv");
             numberOfProband = modules.FindNumberOfProband(relationshipsMatrix);
-            relationshipsMatrix = modules.RemoveDuplicatesFromRelationshipsMatrix(relationshipsMatrix);
-
             centimorgansMatrix = fileSaverLoader.LoadFromFile1D("centimorgans.csv");
-
             maxCountMatrix = fileSaverLoader.LoadFromFile2D("maxCount.csv");
         }
 
@@ -63,14 +60,14 @@ namespace FamilyMatrixCreator
 
             return generatedInputMatrix;
         }
-
+       
         private void Generate(object sender, EventArgs e)
         {
             List<int> existingRelationshipDegrees = modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband);
 
             List<int[]> complianceMatrix = modules.CreateComplianceMatrix(existingRelationshipDegrees);
             fileSaverLoader.SaveToFile("compliance.csv", complianceMatrix);
-
+            
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
             textBox2.Text = "";
 

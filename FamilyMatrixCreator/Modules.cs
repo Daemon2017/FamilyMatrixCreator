@@ -87,14 +87,11 @@ namespace FamilyMatrixCreator
          */
         public List<int[]> CreateComplianceMatrix(List<int> existingRelationshipDegrees)
         {
-            List<int[]> complianceMatrix = new List<int[]>
-            {
-                new int[2] {0, 1}
-            };
+            List<int[]> complianceMatrix = new List<int[]> { };
 
             for (int relationship = 0; relationship < existingRelationshipDegrees.Count(); relationship++)
             {
-                int[] compliance = { existingRelationshipDegrees[relationship], relationship + 2 };
+                int[] compliance = { existingRelationshipDegrees[relationship], relationship };
                 complianceMatrix.Add(compliance);
             }
 
@@ -224,6 +221,7 @@ namespace FamilyMatrixCreator
         public List<int> FindAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)
         {
             List<int> existingRelationshipDegrees = new List<int>();
+            existingRelationshipDegrees.Add(0);
 
             for (int i = 0; i < relationshipsMatrix.GetLength(0); i++)
             {
@@ -332,19 +330,6 @@ namespace FamilyMatrixCreator
             Application.Exit();
 
             return 0;
-        }
-
-        public int[,][] RemoveDuplicatesFromRelationshipsMatrix(int[,][] relationshipsMatrix)
-        {
-            for (int person = 0; person < relationshipsMatrix.GetLength(0); person++)
-            {
-                for (int relative = 0; relative < relationshipsMatrix.GetLength(0); relative++)
-                {
-                    relationshipsMatrix[person, relative] = relationshipsMatrix[person, relative].Distinct().ToArray();
-                }
-            }
-
-            return relationshipsMatrix;
         }
     }
 }
