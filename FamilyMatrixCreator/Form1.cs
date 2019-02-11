@@ -117,6 +117,8 @@ namespace FamilyMatrixCreator
                     relationshipNumber++;
                 }
 
+                sumOfMeaningfulValues -= quantityOfEachRelationship[0];
+
                 label5.Text = "Значащих значений: "
                     + 100 * ((float)(sumOfMeaningfulValues - (quantityOfMatrixes * generatedMatrixSize)) / (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%";
                 label6.Text = "Затрачено: " + (((float)myStopwatch.ElapsedMilliseconds) / 1000).ToString() + " сек";

@@ -220,8 +220,7 @@ namespace FamilyMatrixCreator
          */
         public List<int> FindAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)
         {
-            List<int> existingRelationshipDegrees = new List<int>();
-            existingRelationshipDegrees.Add(0);
+            List<int> existingRelationshipDegrees = new List<int> { 0 };
 
             for (int i = 0; i < relationshipsMatrix.GetLength(0); i++)
             {

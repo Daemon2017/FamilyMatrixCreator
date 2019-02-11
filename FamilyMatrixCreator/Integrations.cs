@@ -23,6 +23,8 @@ namespace FamilyMatrixCreator
                 sumOfMeaningfulValues += quantity;
             }
 
+            sumOfMeaningfulValues -= quantityOfEachRelationship[0];
+
             return (100 * (((float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2)));
         }
 
