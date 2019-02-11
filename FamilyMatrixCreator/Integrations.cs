@@ -174,7 +174,7 @@ namespace FamilyMatrixCreator
                      */
                     allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
                 }
-                else if(person - 1 == previousPerson && persons.Count - 1 == person)
+                else if (person - 1 == previousPerson && persons.Count - 1 == person)
                 {
 
                 }
