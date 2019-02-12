@@ -41,7 +41,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение правой (верхней) стороны  (сМ).
          */
-        public float[][] BuildRightTopPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix, int numberOfProband, float[][] generatedInputMatrix, float[] centimorgansMatrix)
+        public float[][] InputBuildRightTopPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix, int numberOfProband, float[][] generatedInputMatrix, float[] centimorgansMatrix)
         {
             for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
             {
@@ -70,7 +70,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение правой (верхней) стороны.
          */
-        public float[][] BuildRightTopPart(int[,][] relationshipsMatrix, int numberOfProband, int generatedMatrixSize, List<int> existingRelationshipDegrees, int[][] maxCountMatrix, int minPercent, int maxPercent)
+        public float[][] OutputBuildRightTopPart(int[,][] relationshipsMatrix, int numberOfProband, int generatedMatrixSize, List<int> existingRelationshipDegrees, int[][] maxCountMatrix, int minPercent, int maxPercent)
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
             int[][] currentCountMatrix = new int[generatedMatrixSize][];
