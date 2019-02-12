@@ -249,7 +249,7 @@ namespace FamilyMatrixCreator
         {
             int[,][] relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
 
-            Assert.That(result, Is.EqualTo(modules.BuildLeftBottomPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband)));
+            Assert.That(result, Is.EqualTo(modules.OutputBuildLeftBottomPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband)));
         }
 
         private static object[] InputBuildLeftBottomPart_DataProvider =
@@ -264,7 +264,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource("InputBuildLeftBottomPart_DataProvider")]
         public void InputBuildLeftBottomPart_Test(float[][] generatedInputMatrix, float[][] result)
         {
-            Assert.That(result, Is.EqualTo(modules.BuildLeftBottomPart(generatedInputMatrix)));
+            Assert.That(result, Is.EqualTo(modules.InputBuildLeftBottomPart(generatedInputMatrix)));
         }
 
         private static object[] FillMainDiagonal_DataProvider =

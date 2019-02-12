@@ -241,7 +241,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение левой (нижней) стороны.
          */
-        public float[][] BuildLeftBottomPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix, int numberOfProband)
+        public float[][] OutputBuildLeftBottomPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix, int numberOfProband)
         {
             for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
             {
@@ -261,9 +261,9 @@ namespace FamilyMatrixCreator
         }
 
         /*
-         * Построение левой (нижней) стороны.
+         * Построение левой (нижней) стороны (сМ).
          */
-        public float[][] BuildLeftBottomPart(float[][] generatedInputMatrix)
+        public float[][] InputBuildLeftBottomPart(float[][] generatedInputMatrix)
         {
             for (int genPerson = 1; genPerson < generatedInputMatrix.GetLength(0); genPerson++)
             {

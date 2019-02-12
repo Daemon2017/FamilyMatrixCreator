@@ -23,7 +23,17 @@ namespace FamilyMatrixCreator
                 sumOfMeaningfulValues += quantity;
             }
 
-            sumOfMeaningfulValues -= quantityOfEachRelationship[0];
+            int i = 0;
+            foreach (var degree in existingRelationshipDegrees)
+            {
+                if (0 == degree)
+                {
+                    sumOfMeaningfulValues -= quantityOfEachRelationship[i];
+                    break;
+                }
+
+                i++;
+            }
 
             return (100 * (((float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2)));
         }
