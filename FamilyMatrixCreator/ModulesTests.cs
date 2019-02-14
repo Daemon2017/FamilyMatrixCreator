@@ -209,15 +209,15 @@ namespace FamilyMatrixCreator
         {
             new object[]
             {
-                3,
                 new List<int> { 0, 13, 9, 8, 5, 3, 2, 1, 18, 15, 12, 10, 7, 6, 4, 32, 29, 24, 22, 17, 16, 11, 50, 47, 40, 38, 31, 30, 23, 72, 69, 60, 58, 49, 48, 39, 98, 95, 84, 82, 71, 70, 59, 128, 125, 112, 110, 97, 96, 83 }
             }
         };
 
         [TestCaseSource("FindAllExistingRelationshipDegrees_DataProvider")]
-        public void FindAllExistingRelationshipDegrees_Test(int numberOfProband, List<int> result)
+        public void FindAllExistingRelationshipDegrees_Test(List<int> result)
         {
             int[,][] relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+            int numberOfProband = modules.FindNumberOfProband(relationshipsMatrix);
 
             Assert.That(result, Is.EqualTo(modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband)));
         }
@@ -227,27 +227,25 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 1, 8, 3 }, new float[] { 0, 1, 2 }, new float[] { 0, 0, 1 } },
-                3,
                 new float[][] { new float[] { 1, 8, 3 }, new float[] { 5, 1, 2 }, new float[] { 2, 3, 1 } }
             },
             new object[]
             {
                 new float[][] { new float[] { 0, 8, 3 }, new float[] { 0, 0, 2 }, new float[] { 0, 0, 0 } },
-                3,
                 new float[][] { new float[] { 0, 8, 3 }, new float[] { 5, 0, 2 }, new float[] { 2, 3, 0 } }
             },
             new object[]
             {
                 new float[][] { new float[] { 1, 8, 3 }, new float[] { 5, 1, 2 }, new float[] { 2, 3, 1 } },
-                3,
                 new float[][] { new float[] { 1, 8, 3 }, new float[] { 5, 1, 2 }, new float[] { 2, 3, 1 } }
             }
         };
 
         [TestCaseSource("OutputBuildLeftBottomPart_DataProvider")]
-        public void OutputBuildLeftBottomPart_Test(float[][] generatedOutputMatrix, int numberOfProband, float[][] result)
+        public void OutputBuildLeftBottomPart_Test(float[][] generatedOutputMatrix, float[][] result)
         {
             int[,][] relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+            int numberOfProband = modules.FindNumberOfProband(relationshipsMatrix);
 
             Assert.That(result, Is.EqualTo(modules.OutputBuildLeftBottomPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband)));
         }

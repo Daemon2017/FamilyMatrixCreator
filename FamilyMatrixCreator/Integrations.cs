@@ -201,26 +201,29 @@ namespace FamilyMatrixCreator
                      */
                     allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
                 }
-                else if (person - 1 == previousPerson && persons.Count - 1 == person)
-                {
-
-                }
-                else if (person - 1 == numberOfNotRelativesOfPerson && person - 1 == numberOfNotRelativesOfRelative)
-                {
-
-                }
                 else
                 {
-                    List<int> currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
-                    if (0 == numberOfI || 0 == numberOfJ)
+                    if (person - 1 == numberOfNotRelativesOfPerson && person - 1 == numberOfNotRelativesOfRelative)
                     {
-                        currentPossibleRelationships.Add(0);
-                    }
 
-                    /*
-                     * Исключение возможных видов родства, которые невозможно сгенерировать.
-                     */
-                    allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
+                    }
+                    else if (person - 1 == previousPerson && persons.Count - 1 == person)
+                    {
+
+                    }
+                    else
+                    {
+                        List<int> currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
+                        if (0 == numberOfI || 0 == numberOfJ)
+                        {
+                            currentPossibleRelationships.Add(0);
+                        }
+
+                        /*
+                         * Исключение возможных видов родства, которые невозможно сгенерировать.
+                         */
+                        allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
+                    }
                 }
             }
 
