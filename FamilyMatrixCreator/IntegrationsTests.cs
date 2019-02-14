@@ -46,7 +46,7 @@ namespace FamilyMatrixCreator
                 3,
                 new List<int> { 4 },
                 0,
-                new int[] { 2, 0 }
+                new int[] { 2, 6, 0 }
             },
             new object[]
             {

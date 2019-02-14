@@ -154,6 +154,21 @@ namespace FamilyMatrixCreator
         {
             int[] allPossibleRelationships = { };
 
+            int numberOfNotRelativesOfPerson = 0,
+                numberOfNotRelativesOfRelative = 0;
+
+            for (int previousPerson = 1; previousPerson < person; previousPerson++)
+            {
+                if (0 == generatedOutputMatrix[persons[previousPerson]][persons[person]])
+                {
+                    numberOfNotRelativesOfPerson++;
+                }
+                if (0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]])
+                {
+                    numberOfNotRelativesOfRelative++;
+                }
+            }
+
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
                 int numberOfI = 0,
@@ -187,6 +202,10 @@ namespace FamilyMatrixCreator
                     allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
                 }
                 else if (person - 1 == previousPerson && persons.Count - 1 == person)
+                {
+
+                }
+                else if (person - 1 == numberOfNotRelativesOfPerson && person - 1 == numberOfNotRelativesOfRelative)
                 {
 
                 }
