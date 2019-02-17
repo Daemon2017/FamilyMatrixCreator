@@ -39,16 +39,6 @@ namespace FamilyMatrixCreator
         {
             new object[]
             {
-                new float[][] { new float[] { 0, 11, 6, 11, 6 }, new float[] { 0, 0, 2, 0, 0 }, new float[] { 0, 0, 0, 0, 0 }, new float[] { 0, 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-                new List<int> { 0, 1, 2, 3, 4 },
-                3,
-                new List<int> { 4 },
-                0,
-                new int[] { 2, 6, 0 }
-            },
-            new object[]
-            {
                 new float[][] { new float[] { 0, 6, 5, 6, 5 }, new float[] { 0, 0, 2, 4, 2 }, new float[] { 0, 0, 0, 3, 0 }, new float[] { 0, 0, 0, 0, 0 }, null },
                 new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3, 4 },
@@ -56,6 +46,26 @@ namespace FamilyMatrixCreator
                 new List<int> { 4 },
                 0,
                 new int[] { 2 }
+            },
+            new object[]
+            {
+                new float[][] { new float[] { 0, 10, 9, 5, 9 }, new float[] { 0, 0, 2, 4, 2 }, new float[] { 0, 0, 0, 3, 0 }, new float[] { 0, 0, 0, 0, 0 }, null },
+                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+                new List<int> { 0, 1, 2, 3, 4 },
+                3,
+                new List<int> { 4 },
+                0,
+                new int[] { 2 }
+            },
+            new object[]
+            {
+                new float[][] { new float[] { 0, 11, 6, 11, 6 }, new float[] { 0, 0, 2, 0, 0 }, new float[] { 0, 0, 0, 0, 0 }, new float[] { 0, 0, 0, 0, 0 }, null },
+                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+                new List<int> { 0, 1, 2, 3, 4 },
+                3,
+                new List<int> { 4 },
+                0,
+                new int[] { 2, 6, 0 }
             },
             new object[]
             {
@@ -284,8 +294,9 @@ namespace FamilyMatrixCreator
         {
             int[,][] relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = modules.FindNumberOfProband(relationshipsMatrix);
+            int[][] maxCountMatrix = fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
 
-            Assert.That(result, Is.EqualTo(integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband)));
+            Assert.That(result, Is.EqualTo(integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband, maxCountMatrix)));
         }
     }
 }

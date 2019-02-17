@@ -129,7 +129,7 @@ namespace FamilyMatrixCreator
             }
             else
             {
-                allPossibleRelationships = FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband);
+                allPossibleRelationships = FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband, maxCountMatrix);
             }
 
             /*
@@ -150,13 +150,32 @@ namespace FamilyMatrixCreator
         /*
          * Поиск всех возможных видов родства.
          */
-        public int[] FindAllPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[,][] relationshipsMatrix, int numberOfProband)
+        public int[] FindAllPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[,][] relationshipsMatrix, int numberOfProband, int[][] maxCountMatrix)
         {
             int[] allPossibleRelationships = { };
 
+            List<int> ancestralRelationships = new List<int> { };
+            for (int relationship = 0; relationship < maxCountMatrix.GetLength(0); relationship++)
+            {
+                ancestralRelationships.Add(maxCountMatrix[relationship][0]);
+            }
+
+            int numberOfAncestralRelativesOfRelative = 0;
+            for (int previousPerson = 1; previousPerson < person; previousPerson++)
+            {
+                for (int ancestralRelationship = 0; ancestralRelationship < ancestralRelationships.Count; ancestralRelationship++)
+                {
+                    if (ancestralRelationships[ancestralRelationship] == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
+                        && 0 != generatedOutputMatrix[persons[previousPerson]][persons[person]])
+                    {
+                        numberOfAncestralRelativesOfRelative++;
+                        break;
+                    }
+                }
+            }
+
             int numberOfNotRelativesOfPerson = 0,
                 numberOfNotRelativesOfRelative = 0;
-
             for (int previousPerson = 1; previousPerson < person; previousPerson++)
             {
                 if (0 == generatedOutputMatrix[persons[previousPerson]][persons[person]])
@@ -217,6 +236,11 @@ namespace FamilyMatrixCreator
                         if (0 == numberOfI || 0 == numberOfJ)
                         {
                             currentPossibleRelationships.Add(0);
+                        }
+
+                        if (0 != numberOfAncestralRelativesOfRelative)
+                        {
+                            currentPossibleRelationships.AddRange(ancestralRelationships);
                         }
 
                         /*
