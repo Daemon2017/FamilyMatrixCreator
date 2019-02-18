@@ -34,32 +34,38 @@ namespace FamilyMatrixCreator
             Assert.That(result, Is.EqualTo(integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix)));
         }
 
-        private static object[] DetectAllPossibleRelationships_DataProvider =
+        private static object[] FindAllPossibleRelationships_DataProvider =
         {
             //new object[]
             //{
             //    new float[][] { new float[] { 0, 6, 5, 6, 5, 9 }, new float[] { 0, 0, 2, 4, 2, 5 }, new float[] { 0, 0, 0, 3, 0, 2 }, new float[] { 0, 0, 0, 0, 2, 5 }, new float[] { 0, 0, 0, 0, 0, 0 }, null },
-            //    new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
             //    new List<int> { 0, 1, 2, 3, 4, 5 },
             //    4,
             //    new List<int> { 5 },
             //    0,
             //    new int[] { 0 }
             //},
-            //new object[]
-            //{
-            //    new float[][] { new float[] { 0, 6, 5, 6, 5, 9 }, new float[] { 0, 0, 2, 4, 2, 5 }, new float[] { 0, 0, 0, 3, 0, 0 }, new float[] { 0, 0, 0, 0, 2, 5 }, new float[] { 0, 0, 0, 0, 0, 0 }, null },
-            //    new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-            //    new List<int> { 0, 1, 2, 3, 4, 5 },
-            //    4,
-            //    new List<int> { 5 },
-            //    0,
-            //    new int[] { 2 }
-            //},
+            new object[]
+            {
+                new float[][] { new float[] { 0, 6, 5, 6, 5, 9 }, new float[] { 0, 0, 2, 4, 2, 5 }, new float[] { 0, 0, 0, 3, 0, 0 }, new float[] { 0, 0, 0, 0, 2, 5 }, new float[] { 0, 0, 0, 0, 0, 0 }, null },
+                new List<int> { 0, 1, 2, 3, 4, 5 },
+                4,
+                new List<int> { 5 },
+                0,
+                new int[] { 2 }
+            },
+            new object[]
+            {
+                new float[][] { new float[] { 0, 4, 5, 5, 9 }, new float[] { 0, 0, 5, 5, 9 }, new float[] { 0, 0, 0, 0, 0 }, new float[] { 0, 0, 0, 0, 0 }, null },
+                new List<int> { 0, 1, 2, 3, 4 },
+                3,
+                new List<int> { 4 },
+                0,
+                new int[] { 2, 0 }
+            },
             new object[]
             {
                 new float[][] { new float[] { 0, 11, 6, 11, 6, 11 }, new float[] { 0, 0, 2, 0, 0, 0 }, new float[] { 0, 0, 0, 0, 0, 0 }, new float[] { 0, 0, 0, 0, 2, 4 }, new float[] { 0, 0, 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3, 4, 5 },
                 4,
                 new List<int> { 5 },
@@ -69,7 +75,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 11, 6, 11, 6, 11 }, new float[] { 0, 0, 2, 0, 0, 4 }, new float[] { 0, 0, 0, 0, 0, 3 }, new float[] { 0, 0, 0, 0, 0, 0 }, new float[] { 0, 0, 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3, 4, 5 },
                 4,
                 new List<int> { 5 },
@@ -79,7 +84,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 6, 5, 6, 5 }, new float[] { 0, 0, 2, 4, 2 }, new float[] { 0, 0, 0, 3, 0 }, new float[] { 0, 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3, 4 },
                 3,
                 new List<int> { 4 },
@@ -89,7 +93,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 11, 6, 11, 6 }, new float[] { 0, 0, 2, 0, 0 }, new float[] { 0, 0, 0, 0, 0 }, new float[] { 0, 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3, 4 },
                 3,
                 new List<int> { 4 },
@@ -99,7 +102,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 5, 5, 5 }, new float[] { 0, 0, 0, 0 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -109,7 +111,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 5, 5, 5 }, new float[] { 0, 0, 0, 0 }, null, new float[] { 0, 0, 0, 0 } },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 3, 2 },
                 3,
                 new List<int> { 3 },
@@ -119,7 +120,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 7, 4, 7 }, new float[] { 0, 0, 2, 11 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -129,7 +129,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 7, 4, 7 }, new float[] { 0, 0, 2, 11 }, null, new float[] { 0, 0, 0, 0 } },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 3, 2 },
                 3,
                 new List<int> { 3 },
@@ -139,7 +138,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 5, 5, 6 }, new float[] { 0, 0, 0, 3 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -149,7 +147,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 5, 5, 6 }, new float[] { 0, 0, 0, 3 }, null, new float[] { 0, 0, 0, 0 } },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 3, 2 },
                 3,
                 new List<int> { 3 },
@@ -159,7 +156,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 5, 6, 5 }, new float[] { 0, 0, 3, 0 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -169,7 +165,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 5, 6, 6 }, new float[] { 0, 0, 3, 3 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -179,7 +174,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 4, 6, 11 }, new float[] { 0, 0, 6, 11 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -189,7 +183,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 11, 6, 4 }, new float[] { 0, 0, 2, 11 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -199,7 +192,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 11, 23, 17 }, new float[] { 0, 0, 0, 3 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -209,7 +201,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 11, 17, 23 }, new float[] { 0, 0, 3, 0 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -219,7 +210,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 7, 11, 17 }, new float[] { 0, 0, 16, 23 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -229,7 +219,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 17, 4, 7 }, new float[] { 0, 0, 16, 23 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -239,7 +228,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 17, 11, 17 }, new float[] { 0, 0, 2, 0 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -249,7 +237,6 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 11, 17, 17 }, new float[] { 0, 0, 0, 3 }, new float[] { 0, 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2, 3 },
                 2,
                 new List<int> { 3 },
@@ -259,27 +246,12 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 new float[][] { new float[] { 0, 23, 16 }, new float[] { 0, 0, 0 }, null },
-                new int[][] { new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
                 new List<int> { 0, 1, 2 },
                 1,
                 new List<int> { 2 },
                 0,
                 new int[] { 2, 6, 16, 0 }
-            }
-        };
-
-        [TestCaseSource("DetectAllPossibleRelationships_DataProvider")]
-        public void DetectAllPossibleRelationships_Test(float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative, int[] result)
-        {
-            int[,][] relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
-            int numberOfProband = modules.FindNumberOfProband(relationshipsMatrix);
-            int[][] maxCountMatrix = fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
-
-            Assert.That(result, Is.EqualTo(integrations.DetectAllPossibleRelationships(relationshipsMatrix, numberOfProband, maxCountMatrix, generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative)));
-        }
-
-        private static object[] FindAllPossibleRelationships_DataProvider =
-        {
+            },
             new object[]
             {
                 new float[][] { new float[] { 1, 4, 7, 7 }, new float[] { 0, 1, 3, 3 }, new float[] { 0, 0, 1, 0 }, new float[] { 0, 0, 0, 1 } },
