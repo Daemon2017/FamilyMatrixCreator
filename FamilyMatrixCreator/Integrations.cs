@@ -230,6 +230,11 @@ namespace FamilyMatrixCreator
                     {
 
                     }
+                    else if (0 == generatedOutputMatrix[persons[previousPerson]][persons[person]]
+                        && 0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]])
+                    {
+
+                    }
                     else
                     {
                         List<int> currentPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
