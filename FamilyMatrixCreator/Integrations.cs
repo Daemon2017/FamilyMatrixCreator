@@ -129,7 +129,7 @@ namespace FamilyMatrixCreator
             }
             else
             {
-                allPossibleRelationships = FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband, maxCountMatrix);
+                allPossibleRelationships = FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband, maxCountMatrix, currentCountMatrix);
             }
 
             /*
@@ -150,16 +150,22 @@ namespace FamilyMatrixCreator
         /*
          * Поиск всех возможных видов родства.
          */
-        public int[] FindAllPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[,][] relationshipsMatrix, int numberOfProband, int[][] maxCountMatrix)
+        public int[] FindAllPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[,][] relationshipsMatrix, int numberOfProband, int[][] maxCountMatrix, int[][] currentCountMatrix)
         {
-            int[] allPossibleRelationships = { };
+            List<int> allPossibleRelationships = new List<int> { };
 
+            /*
+             * Составление списка предковых степеней родства.
+             */
             List<int> ancestralRelationships = new List<int> { };
             for (int relationship = 0; relationship < maxCountMatrix.GetLength(0); relationship++)
             {
                 ancestralRelationships.Add(maxCountMatrix[relationship][0]);
             }
 
+            /*
+             * Определение количества родственников-предков текущего родственника.
+             */
             int numberOfAncestralRelativesOfRelative = 0;
             for (int previousPerson = 1; previousPerson < person; previousPerson++)
             {
@@ -174,6 +180,9 @@ namespace FamilyMatrixCreator
                 }
             }
 
+            /*
+             * Определение количества неродственных родственников текущего лица и родственника.
+             */
             int numberOfNotRelativesOfPerson = 0,
                 numberOfNotRelativesOfRelative = 0;
             for (int previousPerson = 1; previousPerson < person; previousPerson++)
@@ -211,14 +220,14 @@ namespace FamilyMatrixCreator
 
                 if (0 == persons[previousPerson])
                 {
-                    allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToArray();
+                    allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
                     List<int> currentPossibleRelationships = Enumerable.Range(0, relationshipsMatrix.GetLength(1)).Select(j => relationshipsMatrix[numberOfProband, j][0]).ToList();
                     currentPossibleRelationships.Add(0);
 
                     /*
                      * Исключение возможных видов родства, которые невозможно сгенерировать.
                      */
-                    allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
+                    allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToList();
                 }
                 else
                 {
@@ -248,15 +257,29 @@ namespace FamilyMatrixCreator
                             currentPossibleRelationships.AddRange(ancestralRelationships);
                         }
 
+                        for (int p = 1; p < person; p++)
+                        {
+                            for (int relationship = 0; relationship < ancestralRelationships.Count(); relationship++)
+                            {
+                                if (generatedOutputMatrix[persons[p]][persons[person]] == ancestralRelationships[relationship])
+                                {
+                                    if (maxCountMatrix[relationship][1] == currentCountMatrix[persons[p - 1]][relationship])
+                                    {
+                                        currentPossibleRelationships = currentPossibleRelationships.Intersect(new List<int> { ancestralRelationships[relationship] }).ToList();
+                                    }
+                                }
+                            }
+                        }
+
                         /*
                          * Исключение возможных видов родства, которые невозможно сгенерировать.
                          */
-                        allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToArray();
+                        allPossibleRelationships = allPossibleRelationships.Intersect(currentPossibleRelationships).ToList();
                     }
                 }
             }
 
-            return allPossibleRelationships;
+            return allPossibleRelationships.ToArray();
         }
     }
 }
