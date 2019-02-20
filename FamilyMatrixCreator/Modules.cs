@@ -83,22 +83,6 @@ namespace FamilyMatrixCreator
         }
 
         /*
-         * Создание матрицы соответствий.
-         */
-        public List<int[]> CreateComplianceMatrix(List<int> existingRelationshipDegrees)
-        {
-            List<int[]> complianceMatrix = new List<int[]> { };
-
-            for (int relationship = 0; relationship < existingRelationshipDegrees.Count(); relationship++)
-            {
-                int[] compliance = { existingRelationshipDegrees[relationship], relationship };
-                complianceMatrix.Add(compliance);
-            }
-
-            return complianceMatrix;
-        }
-
-        /*
          * Устранение разрывов между номерами видов родства.
          */
         public float[][] TransformMatrix(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
@@ -127,21 +111,6 @@ namespace FamilyMatrixCreator
             }
 
             return generatedOutputMatrix;
-        }
-
-        /*
-         * Перемешивание порядка значений в списке.
-         */
-        public List<int> ShuffleSequence(int startValue, int endValue)
-        {
-            List<int> relatives = new List<int> { };
-
-            for (int relative = startValue; relative < endValue; relative++)
-            {
-                relatives.Add(relative);
-            }
-
-            return relatives.OrderBy(x => new ContinuousUniform().Sample()).ToList();
         }
 
         /*

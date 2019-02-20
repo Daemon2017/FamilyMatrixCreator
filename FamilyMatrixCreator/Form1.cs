@@ -65,7 +65,8 @@ namespace FamilyMatrixCreator
         {
             List<int> existingRelationshipDegrees = modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband);
 
-            List<int[]> complianceMatrix = modules.CreateComplianceMatrix(existingRelationshipDegrees);
+            List<int[]> complianceMatrix = Enumerable.Range(0, existingRelationshipDegrees.Count())
+                .Select(relationship => (new int[] { existingRelationshipDegrees[relationship], relationship })).ToList();
             fileSaverLoader.SaveToFile("compliance.csv", complianceMatrix);
             
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);

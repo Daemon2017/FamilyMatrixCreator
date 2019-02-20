@@ -105,26 +105,6 @@ namespace FamilyMatrixCreator
             Assert.That(result, Is.EqualTo(modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship)));
         }
 
-        private static object[] CreateComplianceMatrix_DataProvider =
-        {
-            new object[]
-            {
-                new List<int> { 1, 2, 3, 4, 5 },
-                new List<int[]> { new int[2] { 1, 0 }, new int[2] { 2, 1 }, new int[2] { 3, 2 }, new int[2] { 4, 3 }, new int[2] { 5, 4 } }
-            },
-            new object[]
-            {
-                new List<int> { 5, 3, 6, 1, 2 },
-                new List<int[]> { new int[2] { 5, 0 }, new int[2] { 3, 1 }, new int[2] { 6, 2 }, new int[2] { 1, 3 }, new int[2] { 2, 4 } }
-            }
-        };
-
-        [TestCaseSource("CreateComplianceMatrix_DataProvider")]
-        public void CreateComplianceMatrix_Test(List<int> existingRelationshipDegrees, List<int[]> result)
-        {
-            Assert.That(result, Is.EqualTo(modules.CreateComplianceMatrix(existingRelationshipDegrees)));
-        }
-
         private static object[] TransformMatrix_DataProvider =
         {
             new object[]
