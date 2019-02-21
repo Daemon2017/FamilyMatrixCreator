@@ -181,7 +181,9 @@ namespace FamilyMatrixCreator
                 }
             }
 
-            return allPossibleRelationshipsOfProband.Where(val => val != 0).ToArray();
+            return allPossibleRelationshipsOfProband.Distinct()
+                .Where(val => val != 0)
+                .ToArray();
         }
 
         /*
@@ -193,18 +195,11 @@ namespace FamilyMatrixCreator
 
             for (int i = 0; i < relationshipsMatrix.GetLength(0); i++)
             {
-                if (!existingRelationshipDegrees.Contains(relationshipsMatrix[numberOfProband, i][0]))
-                {
-                    existingRelationshipDegrees.Add(relationshipsMatrix[numberOfProband, i][0]);
-                }
-
-                if (!existingRelationshipDegrees.Contains(relationshipsMatrix[i, numberOfProband][0]))
-                {
-                    existingRelationshipDegrees.Add(relationshipsMatrix[i, numberOfProband][0]);
-                }
+                existingRelationshipDegrees.Add(relationshipsMatrix[numberOfProband, i][0]);
+                existingRelationshipDegrees.Add(relationshipsMatrix[i, numberOfProband][0]);
             }
 
-            return existingRelationshipDegrees;
+            return existingRelationshipDegrees.Distinct().ToList();
         }
 
         /*

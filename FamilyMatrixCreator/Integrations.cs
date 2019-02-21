@@ -77,7 +77,8 @@ namespace FamilyMatrixCreator
             int[][] currentCountMatrix = new int[generatedMatrixSize][];
 
             List<int> persons = Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                .OrderBy(x => new ContinuousUniform().Sample()).ToList();
+                .OrderBy(x => new ContinuousUniform().Sample())
+                .ToList();
             persons.Insert(0, 0);
 
             for (int person = 0; person < persons.Count; person++)
@@ -86,7 +87,8 @@ namespace FamilyMatrixCreator
                 currentCountMatrix[persons[person]] = new int[maxCountMatrix.Length];
 
                 List<int> relatives = Enumerable.Range(persons[person] + 1, generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
-                    .OrderBy(x => new ContinuousUniform().Sample()).ToList();
+                    .OrderBy(x => new ContinuousUniform().Sample())
+                    .ToList();
 
                 for (int relative = 0; relative < relatives.Count; relative++)
                 {
@@ -112,7 +114,8 @@ namespace FamilyMatrixCreator
                         currentCountMatrix = new int[generatedMatrixSize][];
 
                         persons = Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                            .OrderBy(x => new ContinuousUniform().Sample()).ToList();
+                            .OrderBy(x => new ContinuousUniform().Sample())
+                            .ToList();
                         persons.Insert(0, 0);
 
                         person = -1;
@@ -140,14 +143,8 @@ namespace FamilyMatrixCreator
              * Устранение видов родства из списка допустимых видов родства, 
              * добавление которых приведет к превышению допустимого числа родственников с таким видом родства.
              */
-            foreach (int relationship in allPossibleRelationships)
-            {
-                if (false == modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix))
-                {
-                    allPossibleRelationships = allPossibleRelationships.Where(val => val != relationship).ToArray();
-                }
-            }
-
+            allPossibleRelationships = allPossibleRelationships.Where(relationship => true == modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix)).ToArray();
+                
             return allPossibleRelationships;
         }
 
@@ -162,7 +159,8 @@ namespace FamilyMatrixCreator
              * Составление списка предковых степеней родства.
              */
             List<int> ancestralRelationships = Enumerable.Range(0, maxCountMatrix.GetLength(0))
-                .Select(j => maxCountMatrix[j][0]).ToList();
+                .Select(j => maxCountMatrix[j][0])
+                .ToList();
 
             /*
              * Определение количества родственников-предков текущего родственника.
@@ -171,44 +169,58 @@ namespace FamilyMatrixCreator
             for (int previousPerson = 1; previousPerson < person; previousPerson++)
             {
                 numberOfAncestralRelativesOfRelative += Enumerable.Range(0, ancestralRelationships.Count)
-                    .Where(ancestralRelationship => ancestralRelationships[ancestralRelationship] == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-    && 0 != generatedOutputMatrix[persons[previousPerson]][persons[person]]).Count();
+                    .Where(ancestralRelationship => (ancestralRelationships[ancestralRelationship] == generatedOutputMatrix[persons[previousPerson]][relatives[relative]] 
+                    && 0 != generatedOutputMatrix[persons[previousPerson]][persons[person]]))
+                    .Count();
             }
 
             /*
              * Определение количества неродственных родственников текущего лица и родственника.
              */
             int numberOfNotRelativesOfPerson = Enumerable.Range(1, person - 1)
-                .Where(previousPerson => 0 == generatedOutputMatrix[persons[previousPerson]][persons[person]]).Count();
+                .Where(previousPerson => 0 == generatedOutputMatrix[persons[previousPerson]][persons[person]])
+                .Count();
             int numberOfNotRelativesOfRelative = Enumerable.Range(1, person - 1)
-                .Where(previousPerson => 0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]).Count();
+                .Where(previousPerson => 0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]])
+                .Count();
 
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
-                int numberOfI = 0,
-                    numberOfJ = 0;
-
                 /*
                  * Среди возможных видов родства пробанда ищутся порядковые номера тех, что содержат выбранные виды родства.
                  */
-                for (int number = 0; number < relationshipsMatrix.GetLength(1); number++)
+                int numberOfI = 0;
+                try
                 {
-                    if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[persons[previousPerson]][persons[person]])
-                    {
-                        numberOfI = number;
-                    }
+                    numberOfI = Enumerable.Range(0, relationshipsMatrix.GetLength(1))
+                        .Where(number => relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[persons[previousPerson]][persons[person]])
+                        .Select(number => number)
+                        .Single();
+                }
+                catch (InvalidOperationException)
+                {
 
-                    if (relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[persons[previousPerson]][relatives[relative]])
-                    {
-                        numberOfJ = number;
-                    }
+                }
+
+                int numberOfJ = 0;
+                try
+                {
+                    numberOfJ = Enumerable.Range(0, relationshipsMatrix.GetLength(1))
+                        .Where(number => relationshipsMatrix[numberOfProband, number][0] == generatedOutputMatrix[persons[previousPerson]][relatives[relative]])
+                        .Select(number => number)
+                        .Single();
+                }
+                catch (InvalidOperationException)
+                {
+
                 }
 
                 if (0 == persons[previousPerson])
                 {
                     allPossibleRelationships = relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
                     List<int> currentPossibleRelationships = Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                        .Select(j => relationshipsMatrix[numberOfProband, j][0]).ToList();
+                        .Select(j => relationshipsMatrix[numberOfProband, j][0])
+                        .ToList();
                     currentPossibleRelationships.Add(0);
 
                     /*
