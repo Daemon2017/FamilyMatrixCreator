@@ -94,12 +94,12 @@ namespace FamilyMatrixCreator
 
                 for (int relative = 0; relative < relatives.Count; relative++)
                 {
-                    int[] allPossibleRelationships = DetectAllPossibleRelationships(relationshipsMatrix, numberOfProband, maxCountMatrix, generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative);
+                    List<int> allPossibleRelationships = DetectAllPossibleRelationships(relationshipsMatrix, numberOfProband, maxCountMatrix, generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative);
 
                     /*
                      * Создание родственника со случайным видом родства.
                      */
-                    generatedOutputMatrix[persons[person]][relatives[relative]] = allPossibleRelationships[modules.GetNextRnd(0, allPossibleRelationships.GetLength(0))];
+                    generatedOutputMatrix[persons[person]][relatives[relative]] = allPossibleRelationships[modules.GetNextRnd(0, allPossibleRelationships.Count)];
                     currentCountMatrix = modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
                 }
 
@@ -129,9 +129,9 @@ namespace FamilyMatrixCreator
             return generatedOutputMatrix;
         }
 
-        public int[] DetectAllPossibleRelationships(int[,][] relationshipsMatrix, int numberOfProband, int[][] maxCountMatrix, float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative)
+        public List<int> DetectAllPossibleRelationships(int[,][] relationshipsMatrix, int numberOfProband, int[][] maxCountMatrix, float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative)
         {
-            int[] allPossibleRelationships;
+            List<int> allPossibleRelationships;
 
             if (0 == persons[person])
             {
@@ -149,7 +149,7 @@ namespace FamilyMatrixCreator
             allPossibleRelationships = (from relationship in allPossibleRelationships
                                         where true == modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix)
                                         select relationship)
-                                        .ToArray();
+                                        .ToList();
 
             return allPossibleRelationships;
         }
@@ -157,7 +157,7 @@ namespace FamilyMatrixCreator
         /*
          * Поиск всех возможных видов родства.
          */
-        public int[] FindAllPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[,][] relationshipsMatrix, int numberOfProband, int[][] maxCountMatrix, int[][] currentCountMatrix)
+        public List<int> FindAllPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[,][] relationshipsMatrix, int numberOfProband, int[][] maxCountMatrix, int[][] currentCountMatrix)
         {
             List<int> allPossibleRelationships = new List<int> { };
 
@@ -284,7 +284,7 @@ namespace FamilyMatrixCreator
                 }
             }
 
-            return allPossibleRelationships.ToArray();
+            return allPossibleRelationships;
         }
     }
 }

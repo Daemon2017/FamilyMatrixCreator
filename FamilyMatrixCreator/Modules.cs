@@ -134,9 +134,9 @@ namespace FamilyMatrixCreator
         /*
          * Построение списка возможных степеней родства пробанда.
          */
-        public int[] FindAllPossibleRelationshipsOfProband(int[,][] relationshipsMatrix, int numberOfProband)
+        public List<int> FindAllPossibleRelationshipsOfProband(int[,][] relationshipsMatrix, int numberOfProband)
         {
-            int[] allPossibleRelationshipsOfProband = new int[relationshipsMatrix.GetLength(1)];
+            List<int> allPossibleRelationshipsOfProband = new List<int> { };
 
             for (int i = 0; i < relationshipsMatrix.GetLength(1); i++)
             {
@@ -177,13 +177,13 @@ namespace FamilyMatrixCreator
 
                 if (0 < quantityOfPossibleRelatives)
                 {
-                    allPossibleRelationshipsOfProband[i] = relationshipsMatrix[numberOfProband, i][0];
+                    allPossibleRelationshipsOfProband.Add(relationshipsMatrix[numberOfProband, i][0]);
                 }
             }
 
             return allPossibleRelationshipsOfProband.Distinct()
-                .Where(val => val != 0)
-                .ToArray();
+                                                    .Where(val => val != 0)
+                                                    .ToList();
         }
 
         /*
