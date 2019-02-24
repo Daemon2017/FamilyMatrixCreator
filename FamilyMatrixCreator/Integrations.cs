@@ -270,13 +270,12 @@ namespace FamilyMatrixCreator
                                 {
                                     if (maxCountMatrix[relationship][1] == currentCountMatrix[persons[p - 1]][relationship])
                                     {
-                                        //currentPossibleRelationships = currentPossibleRelationships.Intersect(new List<int> { ancestralRelationships[relationship] }).ToList();
-                                        currentPossibleRelationships.Remove(ancestralRelationships[relationship]);
+                                        currentPossibleRelationships.RemoveAll(values => values == ancestralRelationships[relationship]);
                                     }
                                 }
                             }
                         }
-
+                        
                         /*
                          * Исключение возможных видов родства, которые невозможно сгенерировать.
                          */

@@ -41,27 +41,6 @@ namespace FamilyMatrixCreator
                 new float[][] {
                     new float[] { 0, 6, 5, 6, 5, 9 },
                     new float[] { 0, 0, 2, 4, 2, 5 },
-                    new float[] { 0, 0, 0, 3, 0, 2 },
-                    new float[] { 0, 0, 0, 0, 2, 5 },
-                    new float[] { 0, 0, 0, 0, 0, 0 },
-                    null },
-                new int[][] {
-                    new int[]{ 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    new int[]{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    new int[]{ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    null },
-                new List<int> { 0, 1, 2, 3, 4, 5 },
-                4,
-                new List<int> { 5 },
-                0,
-                new int[] { 0 }
-            },
-            new object[]
-            {
-                new float[][] {
-                    new float[] { 0, 6, 5, 6, 5, 9 },
-                    new float[] { 0, 0, 2, 4, 2, 5 },
                     new float[] { 0, 0, 0, 3, 0, 0 },
                     new float[] { 0, 0, 0, 0, 2, 5 },
                     new float[] { 0, 0, 0, 0, 0, 0 },
@@ -77,6 +56,27 @@ namespace FamilyMatrixCreator
                 new List<int> { 5 },
                 0,
                 new int[] { 2 }
+            },
+            new object[]
+            {
+                new float[][] {
+                    new float[] { 0, 6, 5, 6, 5, 9 },
+                    new float[] { 0, 0, 2, 4, 2, 5 },
+                    new float[] { 0, 0, 0, 3, 0, 2 },
+                    new float[] { 0, 0, 0, 0, 2, 5 },
+                    new float[] { 0, 0, 0, 0, 0, 0 },
+                    null },
+                new int[][] {
+                    new int[]{ 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    new int[]{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    new int[]{ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    null },
+                new List<int> { 0, 1, 2, 3, 4, 5 },
+                4,
+                new List<int> { 5 },
+                0,
+                new int[] { 0 }
             },
             new object[]
             {
