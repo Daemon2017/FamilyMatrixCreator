@@ -262,20 +262,6 @@ namespace FamilyMatrixCreator
                             currentPossibleRelationships.AddRange(ancestralRelationships);
                         }
 
-                        for (int p = 1; p < person; p++)
-                        {
-                            for (int relationship = 0; relationship < ancestralRelationships.Count(); relationship++)
-                            {
-                                if (generatedOutputMatrix[persons[p]][persons[person]] == ancestralRelationships[relationship])
-                                {
-                                    if (maxCountMatrix[relationship][1] == currentCountMatrix[persons[p - 1]][relationship])
-                                    {
-                                        currentPossibleRelationships.RemoveAll(values => values == ancestralRelationships[relationship]);
-                                    }
-                                }
-                            }
-                        }
-                        
                         /*
                          * Исключение возможных видов родства, которые невозможно сгенерировать.
                          */
