@@ -191,20 +191,17 @@ namespace FamilyMatrixCreator
                     where ancestralRelationships[ancestralRelationship] ==
                           generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
                           && 0 != generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                    select ancestralRelationship)
-                .Count();
+                    select ancestralRelationship).Count();
 
             /*
              * Определение количества неродственных родственников текущего лица и родственника.
              */
             int numberOfNotRelativesOfPerson = (from previousPerson in Enumerable.Range(1, person - 1)
                     where 0 == generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                    select previousPerson)
-                .Count();
+                    select previousPerson).Count();
             int numberOfNotRelativesOfRelative = (from previousPerson in Enumerable.Range(1, person - 1)
                     where 0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-                    select previousPerson)
-                .Count();
+                    select previousPerson).Count();
 
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
