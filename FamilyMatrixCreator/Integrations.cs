@@ -214,8 +214,7 @@ namespace FamilyMatrixCreator
                     numberOfI = (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
                             where relationshipsMatrix[numberOfProband, number][0] ==
                                   generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                            select number)
-                        .Single();
+                            select number).Single();
                 }
                 catch (InvalidOperationException)
                 {
@@ -227,8 +226,7 @@ namespace FamilyMatrixCreator
                     numberOfJ = (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
                             where relationshipsMatrix[numberOfProband, number][0] ==
                                   generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-                            select number)
-                        .Single();
+                            select number).Single();
                 }
                 catch (InvalidOperationException)
                 {
