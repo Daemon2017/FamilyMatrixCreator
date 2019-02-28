@@ -14,7 +14,8 @@ namespace FamilyMatrixCreator
         /*
          * Проверка того, что на данное мгновение у данного лица не превышено MAX допустимое число родственников с таким видом родства.
          */
-        public bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix, List<int> persons, int person, int[][] maxCountMatrix)
+        public bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix,
+            List<int> persons, int person, int[][] maxCountMatrix)
         {
             for (int i = 0; i < maxCountMatrix.Length; i++)
             {
@@ -33,15 +34,17 @@ namespace FamilyMatrixCreator
         /*
          * Преобразование видов родства в сантиморганы.
          */
-        public float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative, int relationship, float[] centimorgansMatrix)
+        public float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative,
+            int relationship, float[] centimorgansMatrix)
         {
             if (centimorgansMatrix[relationship] <= 3950)
             {
                 double mean = centimorgansMatrix[relationship];
-                double stdDev = (centimorgansMatrix[relationship] * (-0.2819 * Math.Log(centimorgansMatrix[relationship]) + 2.335)) / 3;
+                double stdDev = (centimorgansMatrix[relationship] *
+                                 (-0.2819 * Math.Log(centimorgansMatrix[relationship]) + 2.335)) / 3;
 
                 Normal normalDist = new Normal(mean, stdDev);
-                float normalyDistributedValue = (float)normalDist.Sample();
+                float normalyDistributedValue = (float) normalDist.Sample();
 
                 if (normalyDistributedValue < 0)
                 {
@@ -57,13 +60,16 @@ namespace FamilyMatrixCreator
         /*
         * Сбор статистики по родству.
         */
-        public int[] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees, int[] quantityOfEachRelationship)
+        public int[] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees,
+            int[] quantityOfEachRelationship)
         {
             foreach (float[] raw in generatedOutputMatrix)
             {
                 foreach (float column in raw)
                 {
-                    for (int probandsRelatioship = 0; probandsRelatioship < existingRelationshipDegrees.Count; probandsRelatioship++)
+                    for (int probandsRelatioship = 0;
+                        probandsRelatioship < existingRelationshipDegrees.Count;
+                        probandsRelatioship++)
                     {
                         if (column == existingRelationshipDegrees[probandsRelatioship])
                         {
@@ -111,7 +117,8 @@ namespace FamilyMatrixCreator
         /*
          * Увеличение числа родственников данного вида у указанного лица.
          */
-        public int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative, int[][] maxCountMatrix)
+        public int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
+            List<int> persons, int person, List<int> relatives, int relative, int[][] maxCountMatrix)
         {
             for (int i = 0; i < maxCountMatrix.Length; i++)
             {
@@ -151,7 +158,8 @@ namespace FamilyMatrixCreator
                             possibleProbandsRelationship < relationshipsMatrix.GetLength(1);
                             possibleProbandsRelationship++)
                         {
-                            if (relationshipsMatrix[numberOfProband, possibleProbandsRelationship][0] == relationshipsMatrix[i, possibleRelative][possibleRelationship]
+                            if (relationshipsMatrix[numberOfProband, possibleProbandsRelationship][0] ==
+                                relationshipsMatrix[i, possibleRelative][possibleRelationship]
                                 || 0 == relationshipsMatrix[i, possibleRelative][possibleRelationship])
                             {
                                 quantityOfPossibleProbandsRelationships++;
@@ -177,8 +185,8 @@ namespace FamilyMatrixCreator
             }
 
             return allPossibleRelationshipsOfProband.Distinct()
-                                                    .Where(val => val != 0)
-                                                    .ToList();
+                .Where(val => val != 0)
+                .ToList();
         }
 
         /*
@@ -186,7 +194,7 @@ namespace FamilyMatrixCreator
          */
         public List<int> FindAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)
         {
-            List<int> existingRelationshipDegrees = new List<int> { 0 };
+            List<int> existingRelationshipDegrees = new List<int> {0};
 
             for (int i = 0; i < relationshipsMatrix.GetLength(0); i++)
             {
@@ -200,7 +208,8 @@ namespace FamilyMatrixCreator
         /*
          * Построение левой (нижней) стороны.
          */
-        public float[][] OutputBuildLeftBottomPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix, int numberOfProband)
+        public float[][] OutputBuildLeftBottomPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix,
+            int numberOfProband)
         {
             for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
             {
@@ -208,9 +217,11 @@ namespace FamilyMatrixCreator
                 {
                     for (int genRelationship = 0; genRelationship < relationshipsMatrix.GetLength(1); genRelationship++)
                     {
-                        if (relationshipsMatrix[numberOfProband, genRelationship][0] == generatedOutputMatrix[genRelative][genPerson])
+                        if (relationshipsMatrix[numberOfProband, genRelationship][0] ==
+                            generatedOutputMatrix[genRelative][genPerson])
                         {
-                            generatedOutputMatrix[genPerson][genRelative] = relationshipsMatrix[genRelationship, numberOfProband][0];
+                            generatedOutputMatrix[genPerson][genRelative] =
+                                relationshipsMatrix[genRelationship, numberOfProband][0];
                         }
                     }
                 }
@@ -256,7 +267,8 @@ namespace FamilyMatrixCreator
             byte[] rndBytes = new byte[4];
             Rng.GetBytes(rndBytes);
 
-            return (int)((BitConverter.ToInt32(rndBytes, 0) - (Decimal)int.MinValue) / (int.MaxValue - (Decimal)int.MinValue) * (max - min) + min);
+            return (int) ((BitConverter.ToInt32(rndBytes, 0) - (Decimal) int.MinValue) /
+                          (int.MaxValue - (Decimal) int.MinValue) * (max - min) + min);
         }
 
         /*

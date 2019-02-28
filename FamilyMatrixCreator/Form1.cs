@@ -40,8 +40,11 @@ namespace FamilyMatrixCreator
          */
         private float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
         {
-            float[][] generatedOutputMatrix = _integrations.OutputBuildRightTopPart(_relationshipsMatrix,_numberOfProband, generatedMatrixSize, existingRelationshipDegrees, _maxCountMatrix, Convert.ToInt32(textBox4.Text), Convert.ToInt32(textBox5.Text));
-            generatedOutputMatrix = _modules.OutputBuildLeftBottomPart(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband);
+            float[][] generatedOutputMatrix = _integrations.OutputBuildRightTopPart(_relationshipsMatrix,
+                _numberOfProband, generatedMatrixSize, existingRelationshipDegrees, _maxCountMatrix,
+                Convert.ToInt32(textBox4.Text), Convert.ToInt32(textBox5.Text));
+            generatedOutputMatrix =
+                _modules.OutputBuildLeftBottomPart(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband);
 
             generatedOutputMatrix = _modules.FillMainDiagonal(generatedOutputMatrix);
 
@@ -55,20 +58,22 @@ namespace FamilyMatrixCreator
         {
             float[][] generatedInputMatrix = new float[generatedMatrixSize][];
 
-            generatedInputMatrix = _integrations.InputBuildRightTopPart(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband, generatedInputMatrix, _centimorgansMatrix);
+            generatedInputMatrix = _integrations.InputBuildRightTopPart(generatedOutputMatrix, _relationshipsMatrix,
+                _numberOfProband, generatedInputMatrix, _centimorgansMatrix);
             generatedInputMatrix = _modules.InputBuildLeftBottomPart(generatedInputMatrix);
 
             return generatedInputMatrix;
         }
-       
+
         private void Generate(object sender, EventArgs e)
         {
-            List<int> existingRelationshipDegrees = _modules.FindAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
+            List<int> existingRelationshipDegrees =
+                _modules.FindAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
 
             List<int[]> complianceMatrix = Enumerable.Range(0, existingRelationshipDegrees.Count)
-                .Select(relationship => new int[] { existingRelationshipDegrees[relationship], relationship }).ToList();
+                .Select(relationship => new int[] {existingRelationshipDegrees[relationship], relationship}).ToList();
             _fileSaverLoader.SaveToFile("compliance.csv", complianceMatrix);
-            
+
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
             textBox2.Text = "";
 
@@ -82,10 +87,12 @@ namespace FamilyMatrixCreator
 
                 Parallel.For(0, quantityOfMatrixes, matrixNumber =>
                 {
-                    float[][] generatedOutputMatrix = GenerateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
+                    float[][] generatedOutputMatrix =
+                        GenerateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
                     float[][] generatedInputMatrix = GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
 
-                    quantityOfEachRelationship = _modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship);
+                    quantityOfEachRelationship = _modules.CollectStatistics(generatedOutputMatrix,
+                        existingRelationshipDegrees, quantityOfEachRelationship);
 
                     //generatedOutputMatrix = modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
 
@@ -112,7 +119,8 @@ namespace FamilyMatrixCreator
 
                 foreach (var quantity in quantityOfEachRelationship)
                 {
-                    textBox2.Text += "Родство " + existingRelationshipDegrees[relationshipNumber] + ": " + quantity + Environment.NewLine;
+                    textBox2.Text += "Родство " + existingRelationshipDegrees[relationshipNumber] + ": " + quantity +
+                                     Environment.NewLine;
                     sumOfMeaningfulValues += quantity;
 
                     relationshipNumber++;
@@ -121,8 +129,9 @@ namespace FamilyMatrixCreator
                 sumOfMeaningfulValues -= quantityOfEachRelationship[0];
 
                 label5.Text = "Значащих значений: "
-                    + 100 * ((sumOfMeaningfulValues - quantityOfMatrixes * generatedMatrixSize) / (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%";
-                label6.Text = "Затрачено: " + (float)myStopwatch.ElapsedMilliseconds / 1000 + " сек";
+                              + 100 * ((sumOfMeaningfulValues - quantityOfMatrixes * generatedMatrixSize) /
+                                       (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%";
+                label6.Text = "Затрачено: " + (float) myStopwatch.ElapsedMilliseconds / 1000 + " сек";
             }
         }
     }
