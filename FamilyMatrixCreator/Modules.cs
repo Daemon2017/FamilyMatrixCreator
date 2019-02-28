@@ -17,18 +17,8 @@ namespace FamilyMatrixCreator
         public bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix,
             List<int> persons, int person, int[][] maxCountMatrix)
         {
-            for (int i = 0; i < maxCountMatrix.Length; i++)
-            {
-                if (relationship == maxCountMatrix[i][0])
-                {
-                    if (currentCountMatrix[persons[person]][i] == maxCountMatrix[i][1])
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
+            return !maxCountMatrix
+                .Where((t, i) => relationship == t[0] && currentCountMatrix[persons[person]][i] == t[1]).Any();
         }
 
         /*
@@ -37,24 +27,21 @@ namespace FamilyMatrixCreator
         public float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative,
             int relationship, float[] centimorgansMatrix)
         {
-            if (centimorgansMatrix[relationship] <= 3950)
+            if (!(centimorgansMatrix[relationship] <= 3950))
             {
-                double mean = centimorgansMatrix[relationship];
-                double stdDev = (centimorgansMatrix[relationship] *
-                                 (-0.2819 * Math.Log(centimorgansMatrix[relationship]) + 2.335)) / 3;
-
-                Normal normalDist = new Normal(mean, stdDev);
-                float normalyDistributedValue = (float) normalDist.Sample();
-
-                if (normalyDistributedValue < 0)
-                {
-                    normalyDistributedValue = 0;
-                }
-
-                return generatedInputMatrix[person][relative] = normalyDistributedValue;
+                return generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
             }
 
-            return generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
+            Normal normalDist = new Normal(centimorgansMatrix[relationship],
+                centimorgansMatrix[relationship] * (-0.2819 * Math.Log(centimorgansMatrix[relationship]) + 2.335) / 3);
+            float normalyDistributedValue = (float)normalDist.Sample();
+
+            if (normalyDistributedValue < 0)
+            {
+                normalyDistributedValue = 0;
+            }
+
+            return generatedInputMatrix[person][relative] = normalyDistributedValue;
         }
 
         /*
@@ -194,7 +181,7 @@ namespace FamilyMatrixCreator
          */
         public List<int> FindAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)
         {
-            List<int> existingRelationshipDegrees = new List<int> {0};
+            List<int> existingRelationshipDegrees = new List<int> { 0 };
 
             for (int i = 0; i < relationshipsMatrix.GetLength(0); i++)
             {
@@ -267,8 +254,8 @@ namespace FamilyMatrixCreator
             byte[] rndBytes = new byte[4];
             Rng.GetBytes(rndBytes);
 
-            return (int) ((BitConverter.ToInt32(rndBytes, 0) - (Decimal) int.MinValue) /
-                          (int.MaxValue - (Decimal) int.MinValue) * (max - min) + min);
+            return (int)((BitConverter.ToInt32(rndBytes, 0) - (Decimal)int.MinValue) /
+                          (int.MaxValue - (Decimal)int.MinValue) * (max - min) + min);
         }
 
         /*

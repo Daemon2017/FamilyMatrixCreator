@@ -13,17 +13,9 @@ namespace FamilyMatrixCreator
             {
                 foreach (float[] raw in generatedMatrix)
                 {
-                    string content = "";
-
-                    foreach (float column in raw)
-                    {
-                        string temp = column.ToString();
-
-                        if (temp != null)
-                        {
-                            content += temp + ",";
-                        }
-                    }
+                    string content = raw.Select(column => column.ToString())
+                        .Where(temp => temp != null)
+                        .Aggregate("", (current, temp) => current + temp + ",");
 
                     if (content != "")
                     {
@@ -43,7 +35,7 @@ namespace FamilyMatrixCreator
                 {
                     string content = "";
 
-                    content += relationship[0].ToString() + ", " + relationship[1].ToString();
+                    content += relationship[0] + ", " + relationship[1];
 
                     outfile.WriteLine(content);
                 }
@@ -61,21 +53,18 @@ namespace FamilyMatrixCreator
             int[,][] matrix = new int[numberOfLines, numberOfLines][];
 
             {
-                int person = 0,
-                    relative = 0,
-                    relationship = 0;
+                int person = 0;
 
                 foreach (var row in input.Split('\n'))
                 {
-                    relative = 0;
-                    int counter = 0;
+                    int relative = 0;
 
-                    if (!(row.Equals("")) && !(row.Equals("\r")))
+                    if (!row.Equals("") && !row.Equals("\r"))
                     {
                         foreach (var column in row.Trim().Split(','))
                         {
-                            relationship = 0;
-                            counter = 0;
+                            int relationship = 0;
+                            int counter = 0;
 
                             /*
                              * Определение числа возможных степеней родства. 
@@ -136,7 +125,7 @@ namespace FamilyMatrixCreator
             {
                 int count = 0;
 
-                if (!(row.Equals("")) && !(row.Equals("\r")))
+                if (!row.Equals("") && !row.Equals("\r"))
                 {
                     matrix[relationship] = new int[2];
 
@@ -166,7 +155,7 @@ namespace FamilyMatrixCreator
 
             foreach (var row in input.Split('\n'))
             {
-                if (!(row.Equals("")) && !(row.Equals("\r")))
+                if (!row.Equals("") && !row.Equals("\r"))
                 {
                     matrix[person] = float.Parse(row);
                 }
