@@ -7,17 +7,17 @@ namespace FamilyMatrixCreator
 {
     public class Integrations
     {
-        Modules modules = new Modules();
+        private readonly Modules _modules = new Modules();
 
         /*
          * Подсчет процента значащих значений
          */
         public double CalculatePercentOfMeaningfulValues(int generatedMatrixSize, List<int> existingRelationshipDegrees, float[][] generatedOutputMatrix)
         {
-            int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
-            quantityOfEachRelationship = modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship);
+            int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count];
+            quantityOfEachRelationship = _modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship);
 
-            int sumOfMeaningfulValues = 0;
+            float sumOfMeaningfulValues = 0;
 
             foreach (var quantity in quantityOfEachRelationship)
             {
@@ -36,7 +36,7 @@ namespace FamilyMatrixCreator
                 i++;
             }
 
-            return (100 * (((float)sumOfMeaningfulValues) / Math.Pow(generatedMatrixSize, 2)));
+            return 100 * (sumOfMeaningfulValues / Math.Pow(generatedMatrixSize, 2));
         }
 
         /*
@@ -54,12 +54,12 @@ namespace FamilyMatrixCreator
                     {
                         if (relationshipsMatrix[numberOfProband, relationship][0] == generatedOutputMatrix[person][relative])
                         {
-                            generatedInputMatrix[person][relative] = modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative, relationship, centimorgansMatrix);
+                            generatedInputMatrix[person][relative] = _modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative, relationship, centimorgansMatrix);
                         }
 
                         if (relationshipsMatrix[relationship, numberOfProband][0] == generatedOutputMatrix[person][relative])
                         {
-                            generatedInputMatrix[person][relative] = modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative, relationship, centimorgansMatrix);
+                            generatedInputMatrix[person][relative] = _modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative, relationship, centimorgansMatrix);
                         }
                     }
                 }
@@ -99,8 +99,8 @@ namespace FamilyMatrixCreator
                     /*
                      * Создание родственника со случайным видом родства.
                      */
-                    generatedOutputMatrix[persons[person]][relatives[relative]] = allPossibleRelationships[modules.GetNextRnd(0, allPossibleRelationships.Count)];
-                    currentCountMatrix = modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
+                    generatedOutputMatrix[persons[person]][relatives[relative]] = allPossibleRelationships[_modules.GetNextRnd(0, allPossibleRelationships.Count)];
+                    currentCountMatrix = _modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
                 }
 
                 /*
@@ -135,7 +135,7 @@ namespace FamilyMatrixCreator
 
             if (0 == persons[person])
             {
-                allPossibleRelationships = modules.FindAllPossibleRelationshipsOfProband(relationshipsMatrix, numberOfProband);
+                allPossibleRelationships = _modules.FindAllPossibleRelationshipsOfProband(relationshipsMatrix, numberOfProband);
             }
             else
             {
@@ -147,7 +147,7 @@ namespace FamilyMatrixCreator
              * добавление которых приведет к превышению допустимого числа родственников с таким видом родства.
              */
             allPossibleRelationships = (from relationship in allPossibleRelationships
-                                        where true == modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix)
+                                        where _modules.MaxNumberOfThisRelationshipTypeIsNotExceeded(relationship, currentCountMatrix, persons, person, maxCountMatrix)
                                         select relationship)
                                         .ToList();
 
@@ -159,7 +159,7 @@ namespace FamilyMatrixCreator
          */
         public List<int> FindAllPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[,][] relationshipsMatrix, int numberOfProband, int[][] maxCountMatrix, int[][] currentCountMatrix)
         {
-            List<int> allPossibleRelationships = new List<int> { };
+            List<int> allPossibleRelationships = new List<int>();
 
             /*
              * Составление списка предковых степеней родства.

@@ -4,13 +4,13 @@ using System.Collections.Generic;
 namespace FamilyMatrixCreator
 {
     [TestFixture]
-    class IntegrationsTests
+    internal class IntegrationsTests
     {
-        Integrations integrations = new Integrations();
-        Modules modules = new Modules();
-        FileSaverLoader fileSaverLoader = new FileSaverLoader();
+        private readonly Integrations _integrations = new Integrations();
+        private readonly Modules _modules = new Modules();
+        private readonly FileSaverLoader _fileSaverLoader = new FileSaverLoader();
 
-        private static object[] CalculatePercentOfMeaningfulValues_DataProvider =
+        private static readonly object[] CalculatePercentOfMeaningfulValues_DataProvider =
         {
             new object[]
             {
@@ -28,13 +28,13 @@ namespace FamilyMatrixCreator
             }
         };
 
-        [TestCaseSource("CalculatePercentOfMeaningfulValues_DataProvider")]
+        [TestCaseSource(nameof(CalculatePercentOfMeaningfulValues_DataProvider))]
         public void CalculatePercentOfMeaningfulValues_Test(int generatedMatrixSize, List<int> existingRelationshipDegrees, float[][] generatedOutputMatrix, double result)
         {
-            Assert.That(result, Is.EqualTo(integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix)));
+            Assert.That(result, Is.EqualTo(_integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees, generatedOutputMatrix)));
         }
 
-        private static object[] FindAllPossibleRelationships_DataProvider =
+        private static readonly object[] FindAllPossibleRelationships_DataProvider =
         {
             new object[]
             {
@@ -532,14 +532,14 @@ namespace FamilyMatrixCreator
             }
         };
 
-        [TestCaseSource("FindAllPossibleRelationships_DataProvider")]
+        [TestCaseSource(nameof(FindAllPossibleRelationships_DataProvider))]
         public void FindAllPossibleRelationships_Test(float[][] generatedOutputMatrix, int[][] currentCountMatrix, List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
-            int[,][] relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
-            int numberOfProband = modules.FindNumberOfProband(relationshipsMatrix);
-            int[][] maxCountMatrix = fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
+            int[,][] relationshipsMatrix = _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+            int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
+            int[][] maxCountMatrix = _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
 
-            Assert.That(result, Is.EqualTo(integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband, maxCountMatrix, currentCountMatrix)));
+            Assert.That(result, Is.EqualTo(_integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative, relationshipsMatrix, numberOfProband, maxCountMatrix, currentCountMatrix)));
         }
     }
 }

@@ -18,21 +18,21 @@ namespace FamilyMatrixCreator
             InitializeComponent();
         }
 
-        Modules modules = new Modules();
-        Integrations integrations = new Integrations();
-        FileSaverLoader fileSaverLoader = new FileSaverLoader();
+        private readonly Modules _modules = new Modules();
+        private readonly Integrations _integrations = new Integrations();
+        private readonly FileSaverLoader _fileSaverLoader = new FileSaverLoader();
 
-        private int[,][] relationshipsMatrix;
-        private float[] centimorgansMatrix;
-        private int[][] maxCountMatrix;
-        private int numberOfProband;
+        private int[,][] _relationshipsMatrix;
+        private float[] _centimorgansMatrix;
+        private int[][] _maxCountMatrix;
+        private int _numberOfProband;
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            relationshipsMatrix = fileSaverLoader.LoadFromFile2DJagged("relationships.csv");
-            numberOfProband = modules.FindNumberOfProband(relationshipsMatrix);
-            centimorgansMatrix = fileSaverLoader.LoadFromFile1D("centimorgans.csv");
-            maxCountMatrix = fileSaverLoader.LoadFromFile2D("maxCount.csv");
+            _relationshipsMatrix = _fileSaverLoader.LoadFromFile2DJagged("relationships.csv");
+            _numberOfProband = _modules.FindNumberOfProband(_relationshipsMatrix);
+            _centimorgansMatrix = _fileSaverLoader.LoadFromFile1D("centimorgans.csv");
+            _maxCountMatrix = _fileSaverLoader.LoadFromFile2D("maxCount.csv");
         }
 
         /*
@@ -40,10 +40,10 @@ namespace FamilyMatrixCreator
          */
         private float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
         {
-            float[][] generatedOutputMatrix = integrations.OutputBuildRightTopPart(relationshipsMatrix,numberOfProband, generatedMatrixSize, existingRelationshipDegrees, maxCountMatrix, Convert.ToInt32(textBox4.Text), Convert.ToInt32(textBox5.Text));
-            generatedOutputMatrix = modules.OutputBuildLeftBottomPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband);
+            float[][] generatedOutputMatrix = _integrations.OutputBuildRightTopPart(_relationshipsMatrix,_numberOfProband, generatedMatrixSize, existingRelationshipDegrees, _maxCountMatrix, Convert.ToInt32(textBox4.Text), Convert.ToInt32(textBox5.Text));
+            generatedOutputMatrix = _modules.OutputBuildLeftBottomPart(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband);
 
-            generatedOutputMatrix = modules.FillMainDiagonal(generatedOutputMatrix);
+            generatedOutputMatrix = _modules.FillMainDiagonal(generatedOutputMatrix);
 
             return generatedOutputMatrix;
         }
@@ -55,19 +55,19 @@ namespace FamilyMatrixCreator
         {
             float[][] generatedInputMatrix = new float[generatedMatrixSize][];
 
-            generatedInputMatrix = integrations.InputBuildRightTopPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband, generatedInputMatrix, centimorgansMatrix);
-            generatedInputMatrix = modules.InputBuildLeftBottomPart(generatedInputMatrix);
+            generatedInputMatrix = _integrations.InputBuildRightTopPart(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband, generatedInputMatrix, _centimorgansMatrix);
+            generatedInputMatrix = _modules.InputBuildLeftBottomPart(generatedInputMatrix);
 
             return generatedInputMatrix;
         }
        
         private void Generate(object sender, EventArgs e)
         {
-            List<int> existingRelationshipDegrees = modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband);
+            List<int> existingRelationshipDegrees = _modules.FindAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
 
-            List<int[]> complianceMatrix = Enumerable.Range(0, existingRelationshipDegrees.Count())
-                .Select(relationship => (new int[] { existingRelationshipDegrees[relationship], relationship })).ToList();
-            fileSaverLoader.SaveToFile("compliance.csv", complianceMatrix);
+            List<int[]> complianceMatrix = Enumerable.Range(0, existingRelationshipDegrees.Count)
+                .Select(relationship => new int[] { existingRelationshipDegrees[relationship], relationship }).ToList();
+            _fileSaverLoader.SaveToFile("compliance.csv", complianceMatrix);
             
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
             textBox2.Text = "";
@@ -78,14 +78,14 @@ namespace FamilyMatrixCreator
             if (quantityOfMatrixes > 0)
             {
                 int generatedMatrixSize = Convert.ToInt32(textBox3.Text);
-                int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count()];
+                int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count];
 
                 Parallel.For(0, quantityOfMatrixes, matrixNumber =>
                 {
                     float[][] generatedOutputMatrix = GenerateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
                     float[][] generatedInputMatrix = GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
 
-                    quantityOfEachRelationship = modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship);
+                    quantityOfEachRelationship = _modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees, quantityOfEachRelationship);
 
                     //generatedOutputMatrix = modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
 
@@ -93,13 +93,13 @@ namespace FamilyMatrixCreator
                      * Сохранение входной матрицы в файл.
                      */
                     Directory.CreateDirectory("input");
-                    fileSaverLoader.SaveToFile(@"input\generated_input", generatedInputMatrix, matrixNumber);
+                    _fileSaverLoader.SaveToFile(@"input\generated_input", generatedInputMatrix, matrixNumber);
 
                     /*
                      * Сохранение выходной матрицы в файл.
                      */
                     Directory.CreateDirectory("output");
-                    fileSaverLoader.SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
+                    _fileSaverLoader.SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
                 });
 
                 myStopwatch.Stop();
@@ -108,7 +108,7 @@ namespace FamilyMatrixCreator
                  * Вывод статистики по родству.
                  */
                 int relationshipNumber = 0;
-                int sumOfMeaningfulValues = 0;
+                float sumOfMeaningfulValues = 0;
 
                 foreach (var quantity in quantityOfEachRelationship)
                 {
@@ -121,8 +121,8 @@ namespace FamilyMatrixCreator
                 sumOfMeaningfulValues -= quantityOfEachRelationship[0];
 
                 label5.Text = "Значащих значений: "
-                    + 100 * ((float)(sumOfMeaningfulValues - (quantityOfMatrixes * generatedMatrixSize)) / (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%";
-                label6.Text = "Затрачено: " + (((float)myStopwatch.ElapsedMilliseconds) / 1000).ToString() + " сек";
+                    + 100 * ((sumOfMeaningfulValues - quantityOfMatrixes * generatedMatrixSize) / (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%";
+                label6.Text = "Затрачено: " + (float)myStopwatch.ElapsedMilliseconds / 1000 + " сек";
             }
         }
     }

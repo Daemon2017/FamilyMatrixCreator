@@ -1,37 +1,33 @@
-﻿using MathNet.Numerics.Distributions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using MathNet.Numerics.Distributions;
 
 namespace FamilyMatrixCreator
 {
     public class Modules
     {
-        private static RNGCryptoServiceProvider _RNG = new RNGCryptoServiceProvider();
+        private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
 
         /*
          * Проверка того, что на данное мгновение у данного лица не превышено MAX допустимое число родственников с таким видом родства.
          */
         public bool MaxNumberOfThisRelationshipTypeIsNotExceeded(int relationship, int[][] currentCountMatrix, List<int> persons, int person, int[][] maxCountMatrix)
         {
-            bool allowToAddRelative = true;
-
             for (int i = 0; i < maxCountMatrix.Length; i++)
             {
                 if (relationship == maxCountMatrix[i][0])
                 {
                     if (currentCountMatrix[persons[person]][i] == maxCountMatrix[i][1])
                     {
-                        allowToAddRelative = false;
-
-                        return allowToAddRelative;
+                        return false;
                     }
                 }
             }
 
-            return allowToAddRelative;
+            return true;
         }
 
         /*
@@ -52,12 +48,10 @@ namespace FamilyMatrixCreator
                     normalyDistributedValue = 0;
                 }
 
-                return (generatedInputMatrix[person][relative] = normalyDistributedValue);
+                return generatedInputMatrix[person][relative] = normalyDistributedValue;
             }
-            else
-            {
-                return (generatedInputMatrix[person][relative] = centimorgansMatrix[relationship]);
-            }
+
+            return generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
         }
 
         /*
@@ -69,7 +63,7 @@ namespace FamilyMatrixCreator
             {
                 foreach (float column in raw)
                 {
-                    for (int probandsRelatioship = 0; probandsRelatioship < existingRelationshipDegrees.Count(); probandsRelatioship++)
+                    for (int probandsRelatioship = 0; probandsRelatioship < existingRelationshipDegrees.Count; probandsRelatioship++)
                     {
                         if (column == existingRelationshipDegrees[probandsRelatioship])
                         {
@@ -91,7 +85,7 @@ namespace FamilyMatrixCreator
             {
                 for (int relative = 0; relative < generatedOutputMatrix.GetLength(0); relative++)
                 {
-                    for (int relationship = 0; relationship < existingRelationshipDegrees.Count(); relationship++)
+                    for (int relationship = 0; relationship < existingRelationshipDegrees.Count; relationship++)
                     {
                         if (existingRelationshipDegrees[relationship] == generatedOutputMatrix[person][relative])
                         {
@@ -101,7 +95,8 @@ namespace FamilyMatrixCreator
                             generatedOutputMatrix[person][relative] = relationship + 2;
                             break;
                         }
-                        else if (0 == generatedOutputMatrix[person][relative])
+
+                        if (0 == generatedOutputMatrix[person][relative])
                         {
                             generatedOutputMatrix[person][relative] = 1;
                             break;
@@ -136,7 +131,7 @@ namespace FamilyMatrixCreator
          */
         public List<int> FindAllPossibleRelationshipsOfProband(int[,][] relationshipsMatrix, int numberOfProband)
         {
-            List<int> allPossibleRelationshipsOfProband = new List<int> { };
+            List<int> allPossibleRelationshipsOfProband = new List<int>();
 
             for (int i = 0; i < relationshipsMatrix.GetLength(1); i++)
             {
@@ -259,7 +254,7 @@ namespace FamilyMatrixCreator
         public int GetNextRnd(int min, int max)
         {
             byte[] rndBytes = new byte[4];
-            _RNG.GetBytes(rndBytes);
+            Rng.GetBytes(rndBytes);
 
             return (int)((BitConverter.ToInt32(rndBytes, 0) - (Decimal)int.MinValue) / (int.MaxValue - (Decimal)int.MinValue) * (max - min) + min);
         }
