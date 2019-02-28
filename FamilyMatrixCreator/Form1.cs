@@ -71,7 +71,7 @@ namespace FamilyMatrixCreator
                 _modules.FindAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
 
             List<int[]> complianceMatrix = Enumerable.Range(0, existingRelationshipDegrees.Count)
-                .Select(relationship => new int[] { existingRelationshipDegrees[relationship], relationship }).ToList();
+                .Select(relationship => new int[] {existingRelationshipDegrees[relationship], relationship}).ToList();
             _fileSaverLoader.SaveToFile("compliance.csv", complianceMatrix);
 
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
@@ -131,7 +131,7 @@ namespace FamilyMatrixCreator
                 label5.Text = "Значащих значений: "
                               + 100 * ((sumOfMeaningfulValues - quantityOfMatrixes * generatedMatrixSize) /
                                        (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%";
-                label6.Text = "Затрачено: " + (float)myStopwatch.ElapsedMilliseconds / 1000 + " сек";
+                label6.Text = "Затрачено: " + (float) myStopwatch.ElapsedMilliseconds / 1000 + " сек";
             }
         }
     }

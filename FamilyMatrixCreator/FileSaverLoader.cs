@@ -14,7 +14,6 @@ namespace FamilyMatrixCreator
                 foreach (float[] raw in generatedMatrix)
                 {
                     string content = raw.Select(column => column.ToString())
-                        .Where(temp => temp != null)
                         .Aggregate("", (current, temp) => current + temp + ",");
 
                     if (content != "")
