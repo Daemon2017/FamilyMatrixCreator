@@ -183,7 +183,7 @@ namespace FamilyMatrixCreator
             List<int> persons, int person, List<int> relatives, int relative, int[][] result)
         {
             int[][] maxCountMatrix =
-                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
+                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCountTest.csv");
 
             Assert.That(result,
                 Is.EqualTo(_modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons,
@@ -206,7 +206,7 @@ namespace FamilyMatrixCreator
         public void FindAllExistingRelationshipDegrees_Test(List<int> result)
         {
             int[,][] relationshipsMatrix =
-                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationshipsTest.csv");
             int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
 
             Assert.That(result,
@@ -236,7 +236,7 @@ namespace FamilyMatrixCreator
         public void OutputBuildLeftBottomPart_Test(float[][] generatedOutputMatrix, float[][] result)
         {
             int[,][] relationshipsMatrix =
-                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationshipsTest.csv");
             int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
 
             Assert.That(result,
