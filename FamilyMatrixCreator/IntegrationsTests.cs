@@ -652,10 +652,10 @@ namespace FamilyMatrixCreator
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
             int[,][] relationshipsMatrix =
-                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationshipsTest.csv");
+                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
             int[][] maxCountMatrix =
-                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCountTest.csv");
+                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
 
             Assert.That(result,
                 Is.EqualTo(_integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives,

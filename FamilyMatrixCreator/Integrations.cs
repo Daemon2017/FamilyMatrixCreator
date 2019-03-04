@@ -209,6 +209,7 @@ namespace FamilyMatrixCreator
                  * Среди возможных видов родства пробанда ищутся порядковые номера тех, что содержат выбранные виды родства.
                  */
                 int numberOfI = 0;
+                bool numberOfIExists = true;
                 try
                 {
                     numberOfI = (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
@@ -218,9 +219,11 @@ namespace FamilyMatrixCreator
                 }
                 catch (InvalidOperationException)
                 {
+                    numberOfIExists = false;
                 }
 
                 int numberOfJ = 0;
+                bool numberOfJExists = true;
                 try
                 {
                     numberOfJ = (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
@@ -230,6 +233,7 @@ namespace FamilyMatrixCreator
                 }
                 catch (InvalidOperationException)
                 {
+                    numberOfJExists = false;
                 }
 
                 if (0 == persons[previousPerson])
@@ -261,8 +265,14 @@ namespace FamilyMatrixCreator
                     }
                     else
                     {
-                        List<int> currentPossibleRelationships =
-                            relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
+                        List<int> currentPossibleRelationships = new List<int>();
+
+                        if (true == numberOfIExists && true == numberOfJExists)
+                        {
+                            currentPossibleRelationships =
+                                relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
+                        }
+
                         if (0 == numberOfI || 0 == numberOfJ)
                         {
                             currentPossibleRelationships.Add(0);

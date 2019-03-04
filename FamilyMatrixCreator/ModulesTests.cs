@@ -183,7 +183,7 @@ namespace FamilyMatrixCreator
             List<int> persons, int person, List<int> relatives, int relative, int[][] result)
         {
             int[][] maxCountMatrix =
-                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCountTest.csv");
+                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
 
             Assert.That(result,
                 Is.EqualTo(_modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons,
@@ -196,8 +196,9 @@ namespace FamilyMatrixCreator
             {
                 new List<int>
                 {
-                    0, 13, 9, 8, 5, 3, 2, 1, 18, 15, 12, 10, 7, 6, 4, 32, 29, 24, 22, 17, 16, 11, 50, 47, 40, 38, 31,
-                    30, 23, 72, 69, 60, 58, 49, 48, 39, 98, 95, 84, 82, 71, 70, 59, 128, 125, 112, 110, 97, 96, 83
+                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+                    27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
+                    52, 53
                 }
             }
         };
@@ -206,7 +207,7 @@ namespace FamilyMatrixCreator
         public void FindAllExistingRelationshipDegrees_Test(List<int> result)
         {
             int[,][] relationshipsMatrix =
-                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationshipsTest.csv");
+                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
 
             Assert.That(result,
@@ -236,7 +237,7 @@ namespace FamilyMatrixCreator
         public void OutputBuildLeftBottomPart_Test(float[][] generatedOutputMatrix, float[][] result)
         {
             int[,][] relationshipsMatrix =
-                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationshipsTest.csv");
+                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
 
             Assert.That(result,
