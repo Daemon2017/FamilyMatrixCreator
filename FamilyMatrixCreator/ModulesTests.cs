@@ -210,7 +210,7 @@ namespace FamilyMatrixCreator
             int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
 
             Assert.That(result,
-                Is.EqualTo(_modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband)));
+                Is.EquivalentTo(_modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband)));
         }
 
         private static readonly object[] OutputBuildLeftBottomPart_DataProvider =
