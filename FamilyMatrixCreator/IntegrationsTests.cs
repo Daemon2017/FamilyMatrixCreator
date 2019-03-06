@@ -15,14 +15,30 @@ namespace FamilyMatrixCreator
             new object[]
             {
                 3,
-                new List<int> {8, 3},
+                new List<int>
+                {
+                    0, 3, 8
+                },
                 new float[][] {new float[] {0, 8, 3}, new float[] {0, 0, 0}, new float[] {0, 0, 0}},
                 100 * (double) 2 / 9
             },
             new object[]
             {
                 3,
-                new List<int> {8},
+                new List<int>
+                {
+                    3, 8
+                },
+                new float[][] {new float[] {0, 8, 3}, new float[] {0, 0, 0}, new float[] {0, 0, 0}},
+                100 * (double) 2 / 9
+            },
+            new object[]
+            {
+                3,
+                new List<int>
+                {
+                    8
+                },
                 new float[][] {new float[] {0, 8, 3}, new float[] {0, 0, 0}, new float[] {0, 0, 0}},
                 100 * (double) 1 / 9
             }
@@ -660,6 +676,96 @@ namespace FamilyMatrixCreator
             Assert.That(result,
                 Is.EqualTo(_integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives,
                     relative, relationshipsMatrix, numberOfProband, maxCountMatrix, currentCountMatrix)));
+        }
+
+        private static readonly object[] DetectAllPossibleRelationships_DataProvider =
+        {
+            new object[]
+            {
+                new float[][]
+                {
+                    new float[] {0, 0},
+                    null
+                },
+                new int[][]
+                {
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    null
+                },
+                new List<int> {0, 1},
+                0,
+                new List<int> {1},
+                0,
+                new int[]
+                {
+                    2, 5, 6, 9, 10, 11, 14, 15, 16, 17, 20, 21, 22, 23, 24, 27, 28, 29, 30, 31, 32, 35, 36, 37, 38, 39,
+                    40, 41, 44, 45, 46, 47, 48, 49, 50, 51
+                }
+            },
+            new object[]
+            {
+                new float[][]
+                {
+                    new float[] {0, 6, 5},
+                    new float[] {0, 0, 0},
+                    null
+                },
+                new int[][]
+                {
+                    new int[] {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    null
+                },
+                new List<int> {0, 1, 2},
+                1,
+                new List<int> {2},
+                0,
+                new int[]
+                {
+                    2, 0
+                }
+            },
+            new object[]
+            {
+                new float[][]
+                {
+                    new float[] {0, 2, 2, 0},
+                    null,
+                    null,
+                    null
+                },
+                new int[][]
+                {
+                    new int[] {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    null,
+                    null,
+                    null
+                },
+                new List<int> {0, 1, 2, 3},
+                0,
+                new List<int> {1, 2, 3},
+                2,
+                new int[]
+                {
+                    5, 6, 9, 10, 11, 14, 15, 16, 17, 20, 21, 22, 23, 24, 27, 28, 29, 30, 31, 32, 35, 36, 37, 38, 39, 40,
+                    41, 44, 45, 46, 47, 48, 49, 50, 51
+                }
+            }
+        };
+
+        [TestCaseSource(nameof(DetectAllPossibleRelationships_DataProvider))]
+        public void DetectAllPossibleRelationships_Test(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
+            List<int> persons, int person, List<int> relatives, int relative, int[] result)
+        {
+            int[,][] relationshipsMatrix =
+                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+            int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
+            int[][] maxCountMatrix =
+                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
+
+            Assert.That(result,
+                Is.EquivalentTo(_integrations.DetectAllPossibleRelationships(relationshipsMatrix, numberOfProband,
+                    maxCountMatrix, generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative)));
         }
     }
 }

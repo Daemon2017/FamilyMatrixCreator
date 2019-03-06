@@ -267,7 +267,7 @@ namespace FamilyMatrixCreator
                     {
                         List<int> currentPossibleRelationships = new List<int>();
 
-                        if (true == numberOfIExists && true == numberOfJExists)
+                        if (numberOfIExists && numberOfJExists)
                         {
                             currentPossibleRelationships =
                                 relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
