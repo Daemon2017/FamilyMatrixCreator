@@ -107,10 +107,27 @@ namespace FamilyMatrixCreator
                     /*
                      * Создание родственника со случайным видом родства.
                      */
-                    generatedOutputMatrix[persons[person]][relatives[relative]] =
-                        allPossibleRelationships[_modules.GetNextRnd(0, allPossibleRelationships.Count)];
-                    currentCountMatrix = _modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
-                        currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
+                    try
+                    {
+                        generatedOutputMatrix[persons[person]][relatives[relative]] =
+                            allPossibleRelationships[_modules.GetNextRnd(0, allPossibleRelationships.Count)];
+                        currentCountMatrix = _modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
+                            currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        generatedOutputMatrix = new float[generatedMatrixSize][];
+                        currentCountMatrix = new int[generatedMatrixSize][];
+
+                        persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
+                                   orderby new ContinuousUniform().Sample()
+                                   select x).ToList();
+                        persons.Insert(0, 0);
+
+                        person = -1;
+
+                        break;
+                    }
                 }
 
                 /*
