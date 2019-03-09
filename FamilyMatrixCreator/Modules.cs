@@ -243,8 +243,8 @@ namespace FamilyMatrixCreator
             byte[] rndBytes = new byte[4];
             Rng.GetBytes(rndBytes);
 
-            return (int) ((BitConverter.ToInt32(rndBytes, 0) - (Decimal) int.MinValue) /
-                          (int.MaxValue - (Decimal) int.MinValue) * (max - min) + min);
+            return (int) ((BitConverter.ToInt32(rndBytes, 0) - (decimal) int.MinValue) /
+                          (int.MaxValue - (decimal) int.MinValue) * (max - min) + min);
         }
 
         /*

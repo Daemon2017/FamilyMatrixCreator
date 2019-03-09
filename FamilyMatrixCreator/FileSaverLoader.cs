@@ -41,6 +41,14 @@ namespace FamilyMatrixCreator
             }
         }
 
+        public void SaveToFile(string outputFileName, string statisticString)
+        {
+            using (StreamWriter outfile = new StreamWriter(outputFileName))
+            {
+                outfile.WriteLine(statisticString);
+            }
+        }
+
         /*
          * Загрузка матрицы возможных степеней родства.
          */

@@ -126,6 +126,8 @@ namespace FamilyMatrixCreator
                     relationshipNumber++;
                 }
 
+                _fileSaverLoader.SaveToFile(@"statistic.csv", textBox2.Text);
+
                 sumOfMeaningfulValues -= quantityOfEachRelationship[0];
 
                 label5.Text = "Значащих значений: "
