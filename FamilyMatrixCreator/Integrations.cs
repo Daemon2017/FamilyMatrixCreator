@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics.Distributions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -35,125 +34,6 @@ namespace FamilyMatrixCreator
             }
 
             return 100 * (sumOfMeaningfulValues / Math.Pow(generatedMatrixSize, 2));
-        }
-
-        /*
-         * Построение правой (верхней) стороны  (сМ).
-         */
-        public float[][] InputBuildRightTopPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix,
-            int numberOfProband, float[][] generatedInputMatrix, float[] centimorgansMatrix)
-        {
-            for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
-            {
-                generatedInputMatrix[person] = new float[generatedOutputMatrix.GetLength(0)];
-
-                for (int relative = person; relative < generatedOutputMatrix.GetLength(0); relative++)
-                {
-                    for (int relationship = 0; relationship < relationshipsMatrix.GetLength(1); relationship++)
-                    {
-                        if (relationshipsMatrix[numberOfProband, relationship][0] ==
-                            generatedOutputMatrix[person][relative])
-                        {
-                            generatedInputMatrix[person][relative] =
-                                _modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative,
-                                    relationship, centimorgansMatrix);
-                        }
-
-                        if (relationshipsMatrix[relationship, numberOfProband][0] ==
-                            generatedOutputMatrix[person][relative])
-                        {
-                            generatedInputMatrix[person][relative] =
-                                _modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative,
-                                    relationship, centimorgansMatrix);
-                        }
-                    }
-                }
-            }
-
-            return generatedInputMatrix;
-        }
-
-        /*
-         * Построение правой (верхней) стороны.
-         */
-        public float[][] OutputBuildRightTopPart(int[,][] relationshipsMatrix, int numberOfProband,
-            int generatedMatrixSize, List<int> existingRelationshipDegrees, int[][] maxCountMatrix, int minPercent,
-            int maxPercent)
-        {
-            float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
-            int[][] currentCountMatrix = new int[generatedMatrixSize][];
-
-            List<int> persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                orderby new ContinuousUniform().Sample()
-                select x).ToList();
-            persons.Insert(0, 0);
-
-            for (int person = 0; person < persons.Count; person++)
-            {
-                generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
-                currentCountMatrix[persons[person]] = new int[maxCountMatrix.Length];
-
-                List<int> relatives = (from x in Enumerable.Range(persons[person] + 1,
-                        generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
-                    orderby new ContinuousUniform().Sample()
-                    select x).ToList();
-
-                for (int relative = 0; relative < relatives.Count; relative++)
-                {
-                    List<int> allPossibleRelationships = DetectAllPossibleRelationships(relationshipsMatrix,
-                        numberOfProband, maxCountMatrix, generatedOutputMatrix, currentCountMatrix, persons, person,
-                        relatives, relative);
-
-                    /*
-                     * Создание родственника со случайным видом родства.
-                     */
-                    try
-                    {
-                        generatedOutputMatrix[persons[person]][relatives[relative]] =
-                            allPossibleRelationships[_modules.GetNextRnd(0, allPossibleRelationships.Count)];
-                        currentCountMatrix = _modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
-                            currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        generatedOutputMatrix = new float[generatedMatrixSize][];
-                        currentCountMatrix = new int[generatedMatrixSize][];
-
-                        persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                                   orderby new ContinuousUniform().Sample()
-                                   select x).ToList();
-                        persons.Insert(0, 0);
-
-                        person = -1;
-
-                        break;
-                    }
-                }
-
-                /*
-                 * Проверка того, что выполняется требование по проценту значащих значений
-                 */
-                if (generatedOutputMatrix.GetLength(0) - 1 == person)
-                {
-                    double percentOfMeaningfulValues = 2 * CalculatePercentOfMeaningfulValues(generatedMatrixSize,
-                                                           existingRelationshipDegrees, generatedOutputMatrix);
-
-                    if (percentOfMeaningfulValues < minPercent || percentOfMeaningfulValues > maxPercent)
-                    {
-                        generatedOutputMatrix = new float[generatedMatrixSize][];
-                        currentCountMatrix = new int[generatedMatrixSize][];
-
-                        persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                            orderby new ContinuousUniform().Sample()
-                            select x).ToList();
-                        persons.Insert(0, 0);
-
-                        person = -1;
-                    }
-                }
-            }
-
-            return generatedOutputMatrix;
         }
 
         public List<int> DetectAllPossibleRelationships(int[,][] relationshipsMatrix, int numberOfProband,
@@ -204,21 +84,21 @@ namespace FamilyMatrixCreator
              * Определение количества родственников-предков текущего родственника.
              */
             int numberOfAncestralRelativesOfRelative = (from previousPerson in Enumerable.Range(1, person - 1)
-                    from ancestralRelationship in Enumerable.Range(0, ancestralRelationships.Count)
-                    where ancestralRelationships[ancestralRelationship] ==
-                          generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-                          && 0 != generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                    select ancestralRelationship).Count();
+                from ancestralRelationship in Enumerable.Range(0, ancestralRelationships.Count)
+                where ancestralRelationships[ancestralRelationship] ==
+                      generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
+                      && 0 != generatedOutputMatrix[persons[previousPerson]][persons[person]]
+                select ancestralRelationship).Count();
 
             /*
              * Определение количества неродственных родственников текущего лица и родственника.
              */
             int numberOfNotRelativesOfPerson = (from previousPerson in Enumerable.Range(1, person - 1)
-                    where 0 == generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                    select previousPerson).Count();
+                where 0 == generatedOutputMatrix[persons[previousPerson]][persons[person]]
+                select previousPerson).Count();
             int numberOfNotRelativesOfRelative = (from previousPerson in Enumerable.Range(1, person - 1)
-                    where 0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-                    select previousPerson).Count();
+                where 0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
+                select previousPerson).Count();
 
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
@@ -230,9 +110,9 @@ namespace FamilyMatrixCreator
                 try
                 {
                     numberOfI = (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                            where relationshipsMatrix[numberOfProband, number][0] ==
-                                  generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                            select number).Single();
+                        where relationshipsMatrix[numberOfProband, number][0] ==
+                              generatedOutputMatrix[persons[previousPerson]][persons[person]]
+                        select number).Single();
                 }
                 catch (InvalidOperationException)
                 {
@@ -244,9 +124,9 @@ namespace FamilyMatrixCreator
                 try
                 {
                     numberOfJ = (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                            where relationshipsMatrix[numberOfProband, number][0] ==
-                                  generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-                            select number).Single();
+                        where relationshipsMatrix[numberOfProband, number][0] ==
+                              generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
+                        select number).Single();
                 }
                 catch (InvalidOperationException)
                 {

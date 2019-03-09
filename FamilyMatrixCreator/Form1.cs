@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MathNet.Numerics.Distributions;
 
 namespace FamilyMatrixCreator
 {
@@ -35,36 +36,6 @@ namespace FamilyMatrixCreator
             _maxCountMatrix = _fileSaverLoader.LoadFromFile2D("maxCount.csv");
         }
 
-        /*
-         * Построение выходной матрицы (матрицы родственных отношений).
-         */
-        private float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
-        {
-            float[][] generatedOutputMatrix = _integrations.OutputBuildRightTopPart(_relationshipsMatrix,
-                _numberOfProband, generatedMatrixSize, existingRelationshipDegrees, _maxCountMatrix,
-                Convert.ToInt32(textBox4.Text), Convert.ToInt32(textBox5.Text));
-            generatedOutputMatrix =
-                _modules.OutputBuildLeftBottomPart(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband);
-
-            generatedOutputMatrix = _modules.FillMainDiagonal(generatedOutputMatrix);
-
-            return generatedOutputMatrix;
-        }
-
-        /*
-         * Построение входной матрицы (матрицы сМ).
-         */
-        private float[][] GenerateInputMatrix(float[][] generatedOutputMatrix, int generatedMatrixSize)
-        {
-            float[][] generatedInputMatrix = new float[generatedMatrixSize][];
-
-            generatedInputMatrix = _integrations.InputBuildRightTopPart(generatedOutputMatrix, _relationshipsMatrix,
-                _numberOfProband, generatedInputMatrix, _centimorgansMatrix);
-            generatedInputMatrix = _modules.InputBuildLeftBottomPart(generatedInputMatrix);
-
-            return generatedInputMatrix;
-        }
-
         private void Generate(object sender, EventArgs e)
         {
             List<int> existingRelationshipDegrees =
@@ -89,7 +60,8 @@ namespace FamilyMatrixCreator
                 {
                     float[][] generatedOutputMatrix =
                         GenerateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
-                    float[][] generatedInputMatrix = GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
+                    float[][] generatedInputMatrix = 
+                        GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
 
                     quantityOfEachRelationship = _modules.CollectStatistics(generatedOutputMatrix,
                         existingRelationshipDegrees, quantityOfEachRelationship);
@@ -135,6 +107,157 @@ namespace FamilyMatrixCreator
                                        (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%";
                 label6.Text = "Затрачено: " + (float) myStopwatch.ElapsedMilliseconds / 1000 + " сек";
             }
+        }
+
+        /*
+         * Построение выходной матрицы (матрицы родственных отношений).
+         */
+        private float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
+        {
+            float[][] generatedOutputMatrix = OutputBuildRightTopPart(_relationshipsMatrix,
+                _numberOfProband, generatedMatrixSize, existingRelationshipDegrees, _maxCountMatrix,
+                Convert.ToInt32(textBox4.Text), Convert.ToInt32(textBox5.Text));
+            generatedOutputMatrix =
+                _modules.OutputBuildLeftBottomPart(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband);
+
+            generatedOutputMatrix = _modules.FillMainDiagonal(generatedOutputMatrix);
+
+            return generatedOutputMatrix;
+        }
+
+        /*
+         * Построение правой (верхней) стороны.
+         */
+        public float[][] OutputBuildRightTopPart(int[,][] relationshipsMatrix, int numberOfProband,
+            int generatedMatrixSize, List<int> existingRelationshipDegrees, int[][] maxCountMatrix, int minPercent,
+            int maxPercent)
+        {
+            float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
+            int[][] currentCountMatrix = new int[generatedMatrixSize][];
+
+            List<int> persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
+                orderby new ContinuousUniform().Sample()
+                select x).ToList();
+            persons.Insert(0, 0);
+
+            for (int person = 0; person < persons.Count; person++)
+            {
+                generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
+                currentCountMatrix[persons[person]] = new int[maxCountMatrix.Length];
+
+                List<int> relatives = (from x in Enumerable.Range(persons[person] + 1,
+                        generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
+                    orderby new ContinuousUniform().Sample()
+                    select x).ToList();
+
+                for (int relative = 0; relative < relatives.Count; relative++)
+                {
+                    List<int> allPossibleRelationships = _integrations.DetectAllPossibleRelationships(
+                        relationshipsMatrix,
+                        numberOfProband, maxCountMatrix, generatedOutputMatrix, currentCountMatrix, persons, person,
+                        relatives, relative);
+
+                    /*
+                     * Создание родственника со случайным видом родства.
+                     */
+                    try
+                    {
+                        generatedOutputMatrix[persons[person]][relatives[relative]] =
+                            allPossibleRelationships[_modules.GetNextRnd(0, allPossibleRelationships.Count)];
+                        currentCountMatrix = _modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
+                            currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        generatedOutputMatrix = new float[generatedMatrixSize][];
+                        currentCountMatrix = new int[generatedMatrixSize][];
+
+                        persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
+                            orderby new ContinuousUniform().Sample()
+                            select x).ToList();
+                        persons.Insert(0, 0);
+
+                        person = -1;
+
+                        break;
+                    }
+                }
+
+                /*
+                 * Проверка того, что выполняется требование по проценту значащих значений
+                 */
+                if (generatedOutputMatrix.GetLength(0) - 1 == person)
+                {
+                    double percentOfMeaningfulValues = 2 * _integrations.CalculatePercentOfMeaningfulValues(
+                                                           generatedMatrixSize,
+                                                           existingRelationshipDegrees, generatedOutputMatrix);
+
+                    if (percentOfMeaningfulValues < minPercent || percentOfMeaningfulValues > maxPercent)
+                    {
+                        generatedOutputMatrix = new float[generatedMatrixSize][];
+                        currentCountMatrix = new int[generatedMatrixSize][];
+
+                        persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
+                            orderby new ContinuousUniform().Sample()
+                            select x).ToList();
+                        persons.Insert(0, 0);
+
+                        person = -1;
+                    }
+                }
+            }
+
+            return generatedOutputMatrix;
+        }
+
+        /*
+         * Построение входной матрицы (матрицы сМ).
+         */
+        private float[][] GenerateInputMatrix(float[][] generatedOutputMatrix, int generatedMatrixSize)
+        {
+            float[][] generatedInputMatrix = new float[generatedMatrixSize][];
+
+            generatedInputMatrix = InputBuildRightTopPart(generatedOutputMatrix, _relationshipsMatrix,
+                _numberOfProband, generatedInputMatrix, _centimorgansMatrix);
+            generatedInputMatrix = _modules.InputBuildLeftBottomPart(generatedInputMatrix);
+
+            return generatedInputMatrix;
+        }
+
+        /*
+         * Построение правой (верхней) стороны  (сМ).
+         */
+        public float[][] InputBuildRightTopPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix,
+            int numberOfProband, float[][] generatedInputMatrix, float[] centimorgansMatrix)
+        {
+            for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
+            {
+                generatedInputMatrix[person] = new float[generatedOutputMatrix.GetLength(0)];
+
+                for (int relative = person; relative < generatedOutputMatrix.GetLength(0); relative++)
+                {
+                    for (int relationship = 0; relationship < relationshipsMatrix.GetLength(1); relationship++)
+                    {
+                        if (relationshipsMatrix[numberOfProband, relationship][0] ==
+                            generatedOutputMatrix[person][relative])
+                        {
+                            generatedInputMatrix[person][relative] =
+                                _modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative,
+                                    relationship, centimorgansMatrix);
+                        }
+
+                        if (relationshipsMatrix[relationship, numberOfProband][0] ==
+                            generatedOutputMatrix[person][relative])
+                        {
+                            generatedInputMatrix[person][relative] =
+                                _modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative,
+                                    relationship, centimorgansMatrix);
+                        }
+                    }
+                }
+            }
+
+            return generatedInputMatrix;
         }
     }
 }
