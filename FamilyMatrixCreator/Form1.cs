@@ -42,7 +42,7 @@ namespace FamilyMatrixCreator
                 _modules.FindAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
 
             List<int[]> complianceMatrix = Enumerable.Range(0, existingRelationshipDegrees.Count)
-                .Select(relationship => new int[] {existingRelationshipDegrees[relationship], relationship}).ToList();
+                .Select(relationship => new int[] { existingRelationshipDegrees[relationship], relationship }).ToList();
             _fileSaverLoader.SaveToFile("compliance.csv", complianceMatrix);
 
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
@@ -60,7 +60,7 @@ namespace FamilyMatrixCreator
                 {
                     float[][] generatedOutputMatrix =
                         GenerateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
-                    float[][] generatedInputMatrix = 
+                    float[][] generatedInputMatrix =
                         GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
 
                     quantityOfEachRelationship = _modules.CollectStatistics(generatedOutputMatrix,
@@ -105,7 +105,7 @@ namespace FamilyMatrixCreator
                 label5.Text = "Значащих значений: "
                               + 100 * ((sumOfMeaningfulValues - quantityOfMatrixes * generatedMatrixSize) /
                                        (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%";
-                label6.Text = "Затрачено: " + (float) myStopwatch.ElapsedMilliseconds / 1000 + " сек";
+                label6.Text = "Затрачено: " + (float)myStopwatch.ElapsedMilliseconds / 1000 + " сек";
             }
         }
 
@@ -136,8 +136,8 @@ namespace FamilyMatrixCreator
             int[][] currentCountMatrix = new int[generatedMatrixSize][];
 
             List<int> persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                orderby new ContinuousUniform().Sample()
-                select x).ToList();
+                                 orderby new ContinuousUniform().Sample()
+                                 select x).ToList();
             persons.Insert(0, 0);
 
             for (int person = 0; person < persons.Count; person++)
@@ -147,8 +147,8 @@ namespace FamilyMatrixCreator
 
                 List<int> relatives = (from x in Enumerable.Range(persons[person] + 1,
                         generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
-                    orderby new ContinuousUniform().Sample()
-                    select x).ToList();
+                                       orderby new ContinuousUniform().Sample()
+                                       select x).ToList();
 
                 for (int relative = 0; relative < relatives.Count; relative++)
                 {
@@ -173,8 +173,8 @@ namespace FamilyMatrixCreator
                         currentCountMatrix = new int[generatedMatrixSize][];
 
                         persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                            orderby new ContinuousUniform().Sample()
-                            select x).ToList();
+                                   orderby new ContinuousUniform().Sample()
+                                   select x).ToList();
                         persons.Insert(0, 0);
 
                         person = -1;
@@ -198,8 +198,8 @@ namespace FamilyMatrixCreator
                         currentCountMatrix = new int[generatedMatrixSize][];
 
                         persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                            orderby new ContinuousUniform().Sample()
-                            select x).ToList();
+                                   orderby new ContinuousUniform().Sample()
+                                   select x).ToList();
                         persons.Insert(0, 0);
 
                         person = -1;
