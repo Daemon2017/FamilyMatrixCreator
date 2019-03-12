@@ -150,17 +150,12 @@ namespace FamilyMatrixCreator
                 }
                 else
                 {
-                    if (person - 1 == numberOfNotRelativesOfPerson && person - 1 == numberOfNotRelativesOfRelative)
-                    {
-                    }
-                    else if (person - 1 == previousPerson && persons.Count - 1 == person)
-                    {
-                    }
-                    else if (0 == generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                             && 0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]])
-                    {
-                    }
-                    else
+                    if (!(person - 1 == numberOfNotRelativesOfPerson &&
+                          person - 1 == numberOfNotRelativesOfRelative) &&
+                        !(person - 1 == previousPerson &&
+                          persons.Count - 1 == person) &&
+                        !(0 == generatedOutputMatrix[persons[previousPerson]][persons[person]] &&
+                          0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]))
                     {
                         List<int> currentPossibleRelationships = new List<int>();
 
@@ -178,6 +173,23 @@ namespace FamilyMatrixCreator
                         if (0 != numberOfAncestralRelativesOfRelative)
                         {
                             currentPossibleRelationships.AddRange(ancestralRelationships);
+                        }
+
+                        for (int p = 1; p < person; p++)
+                        {
+                            for (int relationship = 0; relationship < ancestralRelationships.Count(); relationship++)
+                            {
+                                if (generatedOutputMatrix[persons[p]][persons[person]] ==
+                                    ancestralRelationships[relationship])
+                                {
+                                    if (maxCountMatrix[relationship][1] ==
+                                        currentCountMatrix[persons[p]][relationship])
+                                    {
+                                        currentPossibleRelationships.RemoveAll(values =>
+                                            values == ancestralRelationships[relationship]);
+                                    }
+                                }
+                            }
                         }
 
                         /*
