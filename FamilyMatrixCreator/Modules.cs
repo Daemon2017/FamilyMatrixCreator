@@ -111,24 +111,21 @@ namespace FamilyMatrixCreator
         {
             List<int> allPossibleRelationshipsOfProband =
                 (from i in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                 where 0 < (from possibleRelative in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                            where 0 < (from possibleRelationship in Enumerable.Range(0,
-                                          relationshipsMatrix[i, possibleRelative].Length)
-                                       where relationshipsMatrix.GetLength(1) ==
-                                             (from possibleProbandsRelationship in Enumerable.Range(0,
-                                                     relationshipsMatrix.GetLength(1))
-                                              where relationshipsMatrix[numberOfProband,
-                                                         possibleProbandsRelationship][0] ==
-                                                     relationshipsMatrix[i, possibleRelative][possibleRelationship]
-                                                     || 0 == relationshipsMatrix[i, possibleRelative][
-                                                         possibleRelationship]
-                                              select possibleProbandsRelationship).Count()
-                                       select possibleRelationship).Count()
-                            select possibleRelative).Count()
+                 where (from possibleRelative in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
+                        where (from possibleRelationship in Enumerable.Range(0,
+                                relationshipsMatrix[i, possibleRelative].Length)
+                               where relationshipsMatrix.GetLength(1) ==
+                                     (from possibleProbandsRelationship in Enumerable.Range(0,
+                                             relationshipsMatrix.GetLength(1))
+                                      where relationshipsMatrix[numberOfProband, possibleProbandsRelationship][0] ==
+                                         relationshipsMatrix[i, possibleRelative][possibleRelationship] ||
+                                         0 == relationshipsMatrix[i, possibleRelative][possibleRelationship]
+                                      select possibleProbandsRelationship).Count()
+                               select possibleRelationship).Any()
+                        select possibleRelative).Any()
                  select relationshipsMatrix[numberOfProband, i][0]).ToList();
 
-            return allPossibleRelationshipsOfProband.Distinct()
-                .Where(val => val != 0).ToList();
+            return allPossibleRelationshipsOfProband.Distinct().Where(val => val != 0).ToList();
         }
 
         /*
