@@ -40,20 +40,15 @@ namespace FamilyMatrixCreator
         public int[] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees,
             int[] quantityOfEachRelationship)
         {
-            foreach (float[] raw in generatedOutputMatrix)
+
+            for (int probandsRelatioship = 0;
+                probandsRelatioship < existingRelationshipDegrees.Count;
+                probandsRelatioship++)
             {
-                foreach (float column in raw)
-                {
-                    for (int probandsRelatioship = 0;
-                        probandsRelatioship < existingRelationshipDegrees.Count;
-                        probandsRelatioship++)
-                    {
-                        if (column == existingRelationshipDegrees[probandsRelatioship])
-                        {
-                            quantityOfEachRelationship[probandsRelatioship]++;
-                        }
-                    }
-                }
+                quantityOfEachRelationship[probandsRelatioship] += (from raw in generatedOutputMatrix
+                                                                    from column in raw
+                                                                    where column == existingRelationshipDegrees[probandsRelatioship]
+                                                                    select column).Count();
             }
 
             return quantityOfEachRelationship;
@@ -129,19 +124,12 @@ namespace FamilyMatrixCreator
                         possibleRelationship < relationshipsMatrix[i, possibleRelative].Length;
                         possibleRelationship++)
                     {
-                        int quantityOfPossibleProbandsRelationships = 0;
-
-                        for (int possibleProbandsRelationship = 0;
-                            possibleProbandsRelationship < relationshipsMatrix.GetLength(1);
-                            possibleProbandsRelationship++)
-                        {
-                            if (relationshipsMatrix[numberOfProband, possibleProbandsRelationship][0] ==
-                                relationshipsMatrix[i, possibleRelative][possibleRelationship]
-                                || 0 == relationshipsMatrix[i, possibleRelative][possibleRelationship])
-                            {
-                                quantityOfPossibleProbandsRelationships++;
-                            }
-                        }
+                        int quantityOfPossibleProbandsRelationships =
+                            (from possibleProbandsRelationship in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
+                             where relationshipsMatrix[numberOfProband, possibleProbandsRelationship][0] ==
+                                   relationshipsMatrix[i, possibleRelative][possibleRelationship]
+                                   || 0 == relationshipsMatrix[i, possibleRelative][possibleRelationship]
+                             select possibleProbandsRelationship).Count();
 
                         if (quantityOfPossibleProbandsRelationships == relationshipsMatrix.GetLength(1))
                         {
@@ -191,14 +179,17 @@ namespace FamilyMatrixCreator
             {
                 for (int genRelative = 0; genRelative < genPerson; genRelative++)
                 {
-                    for (int genRelationship = 0; genRelationship < relationshipsMatrix.GetLength(1); genRelationship++)
+                    try
                     {
-                        if (relationshipsMatrix[numberOfProband, genRelationship][0] ==
-                            generatedOutputMatrix[genRelative][genPerson])
-                        {
-                            generatedOutputMatrix[genPerson][genRelative] =
-                                relationshipsMatrix[genRelationship, numberOfProband][0];
-                        }
+                        generatedOutputMatrix[genPerson][genRelative] =
+                            (from genRelationship in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
+                             where relationshipsMatrix[numberOfProband, genRelationship][0] ==
+                                   generatedOutputMatrix[genRelative][genPerson]
+                             select relationshipsMatrix[genRelationship, numberOfProband][0]).Single();
+                    }
+                    catch (InvalidOperationException)
+                    {
+
                     }
                 }
             }
