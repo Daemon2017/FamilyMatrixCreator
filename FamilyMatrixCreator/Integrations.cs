@@ -183,32 +183,18 @@ namespace FamilyMatrixCreator
                         //    where maxCountMatrix[relationship][1] == currentCountMatrix[persons[p]][relationship]
                         //    select ancestralRelationships[relationship]).ToList();
 
-                        int numberOfAncestors = 0;
-                        bool noRelationsAllowed = true;
+                        bool relationsAllowed = (from i in Enumerable.Range(1, persons[person] - 1)
+                                                 where ancestralRelationships.Contains((int)generatedOutputMatrix[persons[i]][persons[person]])
+                                                 where maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1] ==
+                                                       currentCountMatrix[i][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])]
+                                                 where (from j in Enumerable.Range(0, relatives[relative] - 1)
+                                                        where generatedOutputMatrix[persons[i]][persons[j]] ==
+                                                              maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
+                                                        where 0 == generatedOutputMatrix[persons[j]][relatives[relative]]
+                                                        select j).Count() + 1 == maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
+                                                 select i).Any();
 
-                        for (int i = 1; i < persons[person]; i++)
-                        {
-                            if (ancestralRelationships.Contains((int)generatedOutputMatrix[persons[i]][persons[person]]))
-                            {
-                                if (maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1] ==
-                                    currentCountMatrix[i][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])])
-                                {
-                                    numberOfAncestors = (from j in Enumerable.Range(0, relatives[relative] - 1)
-                                                         where generatedOutputMatrix[persons[i]][persons[j]] ==
-                                                               maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
-                                                         where 0 == generatedOutputMatrix[persons[j]][relatives[relative]]
-                                                         select j).Count();
-
-                                    if (numberOfAncestors + 1 ==
-                                        maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1])
-                                    {
-                                        noRelationsAllowed = false;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (false == noRelationsAllowed)
+                        if (relationsAllowed)
                         {
                             currentPossibleRelationships = currentPossibleRelationships.Except(new List<int> { 0 }).ToList();
                         }
