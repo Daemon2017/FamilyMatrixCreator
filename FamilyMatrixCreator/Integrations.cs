@@ -175,13 +175,49 @@ namespace FamilyMatrixCreator
                             currentPossibleRelationships.AddRange(ancestralRelationships);
                         }
 
-                        currentPossibleRelationships = currentPossibleRelationships.Except(
-                            from p in Enumerable.Range(1, person - 1)
-                            from relationship in Enumerable.Range(0, ancestralRelationships.Count)
-                            where generatedOutputMatrix[persons[p]][persons[person]] ==
-                                  ancestralRelationships[relationship]
-                            where maxCountMatrix[relationship][1] == currentCountMatrix[persons[p]][relationship]
-                            select ancestralRelationships[relationship]).ToList();
+                        //currentPossibleRelationships = currentPossibleRelationships.Except(
+                        //    from p in Enumerable.Range(1, person - 1)
+                        //    from relationship in Enumerable.Range(0, ancestralRelationships.Count)
+                        //    where generatedOutputMatrix[persons[p]][persons[person]] ==
+                        //          ancestralRelationships[relationship]
+                        //    where maxCountMatrix[relationship][1] == currentCountMatrix[persons[p]][relationship]
+                        //    select ancestralRelationships[relationship]).ToList();
+
+                        int numberOfAncestors = 0;
+                        bool noRelationsAllowed = true;
+
+                        for (int i = 1; i < persons[person]; i++)
+                        {
+                            if (ancestralRelationships.Contains((int)generatedOutputMatrix[persons[i]][persons[person]]))
+                            {
+                                if (maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1] ==
+                                    currentCountMatrix[i][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])])
+                                {
+                                    for (int j = 0; j < relatives[relative] - 1; j++)
+                                    {
+                                        if (generatedOutputMatrix[persons[i]][persons[j]] ==
+                                        maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1])
+                                        {
+                                            if (0 == generatedOutputMatrix[persons[j]][relatives[relative]])
+                                            {
+                                                numberOfAncestors++;
+
+                                                if (numberOfAncestors + 1 ==
+                                                    maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1])
+                                                {
+                                                    noRelationsAllowed = false;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (false == noRelationsAllowed)
+                        {
+                            currentPossibleRelationships = currentPossibleRelationships.Except(new List<int> { 0 }).ToList();
+                        }
 
                         /*
                          * Исключение возможных видов родства, которые невозможно сгенерировать.
