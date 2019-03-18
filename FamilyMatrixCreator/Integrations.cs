@@ -193,22 +193,16 @@ namespace FamilyMatrixCreator
                                 if (maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1] ==
                                     currentCountMatrix[i][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])])
                                 {
-                                    for (int j = 0; j < relatives[relative] - 1; j++)
-                                    {
-                                        if (generatedOutputMatrix[persons[i]][persons[j]] ==
-                                        maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1])
-                                        {
-                                            if (0 == generatedOutputMatrix[persons[j]][relatives[relative]])
-                                            {
-                                                numberOfAncestors++;
+                                    numberOfAncestors = (from j in Enumerable.Range(0, relatives[relative] - 1)
+                                                         where generatedOutputMatrix[persons[i]][persons[j]] ==
+                                                               maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
+                                                         where 0 == generatedOutputMatrix[persons[j]][relatives[relative]]
+                                                         select j).Count();
 
-                                                if (numberOfAncestors + 1 ==
-                                                    maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1])
-                                                {
-                                                    noRelationsAllowed = false;
-                                                }
-                                            }
-                                        }
+                                    if (numberOfAncestors + 1 ==
+                                        maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1])
+                                    {
+                                        noRelationsAllowed = false;
                                     }
                                 }
                             }
