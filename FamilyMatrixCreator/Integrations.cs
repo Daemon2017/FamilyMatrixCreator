@@ -196,8 +196,7 @@ namespace FamilyMatrixCreator
                                               maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
                                         where 0 == generatedOutputMatrix[persons[j]][relatives[relative]]
                                         select j).Count() + 1 ==
-                                       maxCountMatrix[
-                                           ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
+                                       maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
                                  select i).Any();
                         }
                         catch (NullReferenceException)
