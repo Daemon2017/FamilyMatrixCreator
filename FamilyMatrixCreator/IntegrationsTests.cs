@@ -55,30 +55,52 @@ namespace FamilyMatrixCreator
 
         private static readonly object[] FindAllPossibleRelationships_DataProvider =
         {
-            //new object[]
-            //{
-            //    new float[][]
-            //    {
-            //        new float[] {0, 5, 5, 9, 6},
-            //        new float[] {0, 0, 0, 0, 3},
-            //        new float[] {0, 0, 0, 2, 0},
-            //        null,
-            //        null
-            //    },
-            //    new int[][]
-            //    {
-            //        new int[] {0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            //        new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            //        new int[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            //        null,
-            //        null
-            //    },
-            //    new List<int> {0, 1, 2, 3, 4},
-            //    2,
-            //    new List<int> {3, 4},
-            //    1,
-            //    new int[] {3}
-            //},
+            new object[]
+            {
+                new float[][]
+                {
+                    new float[] {0, 5, 5, 4},
+                    new float[] {0, 0, 0, 8},
+                    new float[] {0, 0, 0, 0},
+                    null
+                },
+                new int[][]
+                {
+                    new int[] {0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    null
+                },
+                new List<int> {0, 1, 2, 3},
+                2,
+                new List<int> {3},
+                0,
+                new int[] {8}
+            },
+            new object[]
+            {
+                new float[][]
+                {
+                    new float[] {0, 5, 6, 9, 5},
+                    new float[] {0, 0, 3, 0, 0},
+                    new float[] {0, 0, 0, 5, 2},
+                    new float[] {0, 0, 0, 0, 0},
+                    null
+                },
+                new int[][]
+                {
+                    new int[] {0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    null
+                },
+                new List<int> {0, 1, 2, 3, 4},
+                3,
+                new List<int> {4},
+                0,
+                new int[] {3}
+            },
             new object[]
             {
                 new float[][]
@@ -874,7 +896,7 @@ namespace FamilyMatrixCreator
                 _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
 
             Assert.That(result,
-                Is.EqualTo(_integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives,
+                Is.EquivalentTo(_integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives,
                     relative, relationshipsMatrix, numberOfProband, maxCountMatrix, currentCountMatrix)));
         }
 
