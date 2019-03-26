@@ -48,9 +48,10 @@ namespace FamilyMatrixCreator
         public void CalculatePercentOfMeaningfulValues_Test(int generatedMatrixSize,
             List<int> existingRelationshipDegrees, float[][] generatedOutputMatrix, double result)
         {
-            Assert.That(result,
-                Is.EqualTo(_integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize,
-                    existingRelationshipDegrees, generatedOutputMatrix)));
+            Assert.That(
+                _integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees,
+                    generatedOutputMatrix),
+                Is.EqualTo(result));
         }
 
         private static readonly object[] FindAllPossibleRelationships_DataProvider =
@@ -59,8 +60,8 @@ namespace FamilyMatrixCreator
             {
                 new float[][]
                 {
-                    new float[] {0, 5, 5, 4},
-                    new float[] {0, 0, 0, 8},
+                    new float[] {0, 5, 5, 6},
+                    new float[] {0, 0, 0, 3},
                     new float[] {0, 0, 0, 0},
                     null
                 },
@@ -75,80 +76,124 @@ namespace FamilyMatrixCreator
                 2,
                 new List<int> {3},
                 0,
-                new int[] {8}
+                new int[] {3, 0}
             },
             new object[]
             {
                 new float[][]
                 {
-                    new float[] {0, 5, 6, 9, 5},
-                    new float[] {0, 0, 3, 0, 0},
-                    new float[] {0, 0, 0, 5, 2},
-                    new float[] {0, 0, 0, 0, 0},
-                    null
+                    new float[] {0, 5, 5, 6},
+                    new float[] {0, 0, 0, 3},
+                    null,
+                    new float[] {0, 0, 0, 0}
                 },
                 new int[][]
                 {
-                    new int[] {0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                     new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    null
+                    null,
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
                 },
-                new List<int> {0, 1, 2, 3, 4},
+                new List<int> {0, 1, 3, 2},
                 3,
-                new List<int> {4},
+                new List<int> {3},
                 0,
-                new int[] {3}
+                new int[] {3, 0}
             },
-            new object[]
-            {
-                new float[][]
-                {
-                    new float[] {0, 2, 5, 5, 2},
-                    new float[] {0, 0, 2, 0, 0},
-                    new float[] {0, 0, 0, 0, 0},
-                    new float[] {0, 0, 0, 0, 0},
-                    null
-                },
-                new int[][]
-                {
-                    new int[] {2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    null
-                },
-                new List<int> {0, 1, 2, 3, 4},
-                3,
-                new List<int> {4},
-                0,
-                new int[] {3}
-            },
-            new object[]
-            {
-                new float[][]
-                {
-                    new float[] {0, 5, 2, 2, 5},
-                    new float[] {0, 0, 3, 0, 0},
-                    new float[] {0, 0, 0, 0, 0},
-                    new float[] {0, 0, 0, 0, 0},
-                    null
-                },
-                new int[][]
-                {
-                    new int[] {2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    null
-                },
-                new List<int> {0, 1, 2, 3, 4},
-                3,
-                new List<int> {4},
-                0,
-                new int[] {2}
-            },
+            //new object[]
+            //{
+            //    new float[][]
+            //    {
+            //        new float[] {0, 5, 5, 4},
+            //        new float[] {0, 0, 0, 8},
+            //        new float[] {0, 0, 0, 0},
+            //        null
+            //    },
+            //    new int[][]
+            //    {
+            //        new int[] {0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        null
+            //    },
+            //    new List<int> {0, 1, 2, 3},
+            //    2,
+            //    new List<int> {3},
+            //    0,
+            //    new int[] {8}
+            //},
+            //new object[]
+            //{
+            //    new float[][]
+            //    {
+            //        new float[] {0, 5, 6, 9, 5},
+            //        new float[] {0, 0, 3, 0, 0},
+            //        new float[] {0, 0, 0, 5, 2},
+            //        new float[] {0, 0, 0, 0, 0},
+            //        null
+            //    },
+            //    new int[][]
+            //    {
+            //        new int[] {0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        new int[] {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        null
+            //    },
+            //    new List<int> {0, 1, 2, 3, 4},
+            //    3,
+            //    new List<int> {4},
+            //    0,
+            //    new int[] {3}
+            //},
+            //new object[]
+            //{
+            //    new float[][]
+            //    {
+            //        new float[] {0, 2, 5, 5, 2},
+            //        new float[] {0, 0, 2, 0, 0},
+            //        new float[] {0, 0, 0, 0, 0},
+            //        new float[] {0, 0, 0, 0, 0},
+            //        null
+            //    },
+            //    new int[][]
+            //    {
+            //        new int[] {2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        null
+            //    },
+            //    new List<int> {0, 1, 2, 3, 4},
+            //    3,
+            //    new List<int> {4},
+            //    0,
+            //    new int[] {3}
+            //},
+            //new object[]
+            //{
+            //    new float[][]
+            //    {
+            //        new float[] {0, 5, 2, 2, 5},
+            //        new float[] {0, 0, 3, 0, 0},
+            //        new float[] {0, 0, 0, 0, 0},
+            //        new float[] {0, 0, 0, 0, 0},
+            //        null
+            //    },
+            //    new int[][]
+            //    {
+            //        new int[] {2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            //        null
+            //    },
+            //    new List<int> {0, 1, 2, 3, 4},
+            //    3,
+            //    new List<int> {4},
+            //    0,
+            //    new int[] {2}
+            //},
             new object[]
             {
                 new float[][]
@@ -517,50 +562,6 @@ namespace FamilyMatrixCreator
             {
                 new float[][]
                 {
-                    new float[] {0, 5, 5, 6},
-                    new float[] {0, 0, 0, 3},
-                    new float[] {0, 0, 0, 0},
-                    null
-                },
-                new int[][]
-                {
-                    new int[] {0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    null
-                },
-                new List<int> {0, 1, 2, 3},
-                2,
-                new List<int> {3},
-                0,
-                new int[] {0}
-            },
-            new object[]
-            {
-                new float[][]
-                {
-                    new float[] {0, 5, 5, 6},
-                    new float[] {0, 0, 0, 3},
-                    null,
-                    new float[] {0, 0, 0, 0}
-                },
-                new int[][]
-                {
-                    new int[] {0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    null,
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-                },
-                new List<int> {0, 1, 3, 2},
-                3,
-                new List<int> {3},
-                0,
-                new int[] {0}
-            },
-            new object[]
-            {
-                new float[][]
-                {
                     new float[] {0, 5, 6, 5},
                     new float[] {0, 0, 3, 0},
                     new float[] {0, 0, 0, 0},
@@ -895,9 +896,10 @@ namespace FamilyMatrixCreator
             int[][] maxCountMatrix =
                 _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
 
-            Assert.That(result,
-                Is.EquivalentTo(_integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives,
-                    relative, relationshipsMatrix, numberOfProband, maxCountMatrix, currentCountMatrix)));
+            Assert.That(
+                _integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative,
+                    relationshipsMatrix, numberOfProband, maxCountMatrix, currentCountMatrix),
+                Is.EquivalentTo(result));
         }
 
         private static readonly object[] DetectAllPossibleRelationships_DataProvider =
@@ -985,9 +987,10 @@ namespace FamilyMatrixCreator
             int[][] maxCountMatrix =
                 _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
 
-            Assert.That(result,
-                Is.EquivalentTo(_integrations.DetectAllPossibleRelationships(relationshipsMatrix, numberOfProband,
-                    maxCountMatrix, generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative)));
+            Assert.That(
+                _integrations.DetectAllPossibleRelationships(relationshipsMatrix, numberOfProband, maxCountMatrix,
+                    generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative),
+                Is.EquivalentTo(result));
         }
     }
 }
