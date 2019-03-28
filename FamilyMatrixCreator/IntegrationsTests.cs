@@ -400,32 +400,6 @@ namespace FamilyMatrixCreator
             {
                 new float[][]
                 {
-                    new float[] {0, 11, 6, 11, 6, 11},
-                    new float[] {0, 0, 2, 0, 0, 4},
-                    new float[] {0, 0, 0, 0, 0, 3},
-                    new float[] {0, 0, 0, 0, 0, 0},
-                    new float[] {0, 0, 0, 0, 0, 0},
-                    null
-                },
-                new int[][]
-                {
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    null
-                },
-                new List<int> {0, 1, 2, 3, 4, 5},
-                4,
-                new List<int> {5},
-                0,
-                new int[] {0}
-            },
-            new object[]
-            {
-                new float[][]
-                {
                     new float[] {0, 6, 5, 6, 5},
                     new float[] {0, 0, 2, 4, 2},
                     new float[] {0, 0, 0, 3, 0},
@@ -468,7 +442,7 @@ namespace FamilyMatrixCreator
                 3,
                 new List<int> {4},
                 0,
-                new int[] {2, 6, 0}
+                new int[] {2, 6}
             },
             new object[]
             {
