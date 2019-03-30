@@ -184,29 +184,10 @@ namespace FamilyMatrixCreator
                             currentPossibleRelationships.AddRange(ancestralRelationships);
                         }
 
-                        bool relationsWithAncestorMustExist = false;
+                        bool relationWithAncestorMustExist = _modules.IsRelationWithAncestorMustExist(generatedOutputMatrix, 
+                            persons, person, relatives, relative, maxCountMatrix, currentCountMatrix, ancestralRelationships);
 
-                        try
-                        {
-                            relationsWithAncestorMustExist =
-                                (from i in Enumerable.Range(1, persons[person] - 1)
-                                 where ancestralRelationships.Contains((int)generatedOutputMatrix[persons[i]][persons[person]])
-                                 where maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1] ==
-                                       currentCountMatrix[i][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])]
-                                 where (from j in Enumerable.Range(0, relatives[relative] - 1)
-                                        where generatedOutputMatrix[persons[i]][persons[j]] ==
-                                              maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
-                                        where 0 == generatedOutputMatrix[persons[j]][relatives[relative]]
-                                        select j).Count() + 1 ==
-                                       maxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
-                                 select i).Any();
-                        }
-                        catch (NullReferenceException)
-                        {
-
-                        }
-
-                        if (relationsWithAncestorMustExist)
+                        if (relationWithAncestorMustExist)
                         {
                             currentPossibleRelationships = currentPossibleRelationships.Except(new List<int> { 0 }).ToList();
                         }
