@@ -209,7 +209,7 @@ namespace FamilyMatrixCreator
                 new List<int> {3},
                 0,
                 new int[] {0}
-            },            
+            },
             new object[]
             {
                 new float[][]
@@ -845,12 +845,19 @@ namespace FamilyMatrixCreator
             int[,][] relationshipsMatrix =
                 _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
-            int[][] maxCountMatrix =
-                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
+            int[][] ancestorsMaxCountMatrix =
+                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
+            int[][] descendantsMatrix =
+                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
 
             Assert.That(
-                _integrations.FindAllPossibleRelationships(generatedOutputMatrix, persons, person, relatives, relative,
-                    relationshipsMatrix, numberOfProband, maxCountMatrix, currentCountMatrix),
+                _integrations.FindAllPossibleRelationships(
+                    generatedOutputMatrix,
+                    persons, person,
+                    relatives, relative,
+                    relationshipsMatrix, numberOfProband,
+                    ancestorsMaxCountMatrix, descendantsMatrix,
+                    currentCountMatrix),
                 Is.EquivalentTo(result));
         }
 
@@ -936,12 +943,18 @@ namespace FamilyMatrixCreator
             int[,][] relationshipsMatrix =
                 _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
-            int[][] maxCountMatrix =
-                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
+            int[][] ancestorsMaxCountMatrix =
+                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
+            int[][] descendantsMatrix =
+                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
 
             Assert.That(
-                _integrations.DetectAllPossibleRelationships(relationshipsMatrix, numberOfProband, maxCountMatrix,
-                    generatedOutputMatrix, currentCountMatrix, persons, person, relatives, relative),
+                _integrations.DetectAllPossibleRelationships(
+                    relationshipsMatrix, numberOfProband,
+                    ancestorsMaxCountMatrix, descendantsMatrix,
+                    generatedOutputMatrix, currentCountMatrix,
+                    persons, person,
+                    relatives, relative),
                 Is.EquivalentTo(result));
         }
     }

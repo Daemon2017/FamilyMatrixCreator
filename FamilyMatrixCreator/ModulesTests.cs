@@ -183,12 +183,14 @@ namespace FamilyMatrixCreator
         public void IncreaseCurrentRelationshipCount_Test(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
             List<int> persons, int person, List<int> relatives, int relative, int[][] result)
         {
-            int[][] maxCountMatrix =
-                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\maxCount.csv");
+            int[][] ancestorsMaxCountMatrix =
+                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
 
             Assert.That(
-                _modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix, persons, person,
-                    relatives, relative, maxCountMatrix),
+                _modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix,
+                    persons, person,
+                    relatives, relative,
+                    ancestorsMaxCountMatrix),
                 Is.EqualTo(result));
         }
 

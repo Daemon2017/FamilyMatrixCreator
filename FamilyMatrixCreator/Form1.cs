@@ -25,7 +25,8 @@ namespace FamilyMatrixCreator
 
         private int[,][] _relationshipsMatrix;
         private float[] _centimorgansMatrix;
-        private int[][] _maxCountMatrix;
+        private int[][] _ancestorsMaxCountMatrix;
+        private int[][] _descendantsMatrix;
         private int _numberOfProband;
 
         private void Form1_Load(object sender, EventArgs e)
@@ -33,7 +34,8 @@ namespace FamilyMatrixCreator
             _relationshipsMatrix = _fileSaverLoader.LoadFromFile2DJagged("relationships.csv");
             _numberOfProband = _modules.FindNumberOfProband(_relationshipsMatrix);
             _centimorgansMatrix = _fileSaverLoader.LoadFromFile1D("centimorgans.csv");
-            _maxCountMatrix = _fileSaverLoader.LoadFromFile2D("maxCount.csv");
+            _ancestorsMaxCountMatrix = _fileSaverLoader.LoadFromFile2D("ancestorsMatrix.csv");
+            _descendantsMatrix = _fileSaverLoader.LoadFromFile2D("descendantsMatrix.csv");
         }
 
         private void Generate(object sender, EventArgs e)
@@ -42,7 +44,7 @@ namespace FamilyMatrixCreator
                 _modules.FindAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
 
             List<int[]> complianceMatrix = Enumerable.Range(0, existingRelationshipDegrees.Count)
-                .Select(relationship => new int[] { existingRelationshipDegrees[relationship], relationship }).ToList();
+                .Select(relationship => new int[] {existingRelationshipDegrees[relationship], relationship}).ToList();
             _fileSaverLoader.SaveToFile("compliance.csv", complianceMatrix);
 
             int quantityOfMatrixes = Convert.ToInt32(textBox1.Text);
@@ -105,7 +107,7 @@ namespace FamilyMatrixCreator
                 label5.Text = "Значащих значений: "
                               + 100 * ((sumOfMeaningfulValues - quantityOfMatrixes * generatedMatrixSize) /
                                        (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%";
-                label6.Text = "Затрачено: " + (float)myStopwatch.ElapsedMilliseconds / 1000 + " сек";
+                label6.Text = "Затрачено: " + (float) myStopwatch.ElapsedMilliseconds / 1000 + " сек";
             }
         }
 
@@ -115,7 +117,8 @@ namespace FamilyMatrixCreator
         private float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
         {
             float[][] generatedOutputMatrix = OutputBuildRightTopPart(_relationshipsMatrix,
-                _numberOfProband, generatedMatrixSize, existingRelationshipDegrees, _maxCountMatrix,
+                _numberOfProband, generatedMatrixSize, existingRelationshipDegrees,
+                _ancestorsMaxCountMatrix, _descendantsMatrix,
                 Convert.ToInt32(textBox4.Text), Convert.ToInt32(textBox5.Text));
             generatedOutputMatrix =
                 _modules.OutputBuildLeftBottomPart(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband);
@@ -129,32 +132,35 @@ namespace FamilyMatrixCreator
          * Построение правой (верхней) стороны.
          */
         public float[][] OutputBuildRightTopPart(int[,][] relationshipsMatrix, int numberOfProband,
-            int generatedMatrixSize, List<int> existingRelationshipDegrees, int[][] maxCountMatrix, int minPercent,
-            int maxPercent)
+            int generatedMatrixSize, List<int> existingRelationshipDegrees,
+            int[][] ancestorsMaxCountMatrix, int[][] descendantsMatrix,
+            int minPercent, int maxPercent)
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
             int[][] currentCountMatrix = new int[generatedMatrixSize][];
 
             List<int> persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                                 orderby new ContinuousUniform().Sample()
-                                 select x).ToList();
+                orderby new ContinuousUniform().Sample()
+                select x).ToList();
             persons.Insert(0, 0);
 
             for (int person = 0; person < persons.Count; person++)
             {
                 generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
-                currentCountMatrix[persons[person]] = new int[maxCountMatrix.Length];
+                currentCountMatrix[persons[person]] = new int[ancestorsMaxCountMatrix.Length];
 
                 List<int> relatives = (from x in Enumerable.Range(persons[person] + 1,
                         generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
-                                       orderby new ContinuousUniform().Sample()
-                                       select x).ToList();
+                    orderby new ContinuousUniform().Sample()
+                    select x).ToList();
 
                 for (int relative = 0; relative < relatives.Count; relative++)
                 {
                     List<int> allPossibleRelationships = _integrations.DetectAllPossibleRelationships(
-                        relationshipsMatrix,
-                        numberOfProband, maxCountMatrix, generatedOutputMatrix, currentCountMatrix, persons, person,
+                        relationshipsMatrix, numberOfProband,
+                        ancestorsMaxCountMatrix, descendantsMatrix,
+                        generatedOutputMatrix, currentCountMatrix,
+                        persons, person,
                         relatives, relative);
 
                     /*
@@ -165,7 +171,7 @@ namespace FamilyMatrixCreator
                         generatedOutputMatrix[persons[person]][relatives[relative]] =
                             allPossibleRelationships[_modules.GetNextRnd(0, allPossibleRelationships.Count)];
                         currentCountMatrix = _modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
-                            currentCountMatrix, persons, person, relatives, relative, maxCountMatrix);
+                            currentCountMatrix, persons, person, relatives, relative, ancestorsMaxCountMatrix);
                     }
                     catch (ArgumentOutOfRangeException)
                     {
@@ -173,8 +179,8 @@ namespace FamilyMatrixCreator
                         currentCountMatrix = new int[generatedMatrixSize][];
 
                         persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                                   orderby new ContinuousUniform().Sample()
-                                   select x).ToList();
+                            orderby new ContinuousUniform().Sample()
+                            select x).ToList();
                         persons.Insert(0, 0);
 
                         person = -1;
@@ -198,8 +204,8 @@ namespace FamilyMatrixCreator
                         currentCountMatrix = new int[generatedMatrixSize][];
 
                         persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                                   orderby new ContinuousUniform().Sample()
-                                   select x).ToList();
+                            orderby new ContinuousUniform().Sample()
+                            select x).ToList();
                         persons.Insert(0, 0);
 
                         person = -1;
