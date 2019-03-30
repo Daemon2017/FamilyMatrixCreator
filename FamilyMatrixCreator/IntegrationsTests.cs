@@ -60,6 +60,94 @@ namespace FamilyMatrixCreator
             {
                 new float[][]
                 {
+                    new float[] {1, 2, 2, 5},
+                    new float[] {0, 1, 0, 2},
+                    new float[] {0, 0, 1, 0},
+                    new float[] {0, 0, 0, 1}
+                },
+                new int[][]
+                {
+                    new int[] {2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+                },
+                new List<int> {0, 1, 2, 3},
+                2,
+                new List<int> {3},
+                0,
+                new int[] {0}
+            },
+            new object[]
+            {
+                new float[][]
+                {
+                    new float[] {0, 11, 17, 17},
+                    new float[] {0, 0, 0, 3},
+                    new float[] {0, 0, 0, 0},
+                    null
+                },
+                new int[][]
+                {
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    null
+                },
+                new List<int> {0, 1, 2, 3},
+                2,
+                new List<int> {3},
+                0,
+                new int[] {0}
+            },
+            new object[]
+            {
+                new float[][]
+                {
+                    new float[] {0, 17, 11, 17},
+                    new float[] {0, 0, 2, 0},
+                    new float[] {0, 0, 0, 0},
+                    null
+                },
+                new int[][]
+                {
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    null
+                },
+                new List<int> {0, 1, 2, 3},
+                2,
+                new List<int> {3},
+                0,
+                new int[] {0}
+            },
+            new object[]
+            {
+                new float[][]
+                {
+                    new float[] {0, 11, 17, 23},
+                    new float[] {0, 0, 3, 0},
+                    new float[] {0, 0, 0, 0},
+                    null
+                },
+                new int[][]
+                {
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    null
+                },
+                new List<int> {0, 1, 2, 3},
+                2,
+                new List<int> {3},
+                0,
+                new int[] {0}
+            },
+            new object[]
+            {
+                new float[][]
+                {
                     new float[] {0, 5, 5, 6},
                     new float[] {0, 0, 0, 3},
                     new float[] {0, 0, 0, 0},
@@ -624,28 +712,6 @@ namespace FamilyMatrixCreator
             {
                 new float[][]
                 {
-                    new float[] {0, 11, 17, 23},
-                    new float[] {0, 0, 3, 0},
-                    new float[] {0, 0, 0, 0},
-                    null
-                },
-                new int[][]
-                {
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    null
-                },
-                new List<int> {0, 1, 2, 3},
-                2,
-                new List<int> {3},
-                0,
-                new int[] {0}
-            },
-            new object[]
-            {
-                new float[][]
-                {
                     new float[] {0, 7, 11, 17},
                     new float[] {0, 0, 16, 23},
                     new float[] {0, 0, 0, 0},
@@ -685,50 +751,6 @@ namespace FamilyMatrixCreator
                 new List<int> {3},
                 0,
                 new int[] {3, 7}
-            },
-            new object[]
-            {
-                new float[][]
-                {
-                    new float[] {0, 17, 11, 17},
-                    new float[] {0, 0, 2, 0},
-                    new float[] {0, 0, 0, 0},
-                    null
-                },
-                new int[][]
-                {
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    null
-                },
-                new List<int> {0, 1, 2, 3},
-                2,
-                new List<int> {3},
-                0,
-                new int[] {0}
-            },
-            new object[]
-            {
-                new float[][]
-                {
-                    new float[] {0, 11, 17, 17},
-                    new float[] {0, 0, 0, 3},
-                    new float[] {0, 0, 0, 0},
-                    null
-                },
-                new int[][]
-                {
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    null
-                },
-                new List<int> {0, 1, 2, 3},
-                2,
-                new List<int> {3},
-                0,
-                new int[] {0}
             },
             new object[]
             {
@@ -813,28 +835,6 @@ namespace FamilyMatrixCreator
                 new List<int> {2},
                 0,
                 new int[] {5, 10, 22, 38, 0}
-            },
-            new object[]
-            {
-                new float[][]
-                {
-                    new float[] {1, 2, 2, 5},
-                    new float[] {0, 1, 0, 2},
-                    new float[] {0, 0, 1, 0},
-                    new float[] {0, 0, 0, 1}
-                },
-                new int[][]
-                {
-                    new int[] {2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-                },
-                new List<int> {0, 1, 2, 3},
-                2,
-                new List<int> {3},
-                0,
-                new int[] {0}
             }
         };
 
