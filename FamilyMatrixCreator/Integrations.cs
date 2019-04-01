@@ -65,9 +65,9 @@ namespace FamilyMatrixCreator
              */
             allPossibleRelationships =
                 (from relationship in allPossibleRelationships
-                    where !ancestorsMaxCountMatrix.Where((raw, column) =>
-                        relationship == raw[0] && currentCountMatrix[persons[person]][column] == raw[1]).Any()
-                    select relationship).ToList();
+                 where !ancestorsMaxCountMatrix.Where((raw, column) =>
+                     relationship == raw[0] && currentCountMatrix[persons[person]][column] == raw[1]).Any()
+                 select relationship).ToList();
 
             return allPossibleRelationships;
         }
@@ -89,14 +89,14 @@ namespace FamilyMatrixCreator
              */
             List<int> ancestorsRelationships =
                 (from j in Enumerable.Range(0, ancestorsMaxCountMatrix.GetLength(0))
-                    select ancestorsMaxCountMatrix[j][0]).ToList();
+                 select ancestorsMaxCountMatrix[j][0]).ToList();
 
             /*
              * Составление списка потомковых степеней родства.
              */
             List<int> descendantsRelationships =
                 (from j in Enumerable.Range(0, descendantsMatrix.GetLength(0))
-                    select descendantsMatrix[j][0]).ToList();
+                 select descendantsMatrix[j][0]).ToList();
 
             bool relationWithAncestorMustExist = _modules.IsRelationWithAncestorMustExist(generatedOutputMatrix,
                 persons, person, relatives, relative, ancestorsMaxCountMatrix, currentCountMatrix,
@@ -107,23 +107,23 @@ namespace FamilyMatrixCreator
              */
             int numberOfAncestorsOfRelative =
                 (from previousPerson in Enumerable.Range(1, person - 1)
-                    from ancestralRelationship in Enumerable.Range(0, ancestorsRelationships.Count)
-                    where ancestorsRelationships[ancestralRelationship] ==
-                          generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-                          && 0 != generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                    select ancestralRelationship).Count();
+                 from ancestralRelationship in Enumerable.Range(0, ancestorsRelationships.Count)
+                 where ancestorsRelationships[ancestralRelationship] ==
+                       generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
+                       && 0 != generatedOutputMatrix[persons[previousPerson]][persons[person]]
+                 select ancestralRelationship).Count();
 
             /*
              * Определение количества неродственных родственников текущего лица и родственника.
              */
             int numberOfNotRelativesOfPerson =
                 (from previousPerson in Enumerable.Range(1, person - 1)
-                    where 0 == generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                    select previousPerson).Count();
+                 where 0 == generatedOutputMatrix[persons[previousPerson]][persons[person]]
+                 select previousPerson).Count();
             int numberOfNotRelativesOfRelative =
                 (from previousPerson in Enumerable.Range(1, person - 1)
-                    where 0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-                    select previousPerson).Count();
+                 where 0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
+                 select previousPerson).Count();
 
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
@@ -136,9 +136,9 @@ namespace FamilyMatrixCreator
                 {
                     numberOfI =
                         (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                            where relationshipsMatrix[numberOfProband, number][0] ==
-                                  generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                            select number).Single();
+                         where relationshipsMatrix[numberOfProband, number][0] ==
+                               generatedOutputMatrix[persons[previousPerson]][persons[person]]
+                         select number).Single();
                 }
                 catch (InvalidOperationException)
                 {
@@ -151,9 +151,9 @@ namespace FamilyMatrixCreator
                 {
                     numberOfJ =
                         (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                            where relationshipsMatrix[numberOfProband, number][0] ==
-                                  generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-                            select number).Single();
+                         where relationshipsMatrix[numberOfProband, number][0] ==
+                               generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
+                         select number).Single();
                 }
                 catch (InvalidOperationException)
                 {
@@ -166,7 +166,7 @@ namespace FamilyMatrixCreator
                         relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
                     List<int> currentPossibleRelationships =
                         (from j in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                            select relationshipsMatrix[numberOfProband, j][0]).ToList();
+                         select relationshipsMatrix[numberOfProband, j][0]).ToList();
                     currentPossibleRelationships.Add(0);
 
                     /*
@@ -177,67 +177,67 @@ namespace FamilyMatrixCreator
                 }
                 else
                 {
-                    List<int> currentPossibleRelationships;
+                    if (!(person - 1 == previousPerson &&
+                          persons.Count - 1 == person))
+                    {
+                        List<int> currentPossibleRelationships;
 
-                    if (!(person - 1 == numberOfNotRelativesOfPerson &&
-                          person - 1 == numberOfNotRelativesOfRelative) &&
-                        !(person - 1 == previousPerson &&
-                          persons.Count - 1 == person) &&
-                        !(0 == generatedOutputMatrix[persons[previousPerson]][persons[person]] &&
+                        if (!(0 == generatedOutputMatrix[persons[previousPerson]][persons[person]] &&
                           0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]))
-                    {
-                        currentPossibleRelationships = new List<int>();
-
-                        if (numberOfIExists && numberOfJExists)
                         {
-                            currentPossibleRelationships =
-                                relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
+                            currentPossibleRelationships = new List<int>();
+
+                            if (numberOfIExists && numberOfJExists)
+                            {
+                                currentPossibleRelationships =
+                                    relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
+                            }
+                            else
+                            {
+                                currentPossibleRelationships =
+                                    allPossibleRelationships.Intersect(ancestorsRelationships).ToList();
+                                currentPossibleRelationships.AddRange(allPossibleRelationships
+                                    .Intersect(descendantsRelationships).ToList());
+                            }
+
+                            if (0 == numberOfI || 0 == numberOfJ)
+                            {
+                                currentPossibleRelationships.Add(0);
+                            }
+
+                            if (0 != numberOfAncestorsOfRelative)
+                            {
+                                currentPossibleRelationships.AddRange(ancestorsRelationships);
+                            }
+
+                            if (relationWithAncestorMustExist)
+                            {
+                                currentPossibleRelationships =
+                                    currentPossibleRelationships.Except(new List<int> { 0 }).ToList();
+                            }
+                            else
+                            {
+                                currentPossibleRelationships = currentPossibleRelationships.Except(
+                                    from p in Enumerable.Range(1, person - 1)
+                                    from relationship in Enumerable.Range(0, ancestorsRelationships.Count)
+                                    where generatedOutputMatrix[persons[p]][persons[person]] ==
+                                          ancestorsRelationships[relationship]
+                                    where ancestorsMaxCountMatrix[relationship][1] ==
+                                          currentCountMatrix[persons[p]][relationship]
+                                    select ancestorsRelationships[relationship]).ToList();
+                            }
                         }
                         else
                         {
-                            currentPossibleRelationships =
-                                allPossibleRelationships.Intersect(ancestorsRelationships).ToList();
-                            currentPossibleRelationships.AddRange(allPossibleRelationships
-                                .Intersect(descendantsRelationships).ToList());
+                            currentPossibleRelationships = allPossibleRelationships;
                         }
 
-                        if (0 == numberOfI || 0 == numberOfJ)
-                        {
-                            currentPossibleRelationships.Add(0);
-                        }
-
-                        if (0 != numberOfAncestorsOfRelative)
-                        {
-                            currentPossibleRelationships.AddRange(ancestorsRelationships);
-                        }
-
-                        if (relationWithAncestorMustExist)
-                        {
-                            currentPossibleRelationships =
-                                currentPossibleRelationships.Except(new List<int> {0}).ToList();
-                        }
-                        else
-                        {
-                            currentPossibleRelationships = currentPossibleRelationships.Except(
-                                from p in Enumerable.Range(1, person - 1)
-                                from relationship in Enumerable.Range(0, ancestorsRelationships.Count)
-                                where generatedOutputMatrix[persons[p]][persons[person]] ==
-                                      ancestorsRelationships[relationship]
-                                where ancestorsMaxCountMatrix[relationship][1] ==
-                                      currentCountMatrix[persons[p]][relationship]
-                                select ancestorsRelationships[relationship]).ToList();
-                        }
+                        /*
+                         * Исключение возможных видов родства, которые невозможно сгенерировать.
+                         */
+                        allPossibleRelationships =
+                            allPossibleRelationships.Intersect(currentPossibleRelationships).ToList();
                     }
-                    else
-                    {
-                        currentPossibleRelationships = allPossibleRelationships;
-                    }
-
-                    /*
-                     * Исключение возможных видов родства, которые невозможно сгенерировать.
-                     */
-                    allPossibleRelationships =
-                        allPossibleRelationships.Intersect(currentPossibleRelationships).ToList();
                 }
             }
 
