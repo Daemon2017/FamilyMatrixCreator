@@ -56,7 +56,7 @@ namespace FamilyMatrixCreator
             if (quantityOfMatrixes > 0)
             {
                 int generatedMatrixSize = Convert.ToInt32(textBox3.Text);
-                int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count];
+                int[][] quantityOfEachRelationship = new int[quantityOfMatrixes][];
 
                 Parallel.For(0, quantityOfMatrixes, matrixNumber =>
                 {
@@ -65,8 +65,9 @@ namespace FamilyMatrixCreator
                     float[][] generatedInputMatrix =
                         GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
 
+                    quantityOfEachRelationship[matrixNumber] = new int[existingRelationshipDegrees.Count];
                     quantityOfEachRelationship = _modules.CollectStatistics(generatedOutputMatrix,
-                        existingRelationshipDegrees, quantityOfEachRelationship);
+                        existingRelationshipDegrees, quantityOfEachRelationship, matrixNumber);
 
                     //generatedOutputMatrix = modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees);
 
@@ -91,18 +92,24 @@ namespace FamilyMatrixCreator
                 int relationshipNumber = 0;
                 float sumOfMeaningfulValues = 0;
 
-                foreach (var quantity in quantityOfEachRelationship)
+                foreach (var row in quantityOfEachRelationship)
                 {
-                    textBox2.Text += "Родство " + existingRelationshipDegrees[relationshipNumber] + ": " + quantity +
-                                     Environment.NewLine;
-                    sumOfMeaningfulValues += quantity;
+                    foreach (var column in row)
+                    {
+                        textBox2.Text += "Родство " + existingRelationshipDegrees[relationshipNumber] + ": " + column +
+                                         Environment.NewLine;
+                        sumOfMeaningfulValues += column;
 
-                    relationshipNumber++;
+                        relationshipNumber++;
+                    }
                 }
 
                 _fileSaverLoader.SaveToFile(@"statistic.csv", textBox2.Text);
 
-                sumOfMeaningfulValues -= quantityOfEachRelationship[0];
+                foreach (var row in quantityOfEachRelationship)
+                {
+                    sumOfMeaningfulValues -= row[0];
+                }
 
                 label5.Text = "Значащих значений: "
                               + 100 * ((sumOfMeaningfulValues - quantityOfMatrixes * generatedMatrixSize) /
