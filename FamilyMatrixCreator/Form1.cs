@@ -60,7 +60,9 @@ namespace FamilyMatrixCreator
                 int generatedMatrixSize = Convert.ToInt32(textBox3.Text);
                 quantityOfEachRelationship = new int[quantityOfMatrixes][];
 
-                CreateMatrices(existingRelationshipDegrees, quantityOfMatrixes, generatedMatrixSize);
+                Thread matricesCreator = new Thread(() => CreateMatrices(existingRelationshipDegrees, quantityOfMatrixes, generatedMatrixSize));
+                matricesCreator.Start();
+                matricesCreator.Join();
 
                 myStopwatch.Stop();
 
