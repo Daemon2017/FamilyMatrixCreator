@@ -15,53 +15,27 @@ namespace FamilyMatrixCreator
             {
                 new float[][] {new float[] {1, 8, 3}, new float[] {9, 1, 0}, new float[] {2, 0, 1}},
                 new List<int> {9, 8, 3, 2, 1},
-                new int[] {0, 0, 0, 0, 0},
                 new int[] {1, 1, 1, 1, 3}
             },
             new object[]
             {
-                new float[][] {new float[] {1, 8, 3}, new float[] {9, 1, 0}, new float[] {2, 0, 1}},
-                new List<int> {9, 8, 3, 2, 1},
-                new int[] {1, 2, 3, 4, 5},
-                new int[] {2, 3, 4, 5, 8}
-            },
-            new object[]
-            {
                 new float[][] {new float[] {1, 8, 3}, new float[] {0, 1, 0}, new float[] {0, 0, 1}},
                 new List<int> {9, 8, 3, 2, 1},
-                new int[] {0, 0, 0, 0, 0},
                 new int[] {0, 1, 1, 0, 3}
             },
             new object[]
             {
-                new float[][] {new float[] {1, 8, 3}, new float[] {0, 1, 0}, new float[] {0, 0, 1}},
-                new List<int> {9, 8, 3, 2, 1},
-                new int[] {1, 2, 3, 4, 5},
-                new int[] {1, 3, 4, 4, 8}
-            },
-            new object[]
-            {
                 new float[][] {new float[] {0, 8, 3}, new float[] {9, 0, 0}, new float[] {2, 0, 0}},
                 new List<int> {9, 8, 3, 2, 1},
-                new int[] {0, 0, 0, 0, 0},
                 new int[] {1, 1, 1, 1, 0}
-            },
-            new object[]
-            {
-                new float[][] {new float[] {0, 8, 3}, new float[] {9, 0, 0}, new float[] {2, 0, 0}},
-                new List<int> {9, 8, 3, 2, 1},
-                new int[] {1, 2, 3, 4, 5},
-                new int[] {2, 3, 4, 5, 5}
             }
         };
 
         [TestCaseSource(nameof(CollectStatistics_DataProvider))]
-        public void CollectStatistics_Test(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees,
-            int[] quantityOfEachRelationship, int[] result)
+        public void CollectStatistics_Test(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees, int[] result)
         {
             Assert.That(
-                _modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees,
-                    quantityOfEachRelationship),
+                _modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees),
                 Is.EqualTo(result));
         }
 

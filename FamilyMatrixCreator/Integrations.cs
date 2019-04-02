@@ -14,9 +14,7 @@ namespace FamilyMatrixCreator
         public double CalculatePercentOfMeaningfulValues(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             float[][] generatedOutputMatrix)
         {
-            int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count];
-            quantityOfEachRelationship = _modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees,
-                quantityOfEachRelationship);
+            int[] quantityOfEachRelationship = _modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
 
             float sumOfMeaningfulValues =
                 quantityOfEachRelationship.Aggregate<int, float>(0, (current, quantity) => current + quantity);

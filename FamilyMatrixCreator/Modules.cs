@@ -54,22 +54,6 @@ namespace FamilyMatrixCreator
             return quantityOfEachRelationship;
         }
 
-        public int[] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees,
-            int[] quantityOfEachRelationship)
-        {
-            for (int probandsRelatioship = 0;
-                probandsRelatioship < existingRelationshipDegrees.Count;
-                probandsRelatioship++)
-            {
-                quantityOfEachRelationship[probandsRelatioship] += (from raw in generatedOutputMatrix
-                                                                    from column in raw
-                                                                    where column == existingRelationshipDegrees[probandsRelatioship]
-                                                                    select column).Count();
-            }
-
-            return quantityOfEachRelationship;
-        }
-
         /*
          * Устранение разрывов между номерами видов родства.
          */
