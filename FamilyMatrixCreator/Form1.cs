@@ -67,21 +67,31 @@ namespace FamilyMatrixCreator
                 myStopwatch.Stop();
 
                 /*
-                 * Вывод статистики по родству.
+                 * Подсчет общей статистики по родству.
+                 */
+                int[] sumQuantityOfEachRelationship = new int[existingRelationshipDegrees.Count];
+
+                for (int i = 0; i < quantityOfMatrixes; i++)
+                {
+                    for (int j = 0; j < existingRelationshipDegrees.Count; j++)
+                    {
+                        sumQuantityOfEachRelationship[j] += quantityOfEachRelationship[i][j];
+                    }
+                }
+
+                /*
+                 * Вывод общей статистики по родству.
                  */
                 int relationshipNumber = 0;
                 float sumOfMeaningfulValues = 0;
 
-                foreach (var row in quantityOfEachRelationship)
+                foreach (var relationship in sumQuantityOfEachRelationship)
                 {
-                    foreach (var column in row)
-                    {
-                        textBox2.Text += "Родство " + existingRelationshipDegrees[relationshipNumber] + ": " + column +
-                                         Environment.NewLine;
-                        sumOfMeaningfulValues += column;
+                    textBox2.Text += "Родство " + existingRelationshipDegrees[relationshipNumber] + ": " + relationship +
+                                     Environment.NewLine;
+                    sumOfMeaningfulValues += relationship;
 
-                        relationshipNumber++;
-                    }
+                    relationshipNumber++;
                 }
 
                 _fileSaverLoader.SaveToFile(@"statistic.csv", textBox2.Text);
