@@ -37,17 +37,18 @@ namespace FamilyMatrixCreator
         /*
         * Сбор статистики по родству.
         */
-        public int[][] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees,
-            int[][] quantityOfEachRelationship, int matrixNumber)
+        public int[] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
         {
+            int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count];
+
             for (int probandsRelatioship = 0;
                 probandsRelatioship < existingRelationshipDegrees.Count;
                 probandsRelatioship++)
             {
-                quantityOfEachRelationship[matrixNumber][probandsRelatioship] += (from raw in generatedOutputMatrix
-                                                                                  from column in raw
-                                                                                  where column == existingRelationshipDegrees[probandsRelatioship]
-                                                                                  select column).Count();
+                quantityOfEachRelationship[probandsRelatioship] += (from raw in generatedOutputMatrix
+                                                                    from column in raw
+                                                                    where column == existingRelationshipDegrees[probandsRelatioship]
+                                                                    select column).Count();
             }
 
             return quantityOfEachRelationship;
@@ -61,9 +62,9 @@ namespace FamilyMatrixCreator
                 probandsRelatioship++)
             {
                 quantityOfEachRelationship[probandsRelatioship] += (from raw in generatedOutputMatrix
-                                                                                  from column in raw
-                                                                                  where column == existingRelationshipDegrees[probandsRelatioship]
-                                                                                  select column).Count();
+                                                                    from column in raw
+                                                                    where column == existingRelationshipDegrees[probandsRelatioship]
+                                                                    select column).Count();
             }
 
             return quantityOfEachRelationship;
