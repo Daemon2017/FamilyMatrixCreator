@@ -39,36 +39,6 @@ namespace FamilyMatrixCreator
                 Is.EqualTo(result));
         }
 
-        private static readonly object[] TransformMatrix_DataProvider =
-        {
-            new object[]
-            {
-                new float[][] {new float[] {1, 8, 3}, new float[] {9, 1, 0}, new float[] {2, 0, 1}},
-                new List<int> {9, 8, 3, 2, 1},
-                new float[][] {new float[] {6, 3, 4}, new float[] {2, 6, 1}, new float[] {5, 1, 6}}
-            },
-            new object[]
-            {
-                new float[][] {new float[] {1, 8, 3}, new float[] {0, 1, 0}, new float[] {0, 0, 1}},
-                new List<int> {9, 8, 3, 2, 1},
-                new float[][] {new float[] {6, 3, 4}, new float[] {1, 6, 1}, new float[] {1, 1, 6}}
-            },
-            new object[]
-            {
-                new float[][] {new float[] {0, 8, 3}, new float[] {9, 0, 0}, new float[] {2, 0, 0}},
-                new List<int> {9, 8, 3, 2, 1},
-                new float[][] {new float[] {1, 3, 4}, new float[] {2, 1, 1}, new float[] {5, 1, 1}}
-            }
-        };
-
-        [TestCaseSource(nameof(TransformMatrix_DataProvider))]
-        public void TransformMatrix_Test(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees,
-            float[][] result)
-        {
-            Assert.That(_modules.TransformMatrix(generatedOutputMatrix, existingRelationshipDegrees),
-                Is.EqualTo(result));
-        }
-
         private static readonly object[] IncreaseCurrentRelationshipCount_DataProvider =
         {
             new object[]

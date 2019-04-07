@@ -52,39 +52,7 @@ namespace FamilyMatrixCreator
             }
 
             return quantityOfEachRelationship;
-        }
-
-        /*
-         * Устранение разрывов между номерами видов родства.
-         */
-        public float[][] TransformMatrix(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
-        {
-            for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
-            {
-                for (int relative = 0; relative < generatedOutputMatrix.GetLength(0); relative++)
-                {
-                    for (int relationship = 0; relationship < existingRelationshipDegrees.Count; relationship++)
-                    {
-                        if (existingRelationshipDegrees[relationship] == generatedOutputMatrix[person][relative])
-                        {
-                            /*
-                             * Нумерация значащих видов родства должна начинаться с 2.
-                             */
-                            generatedOutputMatrix[person][relative] = relationship + 2;
-                            break;
-                        }
-
-                        if (0 == generatedOutputMatrix[person][relative])
-                        {
-                            generatedOutputMatrix[person][relative] = 1;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return generatedOutputMatrix;
-        }
+        }           
 
         /*
          * Увеличение числа родственников данного вида у указанного лица.
