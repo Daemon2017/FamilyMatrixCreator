@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace FamilyMatrixCreator
 {
-    public class FileSaverLoader
+    public static class FileSaverLoader
     {
-        public void SaveToFile(string outputFileName, float[][] generatedMatrix, int matrixNumber)
+        public static void SaveToFile(string outputFileName, float[][] generatedMatrix, int matrixNumber)
         {
             using (StreamWriter outfile = new StreamWriter(outputFileName + matrixNumber + ".csv"))
             {
@@ -26,7 +26,7 @@ namespace FamilyMatrixCreator
             }
         }
 
-        public void SaveToFile(string outputFileName, List<int[]> complianceMatrix)
+        public static void SaveToFile(string outputFileName, List<int[]> complianceMatrix)
         {
             using (StreamWriter outfile = new StreamWriter(outputFileName))
             {
@@ -41,7 +41,7 @@ namespace FamilyMatrixCreator
             }
         }
 
-        public void SaveToFile(string outputFileName, string statisticString)
+        public static void SaveToFile(string outputFileName, string statisticString)
         {
             using (StreamWriter outfile = new StreamWriter(outputFileName))
             {
@@ -52,7 +52,7 @@ namespace FamilyMatrixCreator
         /*
          * Загрузка матрицы возможных степеней родства.
          */
-        public int[,][] LoadFromFile2DJagged(string inputFileName)
+        public static int[,][] LoadFromFile2DJagged(string inputFileName)
         {
             string input = File.ReadAllText(inputFileName);
             int numberOfLines = input.Split('\n').Length - 1;
@@ -121,7 +121,7 @@ namespace FamilyMatrixCreator
         /*
         * Загрузка матрицы максимального числа предков заданного вида.
         */
-        public int[][] LoadFromFile2D(string inputFileName)
+        public static int[][] LoadFromFile2D(string inputFileName)
         {
             int relationship = 0;
             string input = File.ReadAllText(inputFileName);
@@ -153,7 +153,7 @@ namespace FamilyMatrixCreator
         /*
         * Загрузка матрицы значений сантиморган.
         */
-        public float[] LoadFromFile1D(string inputFileName)
+        public static float[] LoadFromFile1D(string inputFileName)
         {
             int person = 0;
             string input = File.ReadAllText(inputFileName);

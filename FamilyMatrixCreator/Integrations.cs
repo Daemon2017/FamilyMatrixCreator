@@ -4,17 +4,15 @@ using System.Linq;
 
 namespace FamilyMatrixCreator
 {
-    public class Integrations
+    public static class Integrations
     {
-        private readonly Modules _modules = new Modules();
-
         /*
          * Подсчет процента значащих значений
          */
-        public double CalculatePercentOfMeaningfulValues(int generatedMatrixSize, List<int> existingRelationshipDegrees,
+        public static double CalculatePercentOfMeaningfulValues(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             float[][] generatedOutputMatrix)
         {
-            int[] quantityOfEachRelationship = _modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
+            int[] quantityOfEachRelationship = Modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
 
             float sumOfMeaningfulValues =
                 quantityOfEachRelationship.Aggregate<int, float>(0, (current, quantity) => current + quantity);
@@ -34,7 +32,7 @@ namespace FamilyMatrixCreator
             return 100 * (sumOfMeaningfulValues / Math.Pow(generatedMatrixSize, 2));
         }
 
-        public List<int> DetectAllPossibleRelationships(int[,][] relationshipsMatrix, int numberOfProband,
+        public static List<int> DetectAllPossibleRelationships(int[,][] relationshipsMatrix, int numberOfProband,
             int[][] ancestorsMaxCountMatrix, int[][] descendantsMatrix,
             float[][] generatedOutputMatrix, int[][] currentCountMatrix,
             List<int> persons, int person,
@@ -45,7 +43,7 @@ namespace FamilyMatrixCreator
             if (0 == persons[person])
             {
                 allPossibleRelationships =
-                    _modules.FindAllPossibleRelationshipsOfProband(relationshipsMatrix, numberOfProband);
+                    Modules.FindAllPossibleRelationshipsOfProband(relationshipsMatrix, numberOfProband);
             }
             else
             {
@@ -73,7 +71,7 @@ namespace FamilyMatrixCreator
         /*
          * Поиск всех возможных видов родства.
          */
-        public List<int> FindAllPossibleRelationships(float[][] generatedOutputMatrix,
+        public static List<int> FindAllPossibleRelationships(float[][] generatedOutputMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative,
             int[,][] relationshipsMatrix, int numberOfProband,
@@ -96,7 +94,7 @@ namespace FamilyMatrixCreator
                 (from j in Enumerable.Range(0, descendantsMatrix.GetLength(0))
                  select descendantsMatrix[j][0]).ToList();
 
-            bool relationWithAncestorMustExist = _modules.IsRelationWithAncestorMustExist(generatedOutputMatrix,
+            bool relationWithAncestorMustExist = Modules.IsRelationWithAncestorMustExist(generatedOutputMatrix,
                 persons, person, relatives, relative, ancestorsMaxCountMatrix, currentCountMatrix,
                 ancestorsRelationships);
 

@@ -6,10 +6,6 @@ namespace FamilyMatrixCreator
     [TestFixture]
     internal class IntegrationsTests
     {
-        private readonly Integrations _integrations = new Integrations();
-        private readonly Modules _modules = new Modules();
-        private readonly FileSaverLoader _fileSaverLoader = new FileSaverLoader();
-
         private static readonly object[] CalculatePercentOfMeaningfulValues_DataProvider =
         {
             new object[]
@@ -49,7 +45,7 @@ namespace FamilyMatrixCreator
             List<int> existingRelationshipDegrees, float[][] generatedOutputMatrix, double result)
         {
             Assert.That(
-                _integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees,
+                Integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees,
                     generatedOutputMatrix),
                 Is.EqualTo(result));
         }
@@ -843,15 +839,15 @@ namespace FamilyMatrixCreator
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
             int[,][] relationshipsMatrix =
-                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
-            int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
+                FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+            int numberOfProband = Modules.FindNumberOfProband(relationshipsMatrix);
             int[][] ancestorsMaxCountMatrix =
-                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
+                FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
             int[][] descendantsMatrix =
-                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
+                FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
 
             Assert.That(
-                _integrations.FindAllPossibleRelationships(
+                Integrations.FindAllPossibleRelationships(
                     generatedOutputMatrix,
                     persons, person,
                     relatives, relative,
@@ -941,15 +937,15 @@ namespace FamilyMatrixCreator
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
             int[,][] relationshipsMatrix =
-                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
-            int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
+                FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+            int numberOfProband = Modules.FindNumberOfProband(relationshipsMatrix);
             int[][] ancestorsMaxCountMatrix =
-                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
+                FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
             int[][] descendantsMatrix =
-                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
+                FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
 
             Assert.That(
-                _integrations.DetectAllPossibleRelationships(
+                Integrations.DetectAllPossibleRelationships(
                     relationshipsMatrix, numberOfProband,
                     ancestorsMaxCountMatrix, descendantsMatrix,
                     generatedOutputMatrix, currentCountMatrix,

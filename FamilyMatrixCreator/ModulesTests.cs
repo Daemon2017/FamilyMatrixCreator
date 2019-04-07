@@ -6,9 +6,6 @@ namespace FamilyMatrixCreator
     [TestFixture]
     public class ModulesTests
     {
-        private readonly Modules _modules = new Modules();
-        private readonly FileSaverLoader _fileSaverLoader = new FileSaverLoader();
-
         private static readonly object[] CollectStatistics_DataProvider =
         {
             new object[]
@@ -35,7 +32,7 @@ namespace FamilyMatrixCreator
         public void CollectStatistics_Test(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees, int[] result)
         {
             Assert.That(
-                _modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees),
+                Modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees),
                 Is.EqualTo(result));
         }
 
@@ -128,10 +125,10 @@ namespace FamilyMatrixCreator
             List<int> persons, int person, List<int> relatives, int relative, int[][] result)
         {
             int[][] ancestorsMaxCountMatrix =
-                _fileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
+                FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
 
             Assert.That(
-                _modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix,
+                Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix,
                     persons, person,
                     relatives, relative,
                     ancestorsMaxCountMatrix),
@@ -155,10 +152,10 @@ namespace FamilyMatrixCreator
         public void FindAllExistingRelationshipDegrees_Test(List<int> result)
         {
             int[,][] relationshipsMatrix =
-                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
-            int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
+                FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+            int numberOfProband = Modules.FindNumberOfProband(relationshipsMatrix);
 
-            Assert.That(_modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband),
+            Assert.That(Modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband),
                 Is.EquivalentTo(result));
         }
 
@@ -185,10 +182,10 @@ namespace FamilyMatrixCreator
         public void OutputBuildLeftBottomPart_Test(float[][] generatedOutputMatrix, float[][] result)
         {
             int[,][] relationshipsMatrix =
-                _fileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
-            int numberOfProband = _modules.FindNumberOfProband(relationshipsMatrix);
+                FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+            int numberOfProband = Modules.FindNumberOfProband(relationshipsMatrix);
 
-            Assert.That(_modules.OutputBuildLeftBottomPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband),
+            Assert.That(Modules.OutputBuildLeftBottomPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband),
                 Is.EqualTo(result));
         }
 
@@ -204,7 +201,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(InputBuildLeftBottomPart_DataProvider))]
         public void InputBuildLeftBottomPart_Test(float[][] generatedInputMatrix, float[][] result)
         {
-            Assert.That(_modules.InputBuildLeftBottomPart(generatedInputMatrix), Is.EqualTo(result));
+            Assert.That(Modules.InputBuildLeftBottomPart(generatedInputMatrix), Is.EqualTo(result));
         }
 
         private static readonly object[] FillMainDiagonal_DataProvider =
@@ -229,7 +226,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(FillMainDiagonal_DataProvider))]
         public void FillMainDiagonal_Test(float[][] generatedOutputMatrix, float[][] result)
         {
-            Assert.That(_modules.FillMainDiagonal(generatedOutputMatrix), Is.EqualTo(result));
+            Assert.That(Modules.FillMainDiagonal(generatedOutputMatrix), Is.EqualTo(result));
         }
 
         private static readonly object[] GetNextRnd_DataProvider =
@@ -254,7 +251,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(GetNextRnd_DataProvider))]
         public void GetNextRnd_Test(int min, int max)
         {
-            Assert.That(_modules.GetNextRnd(min, max), Is.GreaterThan(min - 1).And.LessThan(max + 1));
+            Assert.That(Modules.GetNextRnd(min, max), Is.GreaterThan(min - 1).And.LessThan(max + 1));
         }
     }
 }

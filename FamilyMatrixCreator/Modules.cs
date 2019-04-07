@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Windows.Forms;
 using MathNet.Numerics.Distributions;
 
 namespace FamilyMatrixCreator
 {
-    public class Modules
+    public static class Modules
     {
         private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
 
         /*
          * Преобразование видов родства в сантиморганы.
          */
-        public float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative,
+        public static float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative,
             int relationship, float[] centimorgansMatrix)
         {
             if (!(centimorgansMatrix[relationship] <= 3950))
@@ -37,7 +36,7 @@ namespace FamilyMatrixCreator
         /*
         * Сбор статистики по родству.
         */
-        public int[] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
+        public static int[] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
         {
             int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count];
 
@@ -57,7 +56,7 @@ namespace FamilyMatrixCreator
         /*
          * Увеличение числа родственников данного вида у указанного лица.
          */
-        public int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
+        public static int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
             List<int> persons, int person, List<int> relatives, int relative, int[][] maxCountMatrix)
         {
             for (int i = 0; i < maxCountMatrix.Length; i++)
@@ -76,7 +75,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение списка возможных степеней родства пробанда.
          */
-        public List<int> FindAllPossibleRelationshipsOfProband(int[,][] relationshipsMatrix, int numberOfProband)
+        public static List<int> FindAllPossibleRelationshipsOfProband(int[,][] relationshipsMatrix, int numberOfProband)
         {
             List<int> allPossibleRelationshipsOfProband =
                 (from i in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
@@ -100,7 +99,7 @@ namespace FamilyMatrixCreator
         /*
          * Нахождение всех существующих степеней родства.
          */
-        public List<int> FindAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)
+        public static List<int> FindAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)
         {
             List<int> existingRelationshipDegrees = new List<int> { 0 };
 
@@ -116,7 +115,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение левой (нижней) стороны.
          */
-        public float[][] OutputBuildLeftBottomPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix,
+        public static float[][] OutputBuildLeftBottomPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix,
             int numberOfProband)
         {
             for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
@@ -143,7 +142,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение левой (нижней) стороны (сМ).
          */
-        public float[][] InputBuildLeftBottomPart(float[][] generatedInputMatrix)
+        public static float[][] InputBuildLeftBottomPart(float[][] generatedInputMatrix)
         {
             for (int genPerson = 1; genPerson < generatedInputMatrix.GetLength(0); genPerson++)
             {
@@ -159,7 +158,7 @@ namespace FamilyMatrixCreator
         /*
          * Заполнение главной диагонали.
          */
-        public float[][] FillMainDiagonal(float[][] generatedOutputMatrix)
+        public static float[][] FillMainDiagonal(float[][] generatedOutputMatrix)
         {
             for (int i = 0; i < generatedOutputMatrix.GetLength(0); i++)
             {
@@ -172,7 +171,7 @@ namespace FamilyMatrixCreator
         /*
          * Создание случайного значения.
          */
-        public int GetNextRnd(int min, int max)
+        public static int GetNextRnd(int min, int max)
         {
             byte[] rndBytes = new byte[4];
             Rng.GetBytes(rndBytes);
@@ -184,7 +183,7 @@ namespace FamilyMatrixCreator
         /*
          * Определение номера строки, содержащей возможные степени родства пробанда.
          */
-        public int FindNumberOfProband(int[,][] relationshipsMatrix)
+        public static int FindNumberOfProband(int[,][] relationshipsMatrix)
         {
             int onlyOneRelationshipCount = 0;
 
@@ -206,13 +205,13 @@ namespace FamilyMatrixCreator
                 onlyOneRelationshipCount = 0;
             }
 
-            MessageBox.Show("Не удалось найти номер строки с возможными степенями родства пробанда.");
-            Application.Exit();
+            Console.WriteLine("Не удалось найти номер строки с возможными степенями родства пробанда.");
+            Environment.Exit(0);
 
             return 0;
         }
 
-        public bool IsRelationWithAncestorMustExist(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[][] ancestorsMaxCountMatrix, int[][] currentCountMatrix, List<int> ancestralRelationships)
+        public static bool IsRelationWithAncestorMustExist(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[][] ancestorsMaxCountMatrix, int[][] currentCountMatrix, List<int> ancestralRelationships)
         {
             bool relationsWithAncestorMustExist = false;
 
