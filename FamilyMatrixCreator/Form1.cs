@@ -17,7 +17,6 @@ namespace FamilyMatrixCreator
         private static int[][] _ancestorsMaxCountMatrix;
         private static int[][] _descendantsMatrix;
         private static int _numberOfProband;
-        private static int[][] quantityOfEachRelationship;
 
         public static void Main(string[] args)
         {
@@ -55,7 +54,6 @@ namespace FamilyMatrixCreator
             {
                 Console.WriteLine("Все необходимые сведения получены, начинается работа...");
                 int generatedMatrixSize = sizeOfMatrices;
-                quantityOfEachRelationship = new int[quantityOfMatrixes][];
 
                 Thread matricesCreator = new Thread(() => CreateMatrices(existingRelationshipDegrees, quantityOfMatrixes, generatedMatrixSize,
                     minPercentOfValues, maxPercentOfValues));
@@ -64,54 +62,9 @@ namespace FamilyMatrixCreator
 
                 myStopwatch.Stop();
                 Console.WriteLine("Построение матриц завершено! Затрачено: " + (float)myStopwatch.ElapsedMilliseconds / 1000 + " сек");
-
-                GetStatisticReport(existingRelationshipDegrees, quantityOfMatrixes, generatedMatrixSize);
             }
 
             Console.ReadLine();
-        }
-
-        private static void GetStatisticReport(List<int> existingRelationshipDegrees, int quantityOfMatrixes, int generatedMatrixSize)
-        {
-            /*
-             * Подсчет общей статистики по родству.
-             */
-            int[] sumQuantityOfEachRelationship = new int[existingRelationshipDegrees.Count];
-
-            for (int i = 0; i < quantityOfMatrixes; i++)
-            {
-                for (int j = 0; j < existingRelationshipDegrees.Count; j++)
-                {
-                    sumQuantityOfEachRelationship[j] += quantityOfEachRelationship[i][j];
-                }
-            }
-
-            /*
-             * Запись общей статистики по родству.
-             */
-            int relationshipNumber = 0;
-            float sumOfMeaningfulValues = 0;
-            string statistic = "";
-
-            foreach (var relationship in sumQuantityOfEachRelationship)
-            {
-                statistic += "Родство " + existingRelationshipDegrees[relationshipNumber] + ": " + relationship +
-                                 Environment.NewLine;
-                sumOfMeaningfulValues += relationship;
-
-                relationshipNumber++;
-            }
-
-            FileSaverLoader.SaveToFile(@"statistic.csv", statistic);
-
-            foreach (var row in quantityOfEachRelationship)
-            {
-                sumOfMeaningfulValues -= row[0];
-            }
-
-            Console.WriteLine("Значащих значений: "
-                          + 100 * ((sumOfMeaningfulValues - quantityOfMatrixes * generatedMatrixSize) /
-                                   (quantityOfMatrixes * Math.Pow(generatedMatrixSize, 2))) + "%");
         }
 
         private static void CreateMatrices(List<int> existingRelationshipDegrees, int quantityOfMatrixes, int generatedMatrixSize,
@@ -126,8 +79,6 @@ namespace FamilyMatrixCreator
                 float[][] generatedInputMatrix =
                     GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
                 Console.WriteLine("Завершено построение матрицы #{0}!", matrixNumber);
-
-                quantityOfEachRelationship[matrixNumber] = Modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
 
                 /*
                  * Сохранение входной матрицы в файл.
