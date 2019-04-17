@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -23,29 +22,6 @@ namespace FamilyMatrixCreator
 
                     outfile.WriteLine(content);
                 }
-            }
-        }
-
-        public static void SaveToFile(string outputFileName, List<int[]> complianceMatrix)
-        {
-            using (StreamWriter outfile = new StreamWriter(outputFileName))
-            {
-                foreach (var relationship in complianceMatrix)
-                {
-                    string content = "";
-
-                    content += relationship[0] + ", " + relationship[1];
-
-                    outfile.WriteLine(content);
-                }
-            }
-        }
-
-        public static void SaveToFile(string outputFileName, string statisticString)
-        {
-            using (StreamWriter outfile = new StreamWriter(outputFileName))
-            {
-                outfile.WriteLine(statisticString);
             }
         }
 
