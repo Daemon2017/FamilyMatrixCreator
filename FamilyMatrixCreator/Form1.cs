@@ -24,7 +24,7 @@ namespace FamilyMatrixCreator
 
             Console.WriteLine("Подготовка необходимых файлов...");
             _relationshipsMatrix = FileSaverLoader.LoadFromFile2DJagged("relationships.csv");
-            _numberOfProband = Modules.FindNumberOfProband(_relationshipsMatrix);
+            _numberOfProband = 0;
             _centimorgansMatrix = FileSaverLoader.LoadFromFile1D("centimorgans.csv");
             _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2D("ancestorsMatrix.csv");
             _descendantsMatrix = FileSaverLoader.LoadFromFile2D("descendantsMatrix.csv");
@@ -100,9 +100,8 @@ namespace FamilyMatrixCreator
         private static float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             int minPercentOfValues, int maxPercentOfValues)
         {
-            float[][] generatedOutputMatrix = OutputBuildRightTopPart(_relationshipsMatrix,
-                _numberOfProband, generatedMatrixSize, existingRelationshipDegrees,
-                _ancestorsMaxCountMatrix, _descendantsMatrix,
+            float[][] generatedOutputMatrix = OutputBuildRightTopPart(
+                generatedMatrixSize, existingRelationshipDegrees,
                 minPercentOfValues, maxPercentOfValues);
             generatedOutputMatrix =
                 Modules.OutputBuildLeftBottomPart(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband);
@@ -115,9 +114,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение правой (верхней) стороны.
          */
-        public static float[][] OutputBuildRightTopPart(int[,][] relationshipsMatrix, int numberOfProband,
-            int generatedMatrixSize, List<int> existingRelationshipDegrees,
-            int[][] ancestorsMaxCountMatrix, int[][] descendantsMatrix,
+        public static float[][] OutputBuildRightTopPart(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             int minPercent, int maxPercent)
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
@@ -131,7 +128,7 @@ namespace FamilyMatrixCreator
             for (int person = 0; person < persons.Count; person++)
             {
                 generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
-                currentCountMatrix[persons[person]] = new int[ancestorsMaxCountMatrix.Length];
+                currentCountMatrix[persons[person]] = new int[_ancestorsMaxCountMatrix.Length];
 
                 List<int> relatives = (from x in Enumerable.Range(persons[person] + 1,
                         generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
@@ -141,8 +138,8 @@ namespace FamilyMatrixCreator
                 for (int relative = 0; relative < relatives.Count; relative++)
                 {
                     List<int> allPossibleRelationships = Integrations.DetectAllPossibleRelationships(
-                        relationshipsMatrix, numberOfProband,
-                        ancestorsMaxCountMatrix, descendantsMatrix,
+                        _relationshipsMatrix, _numberOfProband,
+                        _ancestorsMaxCountMatrix, _descendantsMatrix,
                         generatedOutputMatrix, currentCountMatrix,
                         persons, person,
                         relatives, relative);
@@ -155,7 +152,7 @@ namespace FamilyMatrixCreator
                         generatedOutputMatrix[persons[person]][relatives[relative]] =
                             allPossibleRelationships[Modules.GetNextRnd(0, allPossibleRelationships.Count)];
                         currentCountMatrix = Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
-                            currentCountMatrix, persons, person, relatives, relative, ancestorsMaxCountMatrix);
+                            currentCountMatrix, persons, person, relatives, relative, _ancestorsMaxCountMatrix);
                     }
                     catch (ArgumentOutOfRangeException)
                     {
@@ -207,8 +204,8 @@ namespace FamilyMatrixCreator
         {
             float[][] generatedInputMatrix = new float[generatedMatrixSize][];
 
-            generatedInputMatrix = InputBuildRightTopPart(generatedOutputMatrix, _relationshipsMatrix,
-                _numberOfProband, generatedInputMatrix, _centimorgansMatrix);
+            generatedInputMatrix = InputBuildRightTopPart(generatedOutputMatrix,
+                generatedInputMatrix);
             generatedInputMatrix = Modules.InputBuildLeftBottomPart(generatedInputMatrix);
 
             return generatedInputMatrix;
@@ -217,8 +214,8 @@ namespace FamilyMatrixCreator
         /*
          * Построение правой (верхней) стороны  (сМ).
          */
-        public static float[][] InputBuildRightTopPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix,
-            int numberOfProband, float[][] generatedInputMatrix, float[] centimorgansMatrix)
+        public static float[][] InputBuildRightTopPart(float[][] generatedOutputMatrix,
+            float[][] generatedInputMatrix)
         {
             for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
             {
@@ -226,22 +223,22 @@ namespace FamilyMatrixCreator
 
                 for (int relative = person; relative < generatedOutputMatrix.GetLength(0); relative++)
                 {
-                    for (int relationship = 0; relationship < relationshipsMatrix.GetLength(1); relationship++)
+                    for (int relationship = 0; relationship < _relationshipsMatrix.GetLength(1); relationship++)
                     {
-                        if (relationshipsMatrix[numberOfProband, relationship][0] ==
+                        if (_relationshipsMatrix[_numberOfProband, relationship][0] ==
                             generatedOutputMatrix[person][relative])
                         {
                             generatedInputMatrix[person][relative] =
                                 Modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative,
-                                    relationship, centimorgansMatrix);
+                                    relationship, _centimorgansMatrix);
                         }
 
-                        if (relationshipsMatrix[relationship, numberOfProband][0] ==
+                        if (_relationshipsMatrix[relationship, _numberOfProband][0] ==
                             generatedOutputMatrix[person][relative])
                         {
                             generatedInputMatrix[person][relative] =
                                 Modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative,
-                                    relationship, centimorgansMatrix);
+                                    relationship, _centimorgansMatrix);
                         }
                     }
                 }

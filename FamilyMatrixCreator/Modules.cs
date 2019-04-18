@@ -180,37 +180,6 @@ namespace FamilyMatrixCreator
                           (int.MaxValue - (decimal)int.MinValue) * (max - min) + min);
         }
 
-        /*
-         * Определение номера строки, содержащей возможные степени родства пробанда.
-         */
-        public static int FindNumberOfProband(int[,][] relationshipsMatrix)
-        {
-            int onlyOneRelationshipCount = 0;
-
-            for (int x = 0; x < relationshipsMatrix.GetLength(0); x++)
-            {
-                for (int y = 0; y < relationshipsMatrix.GetLength(0); y++)
-                {
-                    if (relationshipsMatrix[x, y].GetLength(0) == 1)
-                    {
-                        onlyOneRelationshipCount++;
-
-                        if (relationshipsMatrix.GetLength(0) == onlyOneRelationshipCount)
-                        {
-                            return x;
-                        }
-                    }
-                }
-
-                onlyOneRelationshipCount = 0;
-            }
-
-            Console.WriteLine("Не удалось найти номер строки с возможными степенями родства пробанда.");
-            Environment.Exit(0);
-
-            return 0;
-        }
-
         public static bool IsRelationWithAncestorMustExist(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[][] ancestorsMaxCountMatrix, int[][] currentCountMatrix, List<int> ancestralRelationships)
         {
             bool relationsWithAncestorMustExist = false;

@@ -840,7 +840,7 @@ namespace FamilyMatrixCreator
         {
             int[,][] relationshipsMatrix =
                 FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
-            int numberOfProband = Modules.FindNumberOfProband(relationshipsMatrix);
+            int numberOfProband = 0;
             int[][] ancestorsMaxCountMatrix =
                 FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
             int[][] descendantsMatrix =
@@ -938,7 +938,7 @@ namespace FamilyMatrixCreator
         {
             int[,][] relationshipsMatrix =
                 FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
-            int numberOfProband = Modules.FindNumberOfProband(relationshipsMatrix);
+            int numberOfProband = 0;
             int[][] ancestorsMaxCountMatrix =
                 FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
             int[][] descendantsMatrix =

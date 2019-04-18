@@ -153,7 +153,7 @@ namespace FamilyMatrixCreator
         {
             int[,][] relationshipsMatrix =
                 FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
-            int numberOfProband = Modules.FindNumberOfProband(relationshipsMatrix);
+            int numberOfProband = 0;
 
             Assert.That(Modules.FindAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband),
                 Is.EquivalentTo(result));
@@ -183,7 +183,7 @@ namespace FamilyMatrixCreator
         {
             int[,][] relationshipsMatrix =
                 FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
-            int numberOfProband = Modules.FindNumberOfProband(relationshipsMatrix);
+            int numberOfProband = 0;
 
             Assert.That(Modules.OutputBuildLeftBottomPart(generatedOutputMatrix, relationshipsMatrix, numberOfProband),
                 Is.EqualTo(result));
