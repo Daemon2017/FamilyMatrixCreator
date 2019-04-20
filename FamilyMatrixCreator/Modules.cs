@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MathNet.Numerics.Distributions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-using MathNet.Numerics.Distributions;
 
 namespace FamilyMatrixCreator
 {
@@ -12,6 +12,7 @@ namespace FamilyMatrixCreator
 
         /*
          * Преобразование видов родства в сантиморганы.
+         * TODO: возможно, что массив centimorgansMatrix стоит преобразовать в словарь
          */
         public static float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative,
             int relationship, float[] centimorgansMatrix)
@@ -51,17 +52,18 @@ namespace FamilyMatrixCreator
             }
 
             return quantityOfEachRelationship;
-        }           
+        }
 
         /*
          * Увеличение числа родственников данного вида у указанного лица.
+         * TODO: возможно, что массив ancestorsMaxCountMatrix стоит преобразовать в словарь
          */
         public static int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
-            List<int> persons, int person, List<int> relatives, int relative, int[][] maxCountMatrix)
+            List<int> persons, int person, List<int> relatives, int relative, int[][] ancestorsMaxCountMatrix)
         {
-            for (int i = 0; i < maxCountMatrix.Length; i++)
+            for (int i = 0; i < ancestorsMaxCountMatrix.Length; i++)
             {
-                if (maxCountMatrix[i][0] == generatedOutputMatrix[persons[person]][relatives[relative]])
+                if (ancestorsMaxCountMatrix[i][0] == generatedOutputMatrix[persons[person]][relatives[relative]])
                 {
                     currentCountMatrix[persons[person]][i]++;
 
@@ -80,11 +82,9 @@ namespace FamilyMatrixCreator
             List<int> allPossibleRelationshipsOfProband =
                 (from i in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
                  where (from possibleRelative in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                        where (from possibleRelationship in Enumerable.Range(0,
-                                relationshipsMatrix[i, possibleRelative].Length)
+                        where (from possibleRelationship in Enumerable.Range(0, relationshipsMatrix[i, possibleRelative].Length)
                                where relationshipsMatrix.GetLength(1) ==
-                                     (from possibleProbandsRelationship in Enumerable.Range(0,
-                                             relationshipsMatrix.GetLength(1))
+                                     (from possibleProbandsRelationship in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
                                       where relationshipsMatrix[numberOfProband, possibleProbandsRelationship][0] ==
                                          relationshipsMatrix[i, possibleRelative][possibleRelationship] ||
                                          0 == relationshipsMatrix[i, possibleRelative][possibleRelationship]
@@ -180,7 +180,10 @@ namespace FamilyMatrixCreator
                           (int.MaxValue - (decimal)int.MinValue) * (max - min) + min);
         }
 
-        public static bool IsRelationWithAncestorMustExist(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, int[][] ancestorsMaxCountMatrix, int[][] currentCountMatrix, List<int> ancestralRelationships)
+        public static bool IsRelationWithAncestorMustExist(float[][] generatedOutputMatrix, 
+            List<int> persons, int person, 
+            List<int> relatives, int relative, 
+            int[][] ancestorsMaxCountMatrix, int[][] currentCountMatrix, List<int> ancestralRelationships)
         {
             bool relationsWithAncestorMustExist = false;
 
