@@ -58,20 +58,20 @@ namespace FamilyMatrixCreator
          * Увеличение числа родственников данного вида у указанного лица.
          * TODO: возможно, что массив ancestorsMaxCountMatrix стоит преобразовать в словарь
          */
-        public static int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
+        public static int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] ancestorsCurrentCountMatrix,
             List<int> persons, int person, List<int> relatives, int relative, int[][] ancestorsMaxCountMatrix)
         {
             for (int i = 0; i < ancestorsMaxCountMatrix.Length; i++)
             {
                 if (ancestorsMaxCountMatrix[i][0] == generatedOutputMatrix[persons[person]][relatives[relative]])
                 {
-                    currentCountMatrix[persons[person]][i]++;
+                    ancestorsCurrentCountMatrix[persons[person]][i]++;
 
-                    return currentCountMatrix;
+                    return ancestorsCurrentCountMatrix;
                 }
             }
 
-            return currentCountMatrix;
+            return ancestorsCurrentCountMatrix;
         }
 
         /*
@@ -180,10 +180,11 @@ namespace FamilyMatrixCreator
                           (int.MaxValue - (decimal)int.MinValue) * (max - min) + min);
         }
 
-        public static bool IsRelationWithAncestorMustExist(float[][] generatedOutputMatrix, 
-            List<int> persons, int person, 
-            List<int> relatives, int relative, 
-            int[][] ancestorsMaxCountMatrix, int[][] currentCountMatrix, List<int> ancestralRelationships)
+        public static bool IsRelationWithAncestorMustExist(float[][] generatedOutputMatrix,
+            List<int> persons, int person,
+            List<int> relatives, int relative,
+            int[][] ancestorsMaxCountMatrix, int[][] ancestorsCurrentCountMatrix, 
+            List<int> ancestralRelationships)
         {
             bool relationsWithAncestorMustExist = false;
 
@@ -193,7 +194,7 @@ namespace FamilyMatrixCreator
                     (from i in Enumerable.Range(1, persons[person] - 1)
                      where ancestralRelationships.Contains((int)generatedOutputMatrix[persons[i]][persons[person]])
                      where ancestorsMaxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1] ==
-                           currentCountMatrix[i][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])]
+                           ancestorsCurrentCountMatrix[i][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])]
                      where (from j in Enumerable.Range(0, relatives[relative] - 1)
                             where generatedOutputMatrix[persons[i]][persons[j]] ==
                                   ancestorsMaxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
@@ -210,5 +211,29 @@ namespace FamilyMatrixCreator
             return relationsWithAncestorMustExist;
         }
 
+        public static bool IsItHaveMaxCountOfRelativesOfThisType(float[][] generatedOutputMatrix, 
+            List<int> relatives, int relative, 
+            int[][] ancestorsMaxCountMatrix, int[][] ancestorsCurrentCountMatrix, 
+            List<int> ancestorsRelationships)
+        {
+            bool relativeHaveMaxCountOfRelativesOfThisType = false;
+
+            if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
+            {
+                for (int i = 0; i < ancestorsMaxCountMatrix.GetLength(0); i++)
+                {
+                    if (ancestorsMaxCountMatrix[i][0] == (int)generatedOutputMatrix[0][relatives[relative]])
+                    {
+                        if (ancestorsMaxCountMatrix[i][1] == ancestorsCurrentCountMatrix[0][i])
+                        {
+                            relativeHaveMaxCountOfRelativesOfThisType = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return relativeHaveMaxCountOfRelativesOfThisType;
+        }
     }
 }

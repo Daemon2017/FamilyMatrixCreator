@@ -118,7 +118,7 @@ namespace FamilyMatrixCreator
             int minPercent, int maxPercent)
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
-            int[][] currentCountMatrix = new int[generatedMatrixSize][];
+            int[][] ancestorsCurrentCountMatrix = new int[generatedMatrixSize][];
 
             List<int> persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
                                  orderby new ContinuousUniform().Sample()
@@ -128,7 +128,7 @@ namespace FamilyMatrixCreator
             for (int person = 0; person < persons.Count; person++)
             {
                 generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
-                currentCountMatrix[persons[person]] = new int[_ancestorsMaxCountMatrix.Length];
+                ancestorsCurrentCountMatrix[persons[person]] = new int[_ancestorsMaxCountMatrix.Length];
 
                 List<int> relatives = (from x in Enumerable.Range(persons[person] + 1,
                         generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
@@ -140,7 +140,7 @@ namespace FamilyMatrixCreator
                     List<int> allPossibleRelationships = Integrations.DetectAllPossibleRelationships(
                         _relationshipsMatrix, _numberOfProband,
                         _ancestorsMaxCountMatrix, _descendantsMatrix,
-                        generatedOutputMatrix, currentCountMatrix,
+                        generatedOutputMatrix, ancestorsCurrentCountMatrix,
                         persons, person,
                         relatives, relative);
 
@@ -151,13 +151,13 @@ namespace FamilyMatrixCreator
                     {
                         generatedOutputMatrix[persons[person]][relatives[relative]] =
                             allPossibleRelationships[Modules.GetNextRnd(0, allPossibleRelationships.Count)];
-                        currentCountMatrix = Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
-                            currentCountMatrix, persons, person, relatives, relative, _ancestorsMaxCountMatrix);
+                        ancestorsCurrentCountMatrix = Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
+                            ancestorsCurrentCountMatrix, persons, person, relatives, relative, _ancestorsMaxCountMatrix);
                     }
                     catch (ArgumentOutOfRangeException)
                     {
                         generatedOutputMatrix = new float[generatedMatrixSize][];
-                        currentCountMatrix = new int[generatedMatrixSize][];
+                        ancestorsCurrentCountMatrix = new int[generatedMatrixSize][];
 
                         persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
                                    orderby new ContinuousUniform().Sample()
@@ -182,7 +182,7 @@ namespace FamilyMatrixCreator
                     if (percentOfMeaningfulValues < minPercent || percentOfMeaningfulValues > maxPercent)
                     {
                         generatedOutputMatrix = new float[generatedMatrixSize][];
-                        currentCountMatrix = new int[generatedMatrixSize][];
+                        ancestorsCurrentCountMatrix = new int[generatedMatrixSize][];
 
                         persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
                                    orderby new ContinuousUniform().Sample()
