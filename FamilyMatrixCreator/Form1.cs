@@ -131,7 +131,7 @@ namespace FamilyMatrixCreator
                 ancestorsCurrentCountMatrix[persons[person]] = new int[_ancestorsMaxCountMatrix.Length];
 
                 List<int> relatives = (from x in Enumerable.Range(persons[person] + 1,
-                        generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
+                                       generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
                                        orderby new ContinuousUniform().Sample()
                                        select x).ToList();
 

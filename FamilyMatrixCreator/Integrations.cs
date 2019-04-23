@@ -80,59 +80,6 @@ namespace FamilyMatrixCreator
         {
             List<int> allPossibleRelationships = new List<int>();
 
-            /*
-             * Составление списка предковых степеней родства.
-             */
-            List<int> ancestorsRelationships =
-                (from j in Enumerable.Range(0, ancestorsMaxCountMatrix.GetLength(0))
-                 select ancestorsMaxCountMatrix[j][0]).ToList();
-
-            bool personHaveMaxCountOfRelativesOfThisType = Modules.IsItHaveMaxCountOfRelativesOfThisType(generatedOutputMatrix,
-                persons, person,
-                ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
-                ancestorsRelationships);
-
-            bool relativeHaveMaxCountOfRelativesOfThisType = Modules.IsItHaveMaxCountOfRelativesOfThisType(generatedOutputMatrix,
-                relatives, relative,
-                ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
-                ancestorsRelationships);
-
-            bool relationWithAncestorMustExist = Modules.IsRelationWithAncestorMustExist(generatedOutputMatrix,
-                persons, person,
-                relatives, relative,
-                ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
-                ancestorsRelationships);
-
-            /*
-             * Составление списка потомковых степеней родства.
-             */
-            List<int> descendantsRelationships =
-                (from j in Enumerable.Range(0, descendantsMatrix.GetLength(0))
-                 select descendantsMatrix[j][0]).ToList();
-
-            /*
-             * Определение количества родственников-предков текущего родственника.
-             */
-            int numberOfAncestorsOfRelative =
-                (from previousPerson in Enumerable.Range(1, person - 1)
-                 from ancestralRelationship in Enumerable.Range(0, ancestorsRelationships.Count)
-                 where ancestorsRelationships[ancestralRelationship] ==
-                       generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-                       && 0 != generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                 select ancestralRelationship).Count();
-
-            /*
-             * Определение количества неродственных родственников текущего лица и родственника.
-             */
-            int numberOfNotRelativesOfPerson =
-                (from previousPerson in Enumerable.Range(1, person - 1)
-                 where 0 == generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                 select previousPerson).Count();
-            int numberOfNotRelativesOfRelative =
-                (from previousPerson in Enumerable.Range(1, person - 1)
-                 where 0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-                 select previousPerson).Count();
-
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
                 /*
@@ -190,10 +137,24 @@ namespace FamilyMatrixCreator
                     {
                         List<int> currentPossibleRelationships;
 
+                        /*
+                         * Составление списка предковых степеней родства.
+                         */
+                        List<int> ancestorsRelationships =
+                            (from j in Enumerable.Range(0, ancestorsMaxCountMatrix.GetLength(0))
+                             select ancestorsMaxCountMatrix[j][0]).ToList();
+
                         if (!(0 == generatedOutputMatrix[persons[previousPerson]][persons[person]] &&
                           0 == generatedOutputMatrix[persons[previousPerson]][relatives[relative]]))
                         {
                             currentPossibleRelationships = new List<int>();
+
+                            /*
+                             * Составление списка потомковых степеней родства.
+                             */
+                            List<int> descendantsRelationships =
+                                (from j in Enumerable.Range(0, descendantsMatrix.GetLength(0))
+                                 select descendantsMatrix[j][0]).ToList();
 
                             if (numberOfIExists && numberOfJExists)
                             {
@@ -213,10 +174,28 @@ namespace FamilyMatrixCreator
                                 currentPossibleRelationships.Add(0);
                             }
 
+                            /*
+                             * Определение количества родственников-предков текущего родственника.
+                             */
+                            int numberOfAncestorsOfRelative =
+                                (from prevPerson in Enumerable.Range(1, person - 1)
+                                 from ancestralRelationship in Enumerable.Range(0, ancestorsRelationships.Count)
+                                 where ancestorsRelationships[ancestralRelationship] ==
+                                       generatedOutputMatrix[persons[prevPerson]][relatives[relative]] &&
+                                       0 != generatedOutputMatrix[persons[prevPerson]][persons[person]]
+                                 select ancestralRelationship).Count();
+
                             if (0 != numberOfAncestorsOfRelative)
                             {
                                 currentPossibleRelationships.AddRange(ancestorsRelationships);
                             }
+
+                            bool relationWithAncestorMustExist = 
+                                Modules.IsRelationWithAncestorMustExist(generatedOutputMatrix,
+                                                                        persons, person,
+                                                                        relatives, relative,
+                                                                        ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
+                                                                        ancestorsRelationships);
 
                             if (relationWithAncestorMustExist)
                             {
@@ -238,6 +217,18 @@ namespace FamilyMatrixCreator
                         else
                         {
                             currentPossibleRelationships = allPossibleRelationships;
+
+                            bool personHaveMaxCountOfRelativesOfThisType = 
+                                Modules.IsItHaveMaxCountOfRelativesOfThisType(generatedOutputMatrix,
+                                                                              persons, person,
+                                                                              ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
+                                                                              ancestorsRelationships);
+
+                            bool relativeHaveMaxCountOfRelativesOfThisType = 
+                                Modules.IsItHaveMaxCountOfRelativesOfThisType(generatedOutputMatrix,
+                                                                              relatives, relative,
+                                                                              ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
+                                                                              ancestorsRelationships);
 
                             if (personHaveMaxCountOfRelativesOfThisType || relativeHaveMaxCountOfRelativesOfThisType)
                             {
