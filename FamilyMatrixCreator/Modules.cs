@@ -183,7 +183,7 @@ namespace FamilyMatrixCreator
         public static bool IsRelationWithAncestorMustExist(float[][] generatedOutputMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative,
-            int[][] ancestorsMaxCountMatrix, int[][] ancestorsCurrentCountMatrix, 
+            int[][] ancestorsMaxCountMatrix, int[][] ancestorsCurrentCountMatrix,
             List<int> ancestralRelationships)
         {
             bool relationsWithAncestorMustExist = false;
@@ -211,25 +211,26 @@ namespace FamilyMatrixCreator
             return relationsWithAncestorMustExist;
         }
 
-        public static bool IsItHaveMaxCountOfRelativesOfThisType(float[][] generatedOutputMatrix, 
-            List<int> relatives, int relative, 
-            int[][] ancestorsMaxCountMatrix, int[][] ancestorsCurrentCountMatrix, 
+        public static bool IsItHaveMaxCountOfRelativesOfThisType(float[][] generatedOutputMatrix,
+            List<int> relatives, int relative,
+            int[][] ancestorsMaxCountMatrix, int[][] ancestorsCurrentCountMatrix,
             List<int> ancestorsRelationships)
         {
             bool relativeHaveMaxCountOfRelativesOfThisType = false;
 
             if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
             {
-                for (int i = 0; i < ancestorsMaxCountMatrix.GetLength(0); i++)
+                try
                 {
-                    if (ancestorsMaxCountMatrix[i][0] == (int)generatedOutputMatrix[0][relatives[relative]])
-                    {
-                        if (ancestorsMaxCountMatrix[i][1] == ancestorsCurrentCountMatrix[0][i])
-                        {
-                            relativeHaveMaxCountOfRelativesOfThisType = true;
-                            break;
-                        }
-                    }
+                    relativeHaveMaxCountOfRelativesOfThisType =
+                        (from i in Enumerable.Range(0, ancestorsMaxCountMatrix.GetLength(0))
+                         where ancestorsMaxCountMatrix[i][0] == (int)generatedOutputMatrix[0][relatives[relative]]
+                         where ancestorsMaxCountMatrix[i][1] == ancestorsCurrentCountMatrix[0][i]
+                         select i).Any();
+                }
+                catch (NullReferenceException)
+                {
+
                 }
             }
 
