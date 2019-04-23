@@ -103,11 +103,10 @@ namespace FamilyMatrixCreator
         {
             List<int> existingRelationshipDegrees = new List<int> { 0 };
 
-            for (int i = 0; i < relationshipsMatrix.GetLength(0); i++)
-            {
-                existingRelationshipDegrees.Add(relationshipsMatrix[numberOfProband, i][0]);
-                existingRelationshipDegrees.Add(relationshipsMatrix[i, numberOfProband][0]);
-            }
+            existingRelationshipDegrees.AddRange((from i in Enumerable.Range(0, relationshipsMatrix.GetLength(0))
+                                                  select relationshipsMatrix[numberOfProband, i][0]).Union
+                                                   (from i in Enumerable.Range(0, relationshipsMatrix.GetLength(0))
+                                                    select relationshipsMatrix[i, numberOfProband][0]).ToList());
 
             return existingRelationshipDegrees.Distinct().ToList();
         }
