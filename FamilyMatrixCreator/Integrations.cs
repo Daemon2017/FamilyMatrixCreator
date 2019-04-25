@@ -192,6 +192,33 @@ namespace FamilyMatrixCreator
                                           ancestorsCurrentCountMatrix[persons[p]][relationship]
                                     select ancestorsRelationships[relationship]).ToList();
                             }
+
+                            if ((int)generatedOutputMatrix[0][relatives[relative]] != 
+                                (int)generatedOutputMatrix[0][persons[person]])
+                            {
+                                if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                                    ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+                                {
+                                    bool PersonAndRelativeAreRelatives = true;
+
+                                    for (int i = 0; i < persons[person]; i++)
+                                    {
+                                        if ((0 == (int)generatedOutputMatrix[i][relatives[relative]] &&
+                                            0 != (int)generatedOutputMatrix[i][persons[person]]) ||
+                                            (0 != (int)generatedOutputMatrix[i][relatives[relative]] &&
+                                            0 == (int)generatedOutputMatrix[i][persons[person]]))
+                                        {
+                                            PersonAndRelativeAreRelatives = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!PersonAndRelativeAreRelatives)
+                                    {
+                                        currentPossibleRelationships = new List<int> { 0 };
+                                    }
+                                }
+                            }
                         }
                         else
                         {
