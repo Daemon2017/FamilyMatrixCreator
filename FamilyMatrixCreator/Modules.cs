@@ -235,5 +235,28 @@ namespace FamilyMatrixCreator
 
             return relativeHaveMaxCountOfRelativesOfThisType;
         }
+
+        /*
+         * Среди возможных видов родства пробанда ищутся порядковые номера тех, что содержат выбранные виды родства.
+         */
+        public static int FindSerialNumberInListOfPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, 
+            List<int> relatives, int relative, 
+            int[,][] relationshipsMatrix, int numberOfProband, int previousPerson, int numberOfJ)
+        {
+            try
+            {
+                numberOfJ =
+                    (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
+                     where relationshipsMatrix[numberOfProband, number][0] ==
+                           generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
+                     select number).Single();
+            }
+            catch (InvalidOperationException)
+            {
+
+            }
+
+            return numberOfJ;
+        }
     }
 }

@@ -82,38 +82,17 @@ namespace FamilyMatrixCreator
 
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
-                /*
-                 * Среди возможных видов родства пробанда ищутся порядковые номера тех, что содержат выбранные виды родства.
-                 */
-                int numberOfI = 0;
-                bool numberOfIExists = true;
-                try
-                {
-                    numberOfI =
-                        (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                         where relationshipsMatrix[numberOfProband, number][0] ==
-                               generatedOutputMatrix[persons[previousPerson]][persons[person]]
-                         select number).Single();
-                }
-                catch (InvalidOperationException)
-                {
-                    numberOfIExists = false;
-                }
+                int numberOfI = -1;
+                numberOfI = Modules.FindSerialNumberInListOfPossibleRelationships(
+                    generatedOutputMatrix, persons,
+                    persons, person,
+                    relationshipsMatrix, numberOfProband, previousPerson, numberOfI);
 
-                int numberOfJ = 0;
-                bool numberOfJExists = true;
-                try
-                {
-                    numberOfJ =
-                        (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                         where relationshipsMatrix[numberOfProband, number][0] ==
-                               generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
-                         select number).Single();
-                }
-                catch (InvalidOperationException)
-                {
-                    numberOfJExists = false;
-                }
+                int numberOfJ = -1;
+                numberOfJ = Modules.FindSerialNumberInListOfPossibleRelationships(
+                    generatedOutputMatrix, persons,
+                    relatives, relative,
+                    relationshipsMatrix, numberOfProband, previousPerson, numberOfJ);
 
                 if (0 == persons[previousPerson])
                 {
@@ -156,7 +135,7 @@ namespace FamilyMatrixCreator
                                 (from j in Enumerable.Range(0, descendantsMatrix.GetLength(0))
                                  select descendantsMatrix[j][0]).ToList();
 
-                            if (numberOfIExists && numberOfJExists)
+                            if (-1 != numberOfI && -1 != numberOfJ)
                             {
                                 currentPossibleRelationships =
                                     relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
@@ -169,7 +148,7 @@ namespace FamilyMatrixCreator
                                     .Intersect(descendantsRelationships).ToList());
                             }
 
-                            if (0 == numberOfI || 0 == numberOfJ)
+                            if (-1 == numberOfI || -1 == numberOfJ)
                             {
                                 currentPossibleRelationships.Add(0);
                             }
@@ -190,7 +169,7 @@ namespace FamilyMatrixCreator
                                 currentPossibleRelationships.AddRange(ancestorsRelationships);
                             }
 
-                            bool relationWithAncestorMustExist = 
+                            bool relationWithAncestorMustExist =
                                 Modules.IsRelationWithAncestorMustExist(generatedOutputMatrix,
                                                                         persons, person,
                                                                         relatives, relative,
@@ -218,13 +197,13 @@ namespace FamilyMatrixCreator
                         {
                             currentPossibleRelationships = allPossibleRelationships;
 
-                            bool personHaveMaxCountOfRelativesOfThisType = 
+                            bool personHaveMaxCountOfRelativesOfThisType =
                                 Modules.IsItHaveMaxCountOfRelativesOfThisType(generatedOutputMatrix,
                                                                               persons, person,
                                                                               ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
                                                                               ancestorsRelationships);
 
-                            bool relativeHaveMaxCountOfRelativesOfThisType = 
+                            bool relativeHaveMaxCountOfRelativesOfThisType =
                                 Modules.IsItHaveMaxCountOfRelativesOfThisType(generatedOutputMatrix,
                                                                               relatives, relative,
                                                                               ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
