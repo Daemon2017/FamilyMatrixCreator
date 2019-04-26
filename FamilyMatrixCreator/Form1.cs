@@ -43,7 +43,7 @@ namespace FamilyMatrixCreator
             int maxPercentOfValues = Convert.ToInt32(Console.ReadLine());
 
             List<int> existingRelationshipDegrees =
-                Modules.FindAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
+                Modules.GetAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
 
             int quantityOfMatrixes = numberOfMatrices;
 
@@ -104,7 +104,7 @@ namespace FamilyMatrixCreator
                 generatedMatrixSize, existingRelationshipDegrees,
                 minPercentOfValues, maxPercentOfValues);
             generatedOutputMatrix =
-                Modules.OutputBuildLeftBottomPart(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband);
+                Modules.BuildLeftBottomPartOfOutput(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband);
 
             generatedOutputMatrix = Modules.FillMainDiagonal(generatedOutputMatrix);
 
@@ -206,7 +206,7 @@ namespace FamilyMatrixCreator
 
             generatedInputMatrix = InputBuildRightTopPart(generatedOutputMatrix,
                 generatedInputMatrix);
-            generatedInputMatrix = Modules.InputBuildLeftBottomPart(generatedInputMatrix);
+            generatedInputMatrix = Modules.BuildLeftBottomPartOfInput(generatedInputMatrix);
 
             return generatedInputMatrix;
         }

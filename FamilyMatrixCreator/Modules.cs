@@ -77,7 +77,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение списка возможных степеней родства пробанда.
          */
-        public static List<int> FindAllPossibleRelationshipsOfProband(int[,][] relationshipsMatrix, int numberOfProband)
+        public static List<int> GetAllPossibleRelationshipsOfProband(int[,][] relationshipsMatrix, int numberOfProband)
         {
             List<int> allPossibleRelationshipsOfProband =
                 (from i in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
@@ -99,7 +99,7 @@ namespace FamilyMatrixCreator
         /*
          * Нахождение всех существующих степеней родства.
          */
-        public static List<int> FindAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)
+        public static List<int> GetAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)
         {
             List<int> existingRelationshipDegrees = new List<int> { 0 };
 
@@ -114,7 +114,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение левой (нижней) стороны.
          */
-        public static float[][] OutputBuildLeftBottomPart(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix,
+        public static float[][] BuildLeftBottomPartOfOutput(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix,
             int numberOfProband)
         {
             for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
@@ -141,7 +141,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение левой (нижней) стороны (сМ).
          */
-        public static float[][] InputBuildLeftBottomPart(float[][] generatedInputMatrix)
+        public static float[][] BuildLeftBottomPartOfInput(float[][] generatedInputMatrix)
         {
             for (int genPerson = 1; genPerson < generatedInputMatrix.GetLength(0); genPerson++)
             {
@@ -210,7 +210,7 @@ namespace FamilyMatrixCreator
             return relationsWithAncestorMustExist;
         }
 
-        public static bool IsItHaveMaxCountOfRelativesOfThisType(float[][] generatedOutputMatrix,
+        public static bool IsHeHaveMaxCountOfRelativesOfThisType(float[][] generatedOutputMatrix,
             List<int> relatives, int relative,
             int[][] ancestorsMaxCountMatrix, int[][] ancestorsCurrentCountMatrix,
             List<int> ancestorsRelationships)
@@ -239,8 +239,8 @@ namespace FamilyMatrixCreator
         /*
          * Среди возможных видов родства пробанда ищутся порядковые номера тех, что содержат выбранные виды родства.
          */
-        public static int FindSerialNumberInListOfPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons, 
-            List<int> relatives, int relative, 
+        public static int GetSerialNumberInListOfPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons,
+            List<int> relatives, int relative,
             int[,][] relationshipsMatrix, int numberOfProband, int previousPerson, int numberOfJ)
         {
             try
@@ -257,6 +257,45 @@ namespace FamilyMatrixCreator
             }
 
             return numberOfJ;
+        }
+
+        /*
+         * Определение количества родственников-предков текущего родственника.
+         */
+        public static int GetNumberOfAncestors(float[][] generatedOutputMatrix,
+            List<int> persons, int person,
+            List<int> relatives, int relative,
+            List<int> ancestorsRelationships)
+        {
+            return (from prevPerson in Enumerable.Range(1, person - 1)
+                    from ancestralRelationship in Enumerable.Range(0, ancestorsRelationships.Count)
+                    where ancestorsRelationships[ancestralRelationship] ==
+                          generatedOutputMatrix[persons[prevPerson]][relatives[relative]] &&
+                          0 != generatedOutputMatrix[persons[prevPerson]][persons[person]]
+                    select ancestralRelationship).Count();
+        }
+
+        public static bool IsPersonAndRelativeAreNotRelatives(float[][] generatedOutputMatrix,
+            List<int> persons, int person,
+            List<int> relatives, int relative,
+            List<int> ancestorsRelationships)
+        {
+            bool PersonAndRelativeAreNotRelatives = false;
+
+            if ((int)generatedOutputMatrix[0][relatives[relative]] !=
+                (int)generatedOutputMatrix[0][persons[person]])
+            {
+                if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                    ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+                {
+                    PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, persons[person])
+                                                        where (0 == (int)generatedOutputMatrix[i][relatives[relative]] && 0 != (int)generatedOutputMatrix[i][persons[person]]) ||
+                                                        (0 != (int)generatedOutputMatrix[i][relatives[relative]] && 0 == (int)generatedOutputMatrix[i][persons[person]])
+                                                        select i).Any();
+                }
+            }
+
+            return PersonAndRelativeAreNotRelatives;
         }
     }
 }
