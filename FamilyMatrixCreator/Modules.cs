@@ -191,7 +191,7 @@ namespace FamilyMatrixCreator
                 (from i in Enumerable.Range(1, persons[person] - 1)
                  where ancestralRelationships.Contains((int)generatedOutputMatrix[persons[i]][persons[person]])
                  where ancestorsMaxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1] ==
-                       ancestorsCurrentCountMatrix[i][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])]
+                       ancestorsCurrentCountMatrix[persons[i]][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])]
                  where (from j in Enumerable.Range(0, relatives[relative] - 1)
                         where generatedOutputMatrix[persons[i]][persons[j]] ==
                               ancestorsMaxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
@@ -279,8 +279,10 @@ namespace FamilyMatrixCreator
                     ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
                 {
                     PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, persons[person])
-                                                        where (0 == (int)generatedOutputMatrix[i][relatives[relative]] && 0 != (int)generatedOutputMatrix[i][persons[person]]) ||
-                                                        (0 != (int)generatedOutputMatrix[i][relatives[relative]] && 0 == (int)generatedOutputMatrix[i][persons[person]])
+                                                        where (0 == (int)generatedOutputMatrix[i][relatives[relative]] &&
+                                                        0 != (int)generatedOutputMatrix[i][persons[person]]) ||
+                                                        (0 != (int)generatedOutputMatrix[i][relatives[relative]] &&
+                                                        0 == (int)generatedOutputMatrix[i][persons[person]])
                                                         select i).Any();
                 }
             }
