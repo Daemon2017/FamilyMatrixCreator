@@ -149,12 +149,12 @@ namespace FamilyMatrixCreator
                                 currentPossibleRelationships.Add(0);
                             }
 
-                            int numberOfAncestorsOfRelative = Modules.GetNumberOfAncestors(generatedOutputMatrix,
+                            bool numberOfAncestorsOfRelativeIsNotZero = Modules.IsNumberOfAncestorsNotZero(generatedOutputMatrix,
                                 persons, person,
                                 relatives, relative,
                                 ancestorsRelationships);
 
-                            if (0 != numberOfAncestorsOfRelative)
+                            if (numberOfAncestorsOfRelativeIsNotZero)
                             {
                                 currentPossibleRelationships.AddRange(ancestorsRelationships);
                             }
@@ -197,19 +197,19 @@ namespace FamilyMatrixCreator
                         {
                             currentPossibleRelationships = allPossibleRelationships;
 
-                            bool personHaveMaxCountOfRelativesOfThisType =
-                                Modules.IsHeHaveMaxCountOfRelativesOfThisType(generatedOutputMatrix,
+                            bool personsCountOfRelativesOfThisTypeAlreadyMax =
+                                Modules.IsCountOfRelativesOfThisTypeAlreadyMax(generatedOutputMatrix,
                                                                               persons, person,
                                                                               ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
                                                                               ancestorsRelationships);
 
-                            bool relativeHaveMaxCountOfRelativesOfThisType =
-                                Modules.IsHeHaveMaxCountOfRelativesOfThisType(generatedOutputMatrix,
+                            bool relativesCountOfRelativesOfThisTypeAlreadyMax =
+                                Modules.IsCountOfRelativesOfThisTypeAlreadyMax(generatedOutputMatrix,
                                                                               relatives, relative,
                                                                               ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
                                                                               ancestorsRelationships);
 
-                            if (personHaveMaxCountOfRelativesOfThisType || relativeHaveMaxCountOfRelativesOfThisType)
+                            if (personsCountOfRelativesOfThisTypeAlreadyMax || relativesCountOfRelativesOfThisTypeAlreadyMax)
                             {
                                 if ((int)generatedOutputMatrix[0][relatives[relative]] != (int)generatedOutputMatrix[0][persons[person]])
                                 {

@@ -210,7 +210,7 @@ namespace FamilyMatrixCreator
             return relationsWithAncestorMustExist;
         }
 
-        public static bool IsHeHaveMaxCountOfRelativesOfThisType(float[][] generatedOutputMatrix,
+        public static bool IsCountOfRelativesOfThisTypeAlreadyMax(float[][] generatedOutputMatrix,
             List<int> relatives, int relative,
             int[][] ancestorsMaxCountMatrix, int[][] ancestorsCurrentCountMatrix,
             List<int> ancestorsRelationships)
@@ -262,17 +262,15 @@ namespace FamilyMatrixCreator
         /*
          * Определение количества родственников-предков текущего родственника.
          */
-        public static int GetNumberOfAncestors(float[][] generatedOutputMatrix,
+        public static bool IsNumberOfAncestorsNotZero(float[][] generatedOutputMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative,
             List<int> ancestorsRelationships)
         {
             return (from prevPerson in Enumerable.Range(1, person - 1)
-                    from ancestralRelationship in Enumerable.Range(0, ancestorsRelationships.Count)
-                    where ancestorsRelationships[ancestralRelationship] ==
-                          generatedOutputMatrix[persons[prevPerson]][relatives[relative]] &&
+                    where ancestorsRelationships.Contains((int)generatedOutputMatrix[persons[prevPerson]][relatives[relative]]) &&
                           0 != generatedOutputMatrix[persons[prevPerson]][persons[person]]
-                    select ancestralRelationship).Count();
+                    select prevPerson).Any();
         }
 
         public static bool IsPersonAndRelativeAreNotRelatives(float[][] generatedOutputMatrix,
