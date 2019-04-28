@@ -82,17 +82,15 @@ namespace FamilyMatrixCreator
 
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
-                int numberOfI = -1;
-                numberOfI = Modules.GetSerialNumberInListOfPossibleRelationships(
+                int numberOfI = Modules.GetSerialNumberInListOfPossibleRelationships(
                     generatedOutputMatrix, persons,
                     persons, person,
-                    relationshipsMatrix, numberOfProband, previousPerson, numberOfI);
+                    relationshipsMatrix, numberOfProband, previousPerson);
 
-                int numberOfJ = -1;
-                numberOfJ = Modules.GetSerialNumberInListOfPossibleRelationships(
+                int numberOfJ = Modules.GetSerialNumberInListOfPossibleRelationships(
                     generatedOutputMatrix, persons,
                     relatives, relative,
-                    relationshipsMatrix, numberOfProband, previousPerson, numberOfJ);
+                    relationshipsMatrix, numberOfProband, previousPerson);
 
                 if (0 == persons[previousPerson])
                 {
