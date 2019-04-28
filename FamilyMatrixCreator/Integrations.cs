@@ -146,10 +146,6 @@ namespace FamilyMatrixCreator
                                     allPossibleRelationships.Intersect(ancestorsRelationships).ToList();
                                 currentPossibleRelationships.AddRange(allPossibleRelationships
                                     .Intersect(descendantsRelationships).ToList());
-                            }
-
-                            if (-1 == numberOfI || -1 == numberOfJ)
-                            {
                                 currentPossibleRelationships.Add(0);
                             }
 
