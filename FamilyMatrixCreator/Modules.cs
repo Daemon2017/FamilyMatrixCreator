@@ -279,10 +279,10 @@ namespace FamilyMatrixCreator
                     ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
                 {
                     PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, persons[person])
-                                                        where (0 == (int)generatedOutputMatrix[i][relatives[relative]] &&
-                                                        0 != (int)generatedOutputMatrix[i][persons[person]]) ||
-                                                        (0 != (int)generatedOutputMatrix[i][relatives[relative]] &&
-                                                        0 == (int)generatedOutputMatrix[i][persons[person]])
+                                                        where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                        0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+                                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                        0 == (int)generatedOutputMatrix[persons[i]][persons[person]])
                                                         select i).Any();
                 }
             }
