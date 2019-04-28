@@ -187,25 +187,18 @@ namespace FamilyMatrixCreator
         {
             bool relationsWithAncestorMustExist = false;
 
-            try
-            {
-                relationsWithAncestorMustExist =
-                    (from i in Enumerable.Range(1, persons[person] - 1)
-                     where ancestralRelationships.Contains((int)generatedOutputMatrix[persons[i]][persons[person]])
-                     where ancestorsMaxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1] ==
-                           ancestorsCurrentCountMatrix[i][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])]
-                     where (from j in Enumerable.Range(0, relatives[relative] - 1)
-                            where generatedOutputMatrix[persons[i]][persons[j]] ==
-                                  ancestorsMaxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
-                            where 0 == generatedOutputMatrix[persons[j]][relatives[relative]]
-                            select j).Count() + 1 ==
-                           ancestorsMaxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
-                     select i).Any();
-            }
-            catch (NullReferenceException)
-            {
-
-            }
+            relationsWithAncestorMustExist =
+                (from i in Enumerable.Range(1, persons[person] - 1)
+                 where ancestralRelationships.Contains((int)generatedOutputMatrix[persons[i]][persons[person]])
+                 where ancestorsMaxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1] ==
+                       ancestorsCurrentCountMatrix[i][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])]
+                 where (from j in Enumerable.Range(0, relatives[relative] - 1)
+                        where generatedOutputMatrix[persons[i]][persons[j]] ==
+                              ancestorsMaxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
+                        where 0 == generatedOutputMatrix[persons[j]][relatives[relative]]
+                        select j).Count() + 1 ==
+                       ancestorsMaxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1]
+                 select i).Any();
 
             return relationsWithAncestorMustExist;
         }
@@ -219,18 +212,11 @@ namespace FamilyMatrixCreator
 
             if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
             {
-                try
-                {
-                    countOfRelativesOfThisTypeAlreadyMax =
-                        (from i in Enumerable.Range(0, ancestorsMaxCountMatrix.GetLength(0))
-                         where ancestorsMaxCountMatrix[i][0] == (int)generatedOutputMatrix[0][relatives[relative]]
-                         where ancestorsMaxCountMatrix[i][1] == ancestorsCurrentCountMatrix[0][i]
-                         select i).Any();
-                }
-                catch (NullReferenceException)
-                {
-
-                }
+                countOfRelativesOfThisTypeAlreadyMax =
+                    (from i in Enumerable.Range(0, ancestorsMaxCountMatrix.GetLength(0))
+                     where ancestorsMaxCountMatrix[i][0] == (int)generatedOutputMatrix[0][relatives[relative]]
+                     where ancestorsMaxCountMatrix[i][1] == ancestorsCurrentCountMatrix[0][i]
+                     select i).Any();
             }
 
             return countOfRelativesOfThisTypeAlreadyMax;
@@ -271,17 +257,10 @@ namespace FamilyMatrixCreator
         {
             bool numberOfAncestorsNotZero = false;
 
-            try
-            {
-                (from prevPerson in Enumerable.Range(1, person - 1)
-                 where ancestorsRelationships.Contains((int)generatedOutputMatrix[persons[prevPerson]][relatives[relative]]) &&
-                       0 != generatedOutputMatrix[persons[prevPerson]][persons[person]]
-                 select prevPerson).Any();
-            }
-            catch (NullReferenceException)
-            {
-
-            }
+            numberOfAncestorsNotZero = (from prevPerson in Enumerable.Range(1, person - 1)
+                                        where ancestorsRelationships.Contains((int)generatedOutputMatrix[persons[prevPerson]][relatives[relative]]) &&
+                                              0 != generatedOutputMatrix[persons[prevPerson]][persons[person]]
+                                        select prevPerson).Any();
 
             return numberOfAncestorsNotZero;
         }
