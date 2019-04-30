@@ -1310,6 +1310,13 @@ namespace FamilyMatrixCreator
             int[][] descendantsMatrix =
                 FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
 
+            string firstRow = "";
+
+            foreach (float column in generatedOutputMatrix[0])
+            {
+                firstRow += column + ", ";
+            }
+
             Assert.That(
                 Integrations.FindAllPossibleRelationships(
                     generatedOutputMatrix,
@@ -1318,7 +1325,8 @@ namespace FamilyMatrixCreator
                     relationshipsMatrix, numberOfProband,
                     ancestorsMaxCountMatrix, descendantsMatrix,
                     currentCountMatrix),
-                Is.EquivalentTo(result));
+                Is.EquivalentTo(result),
+                "First row: " + firstRow);
         }
 
         private static readonly object[] DetectAllPossibleRelationships_DataProvider =
