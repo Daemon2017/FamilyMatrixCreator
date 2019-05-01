@@ -56,6 +56,54 @@ namespace FamilyMatrixCreator
             {
                 new float[][]
                 {
+                    new float[] {0, 10, 6, 11, 9},
+                    new float[] {0, 0, 0, 2, 0},
+                    new float[] {0, 0, 0, 0, 0},
+                    null,
+                    null
+                },
+                new int[][]
+                {
+                    new int[] {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    null,
+                    null
+                },
+                new List<int> {0, 1, 2, 3, 4},
+                2,
+                new List<int> {3, 4},
+                0,
+                new int[] {3, 7}
+            },
+            new object[]
+            {
+                new float[][]
+                {
+                    new float[] {0, 9, 9, 11, 6},
+                    new float[] {0, 0, 0, 0, 8},
+                    new float[] {0, 0, 0, 13, 0},
+                    new float[] {0, 0, 0, 0, 0},
+                    null
+                },
+                new int[][]
+                {
+                    new int[] {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                    null
+                },
+                new List<int> {0, 1, 2, 3, 4},
+                3,
+                new List<int> {4},
+                0,
+                new int[] {0}
+            },
+            new object[]
+            {
+                new float[][]
+                {
                     new float[] {0, 11, 11, 9, 5},
                     new float[] {0, 0, 4, 0, 5},
                     new float[] {0, 0, 0, 0, 0},
