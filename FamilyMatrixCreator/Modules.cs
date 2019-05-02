@@ -294,6 +294,24 @@ namespace FamilyMatrixCreator
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]])
                                                     select i).Any();
             }
+            else if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                    (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+                     !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
+            {
+                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, persons[person])
+                                                    where (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                    0 == (int)generatedOutputMatrix[persons[i]][persons[person]])
+                                                    select i).Any();
+            }
+            else if ((!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                      !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
+                      ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            {
+                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, persons[person])
+                                                    where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]])
+                                                    select i).Any();
+            }
 
             return PersonAndRelativeAreNotRelatives;
         }
