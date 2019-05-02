@@ -184,7 +184,7 @@ namespace FamilyMatrixCreator
                             bool PersonAndRelativeAreNotRelatives = Modules.IsPersonAndRelativeAreNotRelatives(generatedOutputMatrix,
                                 persons, person,
                                 relatives, relative,
-                                ancestorsRelationships);
+                                ancestorsRelationships, descendantsRelationships);
 
                             if (PersonAndRelativeAreNotRelatives)
                             {
