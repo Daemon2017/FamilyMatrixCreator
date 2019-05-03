@@ -92,25 +92,19 @@ namespace FamilyMatrixCreator
                     relatives, relative,
                     relationshipsMatrix, numberOfProband, previousPerson);
 
+                List<int> currentPossibleRelationships;
+
                 if (0 == persons[previousPerson])
                 {
                     allPossibleRelationships =
                         relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
-                    List<int> currentPossibleRelationships =
+                    currentPossibleRelationships =
                         (from j in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
                          select relationshipsMatrix[numberOfProband, j][0]).ToList();
                     currentPossibleRelationships.Add(0);
-
-                    /*
-                     * Исключение возможных видов родства, которые невозможно сгенерировать.
-                     */
-                    allPossibleRelationships =
-                        allPossibleRelationships.Intersect(currentPossibleRelationships).ToList();
                 }
                 else
                 {
-                    List<int> currentPossibleRelationships;
-
                     /*
                      * Составление списка предковых степеней родства.
                      */
@@ -211,13 +205,13 @@ namespace FamilyMatrixCreator
                             }
                         }
                     }
-
-                    /*
-                     * Исключение возможных видов родства, которые невозможно сгенерировать.
-                     */
-                    allPossibleRelationships =
-                        allPossibleRelationships.Intersect(currentPossibleRelationships).ToList();
                 }
+
+                /*
+                 * Исключение возможных видов родства, которые невозможно сгенерировать.
+                 */
+                allPossibleRelationships =
+                    allPossibleRelationships.Intersect(currentPossibleRelationships).ToList();
             }
 
             return allPossibleRelationships;
