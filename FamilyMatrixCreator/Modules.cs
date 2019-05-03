@@ -179,6 +179,9 @@ namespace FamilyMatrixCreator
                           (int.MaxValue - (decimal)int.MinValue) * (max - min) + min);
         }
 
+        /*
+         * Проверка того, что лицо должно иметь родство с указанным предком.
+         */
         public static bool IsRelationWithAncestorMustExist(float[][] generatedOutputMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative,
@@ -203,6 +206,9 @@ namespace FamilyMatrixCreator
             return relationsWithAncestorMustExist;
         }
 
+        /*
+         * Проверка того, что число данных степеней родства у данного лица уже максимально.
+         */
         public static bool IsCountOfRelativesOfThisTypeAlreadyMax(float[][] generatedOutputMatrix,
             List<int> relatives, int relative,
             int[][] ancestorsMaxCountMatrix, int[][] ancestorsCurrentCountMatrix,
@@ -248,7 +254,7 @@ namespace FamilyMatrixCreator
         }
 
         /*
-         * Определение количества родственников-предков текущего родственника.
+         * Проверка того, что число предков исследуемого лица не равно нулю.
          */
         public static bool IsNumberOfAncestorsNotZero(float[][] generatedOutputMatrix,
             List<int> persons, int person,
@@ -265,6 +271,9 @@ namespace FamilyMatrixCreator
             return numberOfAncestorsNotZero;
         }
 
+        /*
+         * Проверка того, что Персона и Родственник не могут быть родственниками.
+         */
         public static bool IsPersonAndRelativeAreNotRelatives(float[][] generatedOutputMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative,
