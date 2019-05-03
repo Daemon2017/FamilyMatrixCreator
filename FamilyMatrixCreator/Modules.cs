@@ -182,7 +182,7 @@ namespace FamilyMatrixCreator
         /*
          * Проверка того, что лицо должно иметь родство с указанным предком.
          */
-        public static bool IsRelationWithAncestorMustExist(float[][] generatedOutputMatrix,
+        public static bool IsRelationshipWithAncestorMustExist(float[][] generatedOutputMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative,
             int[][] ancestorsMaxCountMatrix, int[][] ancestorsCurrentCountMatrix,
@@ -323,6 +323,34 @@ namespace FamilyMatrixCreator
             }
 
             return PersonAndRelativeAreNotRelatives;
+        }
+
+        public static bool IsRelationshipWithProbandsAncestorMustNotExist(float[][] generatedOutputMatrix, 
+            List<int> persons, int person, 
+            List<int> relatives, int relative, 
+            List<int> ancestorsRelationships, List<int> descendantsRelationships)
+        {
+            bool relationshipWithProbandsAncestorMustNotExist = false;
+
+            if (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            {
+                if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
+                {
+                    for (int i = 0; i < relatives[relative]; i++)
+                    {
+                        if ((int)generatedOutputMatrix[0][relatives[relative]] ==
+                            (int)generatedOutputMatrix[0][i])
+                        {
+                            if (0 != (int)generatedOutputMatrix[persons[person]][i])
+                            {
+                                relationshipWithProbandsAncestorMustNotExist = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return relationshipWithProbandsAncestorMustNotExist;
         }
     }
 }
