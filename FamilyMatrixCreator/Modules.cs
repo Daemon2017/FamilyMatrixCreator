@@ -191,7 +191,7 @@ namespace FamilyMatrixCreator
             bool relationsWithAncestorMustExist = false;
 
             relationsWithAncestorMustExist =
-                (from i in Enumerable.Range(1, persons[person] - 1)
+                (from i in Enumerable.Range(1, person - 1)
                  where ancestralRelationships.Contains((int)generatedOutputMatrix[persons[i]][persons[person]])
                  where ancestorsMaxCountMatrix[ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])][1] ==
                        ancestorsCurrentCountMatrix[persons[i]][ancestralRelationships.IndexOf((int)generatedOutputMatrix[persons[i]][persons[person]])]
@@ -284,7 +284,7 @@ namespace FamilyMatrixCreator
             if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
                 ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
-                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, persons[person])
+                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
                                                     where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -296,7 +296,7 @@ namespace FamilyMatrixCreator
                     (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
                      !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
             {
-                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, persons[person])
+                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
                                                     where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -307,7 +307,7 @@ namespace FamilyMatrixCreator
                     (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
                      !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
             {
-                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, persons[person])
+                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
                                                     where (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]])
                                                     select i).Any();
@@ -316,7 +316,7 @@ namespace FamilyMatrixCreator
                       !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
                       ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
-                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, persons[person])
+                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
                                                     where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]])
                                                     select i).Any();
