@@ -136,30 +136,6 @@ namespace FamilyMatrixCreator
                             {
                                 currentPossibleRelationships.AddRange(ancestorsRelationships);
                             }
-
-                            bool relationshipWithAncestorMustExist =
-                                Modules.IsRelationshipWithAncestorMustExist(generatedOutputMatrix,
-                                                                             persons, person,
-                                                                             relatives, relative,
-                                                                             ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
-                                                                             ancestorsRelationships);
-
-                            if (relationshipWithAncestorMustExist)
-                            {
-                                currentPossibleRelationships =
-                                    currentPossibleRelationships.Except(new List<int> { 0 }).ToList();
-                            }
-                            else
-                            {
-                                currentPossibleRelationships = currentPossibleRelationships.Except(
-                                    from p in Enumerable.Range(1, person - 1)
-                                    from relationship in Enumerable.Range(0, ancestorsRelationships.Count)
-                                    where generatedOutputMatrix[persons[p]][persons[person]] ==
-                                          ancestorsRelationships[relationship]
-                                    where ancestorsMaxCountMatrix[relationship][1] ==
-                                          ancestorsCurrentCountMatrix[persons[p]][relationship]
-                                    select ancestorsRelationships[relationship]).ToList();
-                            }
                         }
                         else
                         {
