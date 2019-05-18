@@ -145,26 +145,6 @@ namespace FamilyMatrixCreator
                                 .Intersect(descendantsRelationships).ToList());
                             currentPossibleRelationships.Add(0);
                         }
-
-                        bool personAndRelativeAreRelatives = Modules.IsPersonAndRelativeAreRelatives(generatedOutputMatrix,
-                            persons, person,
-                            relatives, relative,
-                            descendantsRelationships);
-
-                        if (personAndRelativeAreRelatives)
-                        {
-                            currentPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToList();
-                        }
-
-                        bool PersonAndRelativeAreNotRelatives = Modules.IsPersonAndRelativeAreNotRelatives(generatedOutputMatrix,
-                            persons, person,
-                            relatives, relative,
-                            ancestorsRelationships, descendantsRelationships);
-
-                        if (PersonAndRelativeAreNotRelatives && !personAndRelativeAreRelatives)
-                        {
-                            currentPossibleRelationships = currentPossibleRelationships.Where(val => val == 0).ToList();
-                        }
                     }
                     else
                     {
@@ -191,6 +171,26 @@ namespace FamilyMatrixCreator
                             }
                         }
                     }
+                }
+
+                bool personAndRelativeAreRelatives = Modules.IsPersonAndRelativeAreRelatives(generatedOutputMatrix,
+                    persons, person,
+                    relatives, relative,
+                    descendantsRelationships);
+
+                if (personAndRelativeAreRelatives)
+                {
+                    currentPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToList();
+                }
+
+                bool PersonAndRelativeAreNotRelatives = Modules.IsPersonAndRelativeAreNotRelatives(generatedOutputMatrix,
+                    persons, person,
+                    relatives, relative,
+                    ancestorsRelationships, descendantsRelationships);
+
+                if (PersonAndRelativeAreNotRelatives && !personAndRelativeAreRelatives)
+                {
+                    currentPossibleRelationships = currentPossibleRelationships.Where(val => val == 0).ToList();
                 }
 
                 bool relationshipWithProbandsAncestorMustNotExist = Modules.IsRelationshipWithProbandsAncestorMustNotExist(generatedOutputMatrix,

@@ -279,12 +279,12 @@ namespace FamilyMatrixCreator
             List<int> relatives, int relative,
             List<int> ancestorsRelationships, List<int> descendantsRelationships)
         {
-            bool PersonAndRelativeAreNotRelatives = false;
+            bool personAndRelativeAreNotRelatives = false;
 
             if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
                 ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
-                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
+                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
                                                     where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -296,7 +296,7 @@ namespace FamilyMatrixCreator
                     (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
                      !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
             {
-                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
+                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
                                                     where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -307,7 +307,7 @@ namespace FamilyMatrixCreator
                     (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
                      !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
             {
-                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
+                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
                                                     where (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]])
                                                     select i).Any();
@@ -316,13 +316,30 @@ namespace FamilyMatrixCreator
                       !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
                       ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
-                PersonAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
+                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
                                                     where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]])
                                                     select i).Any();
             }
 
-            return PersonAndRelativeAreNotRelatives;
+            if (relative > 0)
+            {
+                for (int i = 0; i < relative; i++)
+                {
+                    if (!descendantsRelationships.Contains((int)generatedOutputMatrix[persons[person]][relatives[i]]))
+                    {
+                        if (persons.IndexOf(relatives[i]) < persons.IndexOf(persons[person]))
+                        {
+                            if (0 == generatedOutputMatrix[relatives[i]][relatives[relative]])
+                            {
+                                personAndRelativeAreNotRelatives = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return personAndRelativeAreNotRelatives;
         }
 
         public static bool IsRelationshipWithProbandsAncestorMustNotExist(float[][] generatedOutputMatrix, 
