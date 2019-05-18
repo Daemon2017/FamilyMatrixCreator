@@ -244,9 +244,9 @@ namespace FamilyMatrixCreator
             return numberOfAncestorsNotZero;
         }
 
-        public static bool IsPersonAndRelativeAreRelatives(float[][] generatedOutputMatrix, 
-            List<int> persons, int person, 
-            List<int> relatives, int relative, 
+        public static bool IsPersonAndRelativeAreRelatives(float[][] generatedOutputMatrix,
+            List<int> persons, int person,
+            List<int> relatives, int relative,
             List<int> descendantsRelationships)
         {
             bool personAndRelativeAreRelatives = false;
@@ -255,14 +255,11 @@ namespace FamilyMatrixCreator
             {
                 for (int i = 0; i < relative; i++)
                 {
-                    if (!descendantsRelationships.Contains((int)generatedOutputMatrix[persons[person]][relatives[i]]))
+                    if (persons.IndexOf(relatives[i]) < persons.IndexOf(persons[person]))
                     {
-                        if (persons.IndexOf(relatives[i]) < persons.IndexOf(persons[person]))
+                        if (0 != generatedOutputMatrix[relatives[i]][relatives[relative]])
                         {
-                            if (0 != generatedOutputMatrix[relatives[i]][relatives[relative]])
-                            {
-                                personAndRelativeAreRelatives = true;
-                            }
+                            personAndRelativeAreRelatives = true;
                         }
                     }
                 }
@@ -326,14 +323,11 @@ namespace FamilyMatrixCreator
             {
                 for (int i = 0; i < relative; i++)
                 {
-                    if (!descendantsRelationships.Contains((int)generatedOutputMatrix[persons[person]][relatives[i]]))
+                    if (persons.IndexOf(relatives[i]) < persons.IndexOf(persons[person]))
                     {
-                        if (persons.IndexOf(relatives[i]) < persons.IndexOf(persons[person]))
+                        if (0 == generatedOutputMatrix[relatives[i]][relatives[relative]])
                         {
-                            if (0 == generatedOutputMatrix[relatives[i]][relatives[relative]])
-                            {
-                                personAndRelativeAreNotRelatives = true;
-                            }
+                            personAndRelativeAreNotRelatives = true;
                         }
                     }
                 }
