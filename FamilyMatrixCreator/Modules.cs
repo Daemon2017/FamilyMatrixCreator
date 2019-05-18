@@ -244,6 +244,28 @@ namespace FamilyMatrixCreator
             return numberOfAncestorsNotZero;
         }
 
+        public static bool IsPersonAndRelativeAreRelatives(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, List<int> descendantsRelationships, bool personAndRelativeAreRelatives)
+        {
+            if (relative > 0)
+            {
+                for (int i = 0; i < relative; i++)
+                {
+                    if (!descendantsRelationships.Contains((int)generatedOutputMatrix[persons[person]][relatives[i]]))
+                    {
+                        if (persons.IndexOf(relatives[i]) < persons.IndexOf(persons[person]))
+                        {
+                            if (0 != generatedOutputMatrix[relatives[i]][relatives[relative]])
+                            {
+                                personAndRelativeAreRelatives = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return personAndRelativeAreRelatives;
+        }
+
         /*
          * Проверка того, что Персона и Родственник не могут быть родственниками.
          */
