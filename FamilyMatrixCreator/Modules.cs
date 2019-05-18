@@ -244,8 +244,13 @@ namespace FamilyMatrixCreator
             return numberOfAncestorsNotZero;
         }
 
-        public static bool IsPersonAndRelativeAreRelatives(float[][] generatedOutputMatrix, List<int> persons, int person, List<int> relatives, int relative, List<int> descendantsRelationships, bool personAndRelativeAreRelatives)
+        public static bool IsPersonAndRelativeAreRelatives(float[][] generatedOutputMatrix, 
+            List<int> persons, int person, 
+            List<int> relatives, int relative, 
+            List<int> descendantsRelationships)
         {
+            bool personAndRelativeAreRelatives = false;
+
             if (relative > 0)
             {
                 for (int i = 0; i < relative; i++)
