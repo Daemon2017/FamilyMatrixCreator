@@ -339,16 +339,6 @@ namespace FamilyMatrixCreator
                 }
             }
 
-            return personAndRelativeAreNotRelatives;
-        }
-
-        public static bool IsRelationshipWithProbandsAncestorMustNotExist(float[][] generatedOutputMatrix, 
-            List<int> persons, int person, 
-            List<int> relatives, int relative, 
-            List<int> ancestorsRelationships, List<int> descendantsRelationships)
-        {
-            bool relationshipWithProbandsAncestorMustNotExist = false;
-
             if (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
                 if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
@@ -360,14 +350,14 @@ namespace FamilyMatrixCreator
                         {
                             if (0 != (int)generatedOutputMatrix[persons[person]][i])
                             {
-                                relationshipWithProbandsAncestorMustNotExist = true;
+                                personAndRelativeAreNotRelatives = true;
                             }
                         }
                     }
                 }
             }
 
-            return relationshipWithProbandsAncestorMustNotExist;
+            return personAndRelativeAreNotRelatives;
         }
     }
 }
