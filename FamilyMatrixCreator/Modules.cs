@@ -308,7 +308,9 @@ namespace FamilyMatrixCreator
             {
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
                                                     where persons[i] < persons[person]
-                                                    where (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                    where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) || 
+                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]])
                                                     select i).Any();
             }
@@ -319,7 +321,9 @@ namespace FamilyMatrixCreator
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
                                                     where persons[i] < persons[person]
                                                     where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]])
+                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                    0 == (int)generatedOutputMatrix[persons[i]][persons[person]])
                                                     select i).Any();
             }
 
