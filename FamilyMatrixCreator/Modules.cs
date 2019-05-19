@@ -305,9 +305,7 @@ namespace FamilyMatrixCreator
                      !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
             {
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
-                                                    where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                    where (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]])
                                                     select i).Any();
             }

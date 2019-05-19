@@ -178,17 +178,16 @@ namespace FamilyMatrixCreator
                     relatives, relative,
                     descendantsRelationships);
 
-                if (personAndRelativeAreRelatives)
-                {
-                    currentPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToList();
-                }
-
                 bool personAndRelativeAreNotRelatives = Modules.IsPersonAndRelativeAreNotRelatives(generatedOutputMatrix,
                     persons, person,
                     relatives, relative,
                     ancestorsRelationships, descendantsRelationships);
 
-                if (personAndRelativeAreNotRelatives && !personAndRelativeAreRelatives)
+                if (personAndRelativeAreRelatives && !personAndRelativeAreNotRelatives)
+                {
+                    currentPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToList();
+                }
+                else if (!personAndRelativeAreRelatives && personAndRelativeAreNotRelatives)
                 {
                     currentPossibleRelationships = currentPossibleRelationships.Where(val => val == 0).ToList();
                 }
