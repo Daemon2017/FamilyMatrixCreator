@@ -139,11 +139,7 @@ namespace FamilyMatrixCreator
                         }
                         else
                         {
-                            allPossibleRelationships =
-                                currentPossibleRelationships.Intersect(ancestorsRelationships).ToList();
-                            allPossibleRelationships.AddRange(currentPossibleRelationships
-                                .Intersect(descendantsRelationships).ToList());
-                            allPossibleRelationships.Add(0);
+                            allPossibleRelationships = currentPossibleRelationships;
                         }
                     }
                     else
