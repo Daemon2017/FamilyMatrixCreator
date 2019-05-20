@@ -78,7 +78,21 @@ namespace FamilyMatrixCreator
             int[][] ancestorsMaxCountMatrix, int[][] descendantsMatrix,
             int[][] ancestorsCurrentCountMatrix)
         {
-            List<int> allPossibleRelationships = new List<int>();
+            List<int> currentPossibleRelationships = new List<int>();
+
+            /*
+             * Составление списка предковых степеней родства.
+             */
+            List<int> ancestorsRelationships =
+                (from j in Enumerable.Range(0, ancestorsMaxCountMatrix.GetLength(0))
+                 select ancestorsMaxCountMatrix[j][0]).ToList();
+
+            /*
+             * Составление списка потомковых степеней родства.
+             */
+            List<int> descendantsRelationships =
+                (from j in Enumerable.Range(0, descendantsMatrix.GetLength(0))
+                 select descendantsMatrix[j][0]).ToList();
 
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
@@ -92,30 +106,16 @@ namespace FamilyMatrixCreator
                     relatives, relative,
                     relationshipsMatrix, numberOfProband, previousPerson);
 
-                /*
-                 * Составление списка предковых степеней родства.
-                 */
-                List<int> ancestorsRelationships =
-                    (from j in Enumerable.Range(0, ancestorsMaxCountMatrix.GetLength(0))
-                     select ancestorsMaxCountMatrix[j][0]).ToList();
-
-                /*
-                 * Составление списка потомковых степеней родства.
-                 */
-                List<int> descendantsRelationships =
-                    (from j in Enumerable.Range(0, descendantsMatrix.GetLength(0))
-                     select descendantsMatrix[j][0]).ToList();
-
-                List<int> currentPossibleRelationships;
+                List<int> allPossibleRelationships;
 
                 if (0 == persons[previousPerson])
                 {
-                    allPossibleRelationships =
-                        relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
                     currentPossibleRelationships =
+                        relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
+                    allPossibleRelationships =
                         (from j in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
                          select relationshipsMatrix[numberOfProband, j][0]).ToList();
-                    currentPossibleRelationships.Add(0);
+                    allPossibleRelationships.Add(0);
                 }
                 else
                 {
@@ -124,7 +124,7 @@ namespace FamilyMatrixCreator
                     {
                         if (-1 != numberOfI && -1 != numberOfJ)
                         {
-                            currentPossibleRelationships =
+                            allPossibleRelationships =
                                 relationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
 
                             bool numberOfAncestorsOfRelativeIsNotZero = Modules.IsNumberOfAncestorsNotZero(generatedOutputMatrix,
@@ -134,21 +134,21 @@ namespace FamilyMatrixCreator
 
                             if (numberOfAncestorsOfRelativeIsNotZero)
                             {
-                                currentPossibleRelationships.AddRange(ancestorsRelationships);
+                                allPossibleRelationships.AddRange(ancestorsRelationships);
                             }
                         }
                         else
                         {
-                            currentPossibleRelationships =
-                                allPossibleRelationships.Intersect(ancestorsRelationships).ToList();
-                            currentPossibleRelationships.AddRange(allPossibleRelationships
+                            allPossibleRelationships =
+                                currentPossibleRelationships.Intersect(ancestorsRelationships).ToList();
+                            allPossibleRelationships.AddRange(currentPossibleRelationships
                                 .Intersect(descendantsRelationships).ToList());
-                            currentPossibleRelationships.Add(0);
+                            allPossibleRelationships.Add(0);
                         }
                     }
                     else
                     {
-                        currentPossibleRelationships = allPossibleRelationships;
+                        allPossibleRelationships = currentPossibleRelationships;
 
                         bool personsCountOfRelativesOfThisTypeAlreadyMax =
                             Modules.IsCountOfRelativesOfThisTypeAlreadyMax(generatedOutputMatrix,
@@ -166,8 +166,8 @@ namespace FamilyMatrixCreator
                         {
                             if ((int)generatedOutputMatrix[0][relatives[relative]] != (int)generatedOutputMatrix[0][persons[person]])
                             {
-                                currentPossibleRelationships =
-                                    currentPossibleRelationships.Where(val => val != 0).ToList();
+                                allPossibleRelationships =
+                                    allPossibleRelationships.Where(val => val != 0).ToList();
                             }
                         }
                     }
@@ -185,7 +185,7 @@ namespace FamilyMatrixCreator
 
                 if (personAndRelativeAreRelatives && !personAndRelativeAreNotRelatives)
                 {
-                    currentPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToList();
+                    currentPossibleRelationships = currentPossibleRelationships.Where(val => val != 0).ToList();
                 }
                 else if (!personAndRelativeAreRelatives && personAndRelativeAreNotRelatives)
                 {
@@ -195,11 +195,11 @@ namespace FamilyMatrixCreator
                 /*
                  * Исключение возможных видов родства, которые невозможно сгенерировать.
                  */
-                allPossibleRelationships =
-                    allPossibleRelationships.Intersect(currentPossibleRelationships).ToList();
+                currentPossibleRelationships =
+                    currentPossibleRelationships.Intersect(allPossibleRelationships).ToList();
             }
 
-            return allPossibleRelationships;
+            return currentPossibleRelationships;
         }
     }
 }
