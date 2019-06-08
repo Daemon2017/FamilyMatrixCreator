@@ -349,12 +349,12 @@ namespace FamilyMatrixCreator
             {
                 if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
                 {
-                    for (int i = 0; i < relatives[relative]; i++)
+                    for (int i = persons[person] + 1; i < relatives[relative]; i++)
                     {
                         if ((int)generatedOutputMatrix[0][relatives[relative]] ==
                             (int)generatedOutputMatrix[0][i])
                         {
-                            if (0 != (int)generatedOutputMatrix[persons[person]][i])
+                            if (!ancestorsRelationships.Contains((int)generatedOutputMatrix[persons[person]][i]))
                             {
                                 personAndRelativeAreNotRelatives = true;
                             }
