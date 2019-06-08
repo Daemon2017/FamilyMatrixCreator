@@ -308,6 +308,8 @@ namespace FamilyMatrixCreator
             {
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
                                                     where persons[i] < persons[person]
+                                                    where !(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+                                                    ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
                                                     where (0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
