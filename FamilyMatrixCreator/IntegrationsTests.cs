@@ -951,7 +951,7 @@ namespace FamilyMatrixCreator
                 new float[][]
                 {
                     new float[] {0, 10, 6, 11, 9},
-                    new float[] {0, 0, 0, 2, 0},
+                    new float[] {0, 0, 0, 0, 2},
                     new float[] {0, 0, 0, 0, 0},
                     null,
                     null

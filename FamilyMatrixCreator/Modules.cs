@@ -247,7 +247,7 @@ namespace FamilyMatrixCreator
         public static bool IsPersonAndRelativeAreRelatives(float[][] generatedOutputMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative,
-            List<int> descendantsRelationships)
+            List<int> ancestorsRelationships, List<int> descendantsRelationships)
         {
             bool personAndRelativeAreRelatives = false;
 

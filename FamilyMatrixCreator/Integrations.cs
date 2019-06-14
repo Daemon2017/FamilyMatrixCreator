@@ -172,7 +172,7 @@ namespace FamilyMatrixCreator
                 bool personAndRelativeAreRelatives = Modules.IsPersonAndRelativeAreRelatives(generatedOutputMatrix,
                     persons, person,
                     relatives, relative,
-                    descendantsRelationships);
+                    ancestorsRelationships, descendantsRelationships);
 
                 bool personAndRelativeAreNotRelatives = Modules.IsPersonAndRelativeAreNotRelatives(generatedOutputMatrix,
                     persons, person,
