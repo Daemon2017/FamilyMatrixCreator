@@ -250,21 +250,7 @@ namespace FamilyMatrixCreator
             List<int> ancestorsRelationships, List<int> descendantsRelationships)
         {
             bool personAndRelativeAreRelatives = false;
-
-            if (relative > 0)
-            {
-                for (int i = 0; i < relative; i++)
-                {
-                    if (persons.IndexOf(relatives[i]) < persons.IndexOf(persons[person]))
-                    {
-                        if (0 != generatedOutputMatrix[relatives[i]][relatives[relative]])
-                        {
-                            personAndRelativeAreRelatives = true;
-                        }
-                    }
-                }
-            }
-
+               
             return personAndRelativeAreRelatives;
         }
 
@@ -329,20 +315,6 @@ namespace FamilyMatrixCreator
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]])
                                                     select i).Any();
-            }
-
-            if (relative > 0)
-            {
-                for (int i = 0; i < relative; i++)
-                {
-                    if (persons.IndexOf(relatives[i]) < persons.IndexOf(persons[person]))
-                    {
-                        if (0 == generatedOutputMatrix[relatives[i]][relatives[relative]])
-                        {
-                            personAndRelativeAreNotRelatives = true;
-                        }
-                    }
-                }
             }
 
             if (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
