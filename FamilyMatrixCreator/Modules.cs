@@ -258,9 +258,22 @@ namespace FamilyMatrixCreator
                 {
                     if (0 == generatedOutputMatrix[persons[i]][relatives[relative]])
                     {
-                        if (0 == generatedOutputMatrix[persons[i]][persons[person]])
+                        if (persons[i] < persons[person])
                         {
-                            personAndRelativeAreRelatives = true;
+                            if (0 == generatedOutputMatrix[persons[i]][persons[person]])
+                            {
+                                personAndRelativeAreRelatives = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (persons[i] > persons[person])
+                        {
+                            if (0 != generatedOutputMatrix[persons[person]][persons[i]])
+                            {
+                                personAndRelativeAreRelatives = true;
+                            }
                         }
                     }
                 }
