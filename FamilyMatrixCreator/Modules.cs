@@ -250,7 +250,22 @@ namespace FamilyMatrixCreator
             List<int> ancestorsRelationships, List<int> descendantsRelationships)
         {
             bool personAndRelativeAreRelatives = false;
-               
+
+            if (!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            {
+                for (int i = 1; i < person; i++)
+                {
+                    if (0 == generatedOutputMatrix[persons[i]][relatives[relative]])
+                    {
+                        if (0 == generatedOutputMatrix[persons[i]][persons[person]])
+                        {
+                            personAndRelativeAreRelatives = true;
+                        }
+                    }
+                }
+            }
+
             return personAndRelativeAreRelatives;
         }
 
