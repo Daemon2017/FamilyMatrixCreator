@@ -251,12 +251,8 @@ namespace FamilyMatrixCreator
         {
             bool personAndRelativeAreRelatives = false;
 
-            if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-
-            }
-            else
+            if (!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) ||
+                !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
                 for (int i = 1; i < person; i++)
                 {
