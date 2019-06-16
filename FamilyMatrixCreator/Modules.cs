@@ -251,14 +251,25 @@ namespace FamilyMatrixCreator
         {
             bool personAndRelativeAreRelatives = false;
 
-            if (!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) ||
-                !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            {
+
+            }
+            else
             {
                 for (int i = 1; i < person; i++)
                 {
                     if (0 == generatedOutputMatrix[persons[i]][relatives[relative]])
                     {
-                        if (persons[i] < persons[person])
+                        if (persons[i] > persons[person])
+                        {
+                            if (0 == generatedOutputMatrix[persons[person]][persons[i]])
+                            {
+                                personAndRelativeAreRelatives = true;
+                            }
+                        }
+                        else
                         {
                             if (0 == generatedOutputMatrix[persons[i]][persons[person]])
                             {
@@ -271,6 +282,13 @@ namespace FamilyMatrixCreator
                         if (persons[i] > persons[person])
                         {
                             if (0 != generatedOutputMatrix[persons[person]][persons[i]])
+                            {
+                                personAndRelativeAreRelatives = true;
+                            }
+                        }
+                        else
+                        {
+                            if (0 != generatedOutputMatrix[persons[i]][persons[person]])
                             {
                                 personAndRelativeAreRelatives = true;
                             }
