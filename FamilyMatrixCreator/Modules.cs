@@ -350,13 +350,20 @@ namespace FamilyMatrixCreator
                                                     where
                                                     (persons[i] < persons[person] &&
                                                     (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]])) &&
+                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
+                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]))) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                     (persons[i] > persons[person] &&
+                                                    (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
+                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]))) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -371,13 +378,20 @@ namespace FamilyMatrixCreator
                                                     where
                                                     (persons[i] < persons[person] &&
                                                     (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]])) &&
+                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
+                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]))) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                     (persons[i] > persons[person] &&
+                                                    (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
+                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]))) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
