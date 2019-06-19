@@ -254,43 +254,19 @@ namespace FamilyMatrixCreator
             if (!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) ||
                 !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
-                for (int i = 1; i < person; i++)
-                {
-                    if (0 == generatedOutputMatrix[persons[i]][relatives[relative]])
-                    {
-                        if (persons[i] > persons[person])
-                        {
-                            if (0 == generatedOutputMatrix[persons[person]][persons[i]])
-                            {
-                                personAndRelativeAreRelatives = true;
-                            }
-                        }
-                        else
-                        {
-                            if (0 == generatedOutputMatrix[persons[i]][persons[person]])
-                            {
-                                personAndRelativeAreRelatives = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (persons[i] > persons[person])
-                        {
-                            if (0 != generatedOutputMatrix[persons[person]][persons[i]])
-                            {
-                                personAndRelativeAreRelatives = true;
-                            }
-                        }
-                        else
-                        {
-                            if (0 != generatedOutputMatrix[persons[i]][persons[person]])
-                            {
-                                personAndRelativeAreRelatives = true;
-                            }
-                        }
-                    }
-                }
+                personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
+                                                 where
+                                                 (persons[i] < persons[person] &&
+                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                 0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                 0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+                                                 (persons[i] > persons[person] &&
+                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                 0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+                                                 0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
+                                                 select i).Any();
             }
 
             return personAndRelativeAreRelatives;
@@ -309,7 +285,7 @@ namespace FamilyMatrixCreator
             if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
                 ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
+                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -328,7 +304,7 @@ namespace FamilyMatrixCreator
                     (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
                      !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
             {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
+                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -346,7 +322,7 @@ namespace FamilyMatrixCreator
                     (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
                      !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
             {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
+                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
                                                     (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
@@ -374,7 +350,7 @@ namespace FamilyMatrixCreator
                       !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
                       ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(0, person)
+                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
                                                     (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
