@@ -158,13 +158,11 @@ namespace FamilyMatrixCreator
                                                                           ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
                                                                           ancestorsRelationships);
 
-                        if (personsCountOfRelativesOfThisTypeAlreadyMax || relativesCountOfRelativesOfThisTypeAlreadyMax)
+                        if ((personsCountOfRelativesOfThisTypeAlreadyMax || relativesCountOfRelativesOfThisTypeAlreadyMax) &&
+                            ((int)generatedOutputMatrix[0][relatives[relative]] != (int)generatedOutputMatrix[0][persons[person]]))
                         {
-                            if ((int)generatedOutputMatrix[0][relatives[relative]] != (int)generatedOutputMatrix[0][persons[person]])
-                            {
-                                allPossibleRelationships =
-                                    allPossibleRelationships.Where(val => val != 0).ToList();
-                            }
+                            allPossibleRelationships =
+                                allPossibleRelationships.Where(val => val != 0).ToList();
                         }
                     }
                 }

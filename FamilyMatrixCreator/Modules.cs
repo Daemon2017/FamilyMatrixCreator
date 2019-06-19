@@ -17,7 +17,7 @@ namespace FamilyMatrixCreator
         public static float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative,
             int relationship, float[] centimorgansMatrix)
         {
-            if (!(centimorgansMatrix[relationship] <= 3950))
+            if (centimorgansMatrix[relationship] > 3950)
             {
                 return generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
             }
@@ -131,6 +131,7 @@ namespace FamilyMatrixCreator
                     }
                     catch (InvalidOperationException)
                     {
+
                     }
                 }
             }
@@ -413,20 +414,15 @@ namespace FamilyMatrixCreator
                                                     select i).Any();
             }
 
-            if (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            if ((!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])) &&
+                (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])))
             {
-                if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
+                for (int i = persons[person] + 1; i < relatives[relative]; i++)
                 {
-                    for (int i = persons[person] + 1; i < relatives[relative]; i++)
+                    if (((int)generatedOutputMatrix[0][relatives[relative]] == (int)generatedOutputMatrix[0][i]) &&
+                        (!ancestorsRelationships.Contains((int)generatedOutputMatrix[persons[person]][i])))
                     {
-                        if ((int)generatedOutputMatrix[0][relatives[relative]] ==
-                            (int)generatedOutputMatrix[0][i])
-                        {
-                            if (!ancestorsRelationships.Contains((int)generatedOutputMatrix[persons[person]][i]))
-                            {
-                                personAndRelativeAreNotRelatives = true;
-                            }
-                        }
+                        personAndRelativeAreNotRelatives = true;
                     }
                 }
             }
