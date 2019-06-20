@@ -2513,12 +2513,12 @@ namespace FamilyMatrixCreator
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
             int[,][] relationshipsMatrix =
-                FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+                FileSaverLoader.LoadFromFile2dJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = 0;
             int[][] ancestorsMaxCountMatrix =
-                FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
-            int[][] descendantsMatrix =
-                FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
+                FileSaverLoader.LoadFromFile2dInt(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
+            int[] descendantsMatrix =
+                FileSaverLoader.LoadFromFile1dInt(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
 
             string firstRow = "";
 
@@ -2619,12 +2619,12 @@ namespace FamilyMatrixCreator
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
             int[,][] relationshipsMatrix =
-                FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+                FileSaverLoader.LoadFromFile2dJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = 0;
             int[][] ancestorsMaxCountMatrix =
-                FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
-            int[][] descendantsMatrix =
-                FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
+                FileSaverLoader.LoadFromFile2dInt(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
+            int[] descendantsMatrix =
+                FileSaverLoader.LoadFromFile1dInt(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
 
             Assert.That(
                 Integrations.DetectAllPossibleRelationships(

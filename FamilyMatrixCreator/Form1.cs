@@ -15,7 +15,7 @@ namespace FamilyMatrixCreator
         private static int[,][] _relationshipsMatrix;
         private static Dictionary<int, float> _centimorgansDictionary;
         private static int[][] _ancestorsMaxCountMatrix;
-        private static int[][] _descendantsMatrix;
+        private static int[] _descendantsMatrix;
         private static int _numberOfProband;
 
         public static void Main(string[] args)
@@ -23,11 +23,11 @@ namespace FamilyMatrixCreator
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
             Console.WriteLine("Подготовка необходимых файлов...");
-            _relationshipsMatrix = FileSaverLoader.LoadFromFile2DJagged("relationships.csv");
+            _relationshipsMatrix = FileSaverLoader.LoadFromFile2dJagged("relationships.csv");
             _numberOfProband = 0;
-            float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1D("centimorgans.csv");
-            _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2D("ancestorsMatrix.csv");
-            _descendantsMatrix = FileSaverLoader.LoadFromFile2D("descendantsMatrix.csv");
+            float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1dFloat("centimorgans.csv");
+            _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2dInt("ancestorsMatrix.csv");
+            _descendantsMatrix = FileSaverLoader.LoadFromFile1dInt("descendantsMatrix.csv");
             Console.WriteLine("Необходимые файлы успешно подготовлены!");
 
             Console.WriteLine("Введите число пар матриц, которое необходимо построить:");

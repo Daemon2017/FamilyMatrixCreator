@@ -28,7 +28,7 @@ namespace FamilyMatrixCreator
         /*
          * Загрузка матрицы возможных степеней родства.
          */
-        public static int[,][] LoadFromFile2DJagged(string inputFileName)
+        public static int[,][] LoadFromFile2dJagged(string inputFileName)
         {
             string input = File.ReadAllText(inputFileName);
             int numberOfLines = input.Split('\n').Length - 1;
@@ -95,9 +95,9 @@ namespace FamilyMatrixCreator
         }
 
         /*
-        * Загрузка матрицы максимального числа предков заданного вида.
+        * Загрузка двумерной матрицы из файла.
         */
-        public static int[][] LoadFromFile2D(string inputFileName)
+        public static int[][] LoadFromFile2dInt(string inputFileName)
         {
             int relationship = 0;
             string input = File.ReadAllText(inputFileName);
@@ -127,9 +127,9 @@ namespace FamilyMatrixCreator
         }
 
         /*
-        * Загрузка матрицы значений сантиморган.
+        * Загрузка одномерной матрицы из файла.
         */
-        public static float[] LoadFromFile1D(string inputFileName)
+        public static float[] LoadFromFile1dFloat(string inputFileName)
         {
             int person = 0;
             string input = File.ReadAllText(inputFileName);
@@ -141,6 +141,26 @@ namespace FamilyMatrixCreator
                 if (!row.Equals("") && !row.Equals("\r"))
                 {
                     matrix[person] = float.Parse(row);
+                }
+
+                person++;
+            }
+
+            return matrix;
+        }
+
+        public static int[] LoadFromFile1dInt(string inputFileName)
+        {
+            int person = 0;
+            string input = File.ReadAllText(inputFileName);
+            int numberOfLines = input.Split('\n').Length - 1;
+            int[] matrix = new int[numberOfLines];
+
+            foreach (var row in input.Split('\n'))
+            {
+                if (!row.Equals("") && !row.Equals("\r"))
+                {
+                    matrix[person] = int.Parse(row);
                 }
 
                 person++;

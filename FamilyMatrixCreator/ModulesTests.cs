@@ -125,7 +125,7 @@ namespace FamilyMatrixCreator
             List<int> persons, int person, List<int> relatives, int relative, int[][] result)
         {
             int[][] ancestorsMaxCountMatrix =
-                FileSaverLoader.LoadFromFile2D(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
+                FileSaverLoader.LoadFromFile2dInt(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
 
             Assert.That(
                 Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix,
@@ -152,7 +152,7 @@ namespace FamilyMatrixCreator
         public void FindAllExistingRelationshipDegrees_Test(List<int> result)
         {
             int[,][] relationshipsMatrix =
-                FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+                FileSaverLoader.LoadFromFile2dJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = 0;
 
             Assert.That(Modules.GetAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband),
@@ -182,7 +182,7 @@ namespace FamilyMatrixCreator
         public void OutputBuildLeftBottomPart_Test(float[][] generatedOutputMatrix, float[][] result)
         {
             int[,][] relationshipsMatrix =
-                FileSaverLoader.LoadFromFile2DJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+                FileSaverLoader.LoadFromFile2dJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = 0;
 
             Assert.That(Modules.BuildLeftBottomPartOfOutput(generatedOutputMatrix, relationshipsMatrix, numberOfProband),

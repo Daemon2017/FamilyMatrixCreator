@@ -33,7 +33,7 @@ namespace FamilyMatrixCreator
         }
 
         public static List<int> DetectAllPossibleRelationships(int[,][] relationshipsMatrix, int numberOfProband,
-            int[][] ancestorsMaxCountMatrix, int[][] descendantsMatrix,
+            int[][] ancestorsMaxCountMatrix, int[] descendantsMatrix,
             float[][] generatedOutputMatrix, int[][] ancestorsCurrentCountMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative)
@@ -75,7 +75,7 @@ namespace FamilyMatrixCreator
             List<int> persons, int person,
             List<int> relatives, int relative,
             int[,][] relationshipsMatrix, int numberOfProband,
-            int[][] ancestorsMaxCountMatrix, int[][] descendantsMatrix,
+            int[][] ancestorsMaxCountMatrix, int[] descendantsMatrix,
             int[][] ancestorsCurrentCountMatrix)
         {
             List<int> currentPossibleRelationships = new List<int>();
@@ -92,7 +92,7 @@ namespace FamilyMatrixCreator
              */
             List<int> descendantsRelationships =
                 (from j in Enumerable.Range(0, descendantsMatrix.GetLength(0))
-                 select descendantsMatrix[j][0]).ToList();
+                 select descendantsMatrix[j]).ToList();
 
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
