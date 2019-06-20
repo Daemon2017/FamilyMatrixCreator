@@ -13,7 +13,7 @@ namespace FamilyMatrixCreator
     public class Form1
     {
         private static int[,][] _relationshipsMatrix;
-        private static float[] _centimorgansMatrix;
+        private static Dictionary<int, float> _centimorgansDictionary;
         private static int[][] _ancestorsMaxCountMatrix;
         private static int[][] _descendantsMatrix;
         private static int _numberOfProband;
@@ -25,7 +25,7 @@ namespace FamilyMatrixCreator
             Console.WriteLine("Подготовка необходимых файлов...");
             _relationshipsMatrix = FileSaverLoader.LoadFromFile2DJagged("relationships.csv");
             _numberOfProband = 0;
-            _centimorgansMatrix = FileSaverLoader.LoadFromFile1D("centimorgans.csv");
+            float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1D("centimorgans.csv");
             _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2D("ancestorsMatrix.csv");
             _descendantsMatrix = FileSaverLoader.LoadFromFile2D("descendantsMatrix.csv");
             Console.WriteLine("Необходимые файлы успешно подготовлены!");
@@ -44,6 +44,14 @@ namespace FamilyMatrixCreator
 
             List<int> existingRelationshipDegrees =
                 Modules.GetAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
+
+            _centimorgansDictionary = new Dictionary<int, float> { { 0, 0 } };
+            for (int i = 0; i < centimorgansMatrix.Length; i++)
+            {
+                _centimorgansDictionary.Add(existingRelationshipDegrees[i], centimorgansMatrix[i]);
+            }
+
+            existingRelationshipDegrees.Insert(0, 0);
 
             int quantityOfMatrixes = numberOfMatrices;
 
@@ -230,7 +238,7 @@ namespace FamilyMatrixCreator
                         {
                             generatedInputMatrix[person][relative] =
                                 Modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative,
-                                    relationship, _centimorgansMatrix);
+                                    relationship, _centimorgansDictionary);
                         }
 
                         if (_relationshipsMatrix[relationship, _numberOfProband][0] ==
@@ -238,7 +246,7 @@ namespace FamilyMatrixCreator
                         {
                             generatedInputMatrix[person][relative] =
                                 Modules.TransformRelationshipTypeToCm(generatedInputMatrix, person, relative,
-                                    relationship, _centimorgansMatrix);
+                                    relationship, _centimorgansDictionary);
                         }
                     }
                 }

@@ -12,26 +12,34 @@ namespace FamilyMatrixCreator
 
         /*
          * Преобразование видов родства в сантиморганы.
-         * TODO: возможно, что массив centimorgansMatrix стоит преобразовать в словарь
          */
         public static float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative,
-            int relationship, float[] centimorgansMatrix)
+            int relationship, Dictionary<int, float> centimorgansDictionary)
         {
-            if (centimorgansMatrix[relationship] > 3950)
+            if (centimorgansDictionary[relationship] > 3950)
             {
-                return generatedInputMatrix[person][relative] = centimorgansMatrix[relationship];
+                return generatedInputMatrix[person][relative] = centimorgansDictionary[relationship];
             }
 
-            Normal normalDist = new Normal(centimorgansMatrix[relationship],
-                centimorgansMatrix[relationship] * (-0.2819 * Math.Log(centimorgansMatrix[relationship]) + 2.335) / 3);
-            float normalyDistributedValue = (float)normalDist.Sample();
-
-            if (normalyDistributedValue < 0)
+            if (0 != relationship)
             {
-                normalyDistributedValue = 0;
-            }
+                double mean = centimorgansDictionary[relationship];
+                double std = mean * (-0.2819 * Math.Log(mean) + 2.335) / 3;
+                Normal normalDist = new Normal(mean, std);
 
-            return generatedInputMatrix[person][relative] = normalyDistributedValue;
+                float normalyDistributedValue = (float)normalDist.Sample();
+
+                if (normalyDistributedValue < 0)
+                {
+                    normalyDistributedValue = 0;
+                }
+
+                return normalyDistributedValue;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         /*
@@ -101,12 +109,10 @@ namespace FamilyMatrixCreator
          */
         public static List<int> GetAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)
         {
-            List<int> existingRelationshipDegrees = new List<int> { 0 };
+            List<int> existingRelationshipDegrees = new List<int>();
 
             existingRelationshipDegrees.AddRange((from i in Enumerable.Range(0, relationshipsMatrix.GetLength(0))
-                                                  select relationshipsMatrix[numberOfProband, i][0]).Union
-                                                   (from i in Enumerable.Range(0, relationshipsMatrix.GetLength(0))
-                                                    select relationshipsMatrix[i, numberOfProband][0]).ToList());
+                                                  select relationshipsMatrix[numberOfProband, i][0]).ToList());
 
             return existingRelationshipDegrees.Distinct().ToList();
         }
