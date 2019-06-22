@@ -17,6 +17,7 @@ namespace FamilyMatrixCreator
         private static int[][] _ancestorsMaxCountMatrix;
         private static int[] _descendantsMatrix;
         private static int _numberOfProband;
+        private static Random random = new Random();
 
         public static void Main(string[] args)
         {
@@ -30,17 +31,20 @@ namespace FamilyMatrixCreator
             _descendantsMatrix = FileSaverLoader.LoadFromFile1dInt("descendantsMatrix.csv");
             Console.WriteLine("Необходимые файлы успешно подготовлены!");
 
-            Console.WriteLine("Введите число пар матриц, которое необходимо построить:");
+            Console.WriteLine("Введите число пар матриц, которое необходимо построить (0;+inf):");
             int numberOfMatrices = Convert.ToInt32(Console.ReadLine());
 
-            Console.WriteLine("Введите требуемый размер стороны каждой матрицы:");
+            Console.WriteLine("Введите требуемый размер стороны каждой матрицы (0;+inf):");
             int sizeOfMatrices = Convert.ToInt32(Console.ReadLine());
 
-            Console.WriteLine("Введите MIN % значащих значений каждой матрицы:");
+            Console.WriteLine("Введите MIN % значащих значений каждой матрицы (0;+inf):");
             int minPercentOfValues = Convert.ToInt32(Console.ReadLine());
 
-            Console.WriteLine("Введите MAX % значащих значений каждой матрицы:");
+            Console.WriteLine("Введите MAX % значащих значений каждой матрицы (0;+inf):");
             int maxPercentOfValues = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Введите % случаев, когда необходимо предпочитать отсутствие родства (0;1):");
+            double noRelationPercent = Convert.ToDouble(Console.ReadLine());
 
             List<int> existingRelationshipDegrees =
                 Modules.GetAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
@@ -64,7 +68,7 @@ namespace FamilyMatrixCreator
                 int generatedMatrixSize = sizeOfMatrices;
 
                 Thread matricesCreator = new Thread(() => CreateMatrices(existingRelationshipDegrees, quantityOfMatrixes, generatedMatrixSize,
-                    minPercentOfValues, maxPercentOfValues));
+                    minPercentOfValues, maxPercentOfValues, noRelationPercent));
                 matricesCreator.Start();
                 matricesCreator.Join();
 
@@ -76,14 +80,14 @@ namespace FamilyMatrixCreator
         }
 
         private static void CreateMatrices(List<int> existingRelationshipDegrees, int quantityOfMatrixes, int generatedMatrixSize,
-            int minPercentOfValues, int maxPercentOfValues)
+            int minPercentOfValues, int maxPercentOfValues, double noRelationPercent)
         {
             Parallel.For(0, quantityOfMatrixes, matrixNumber =>
             {
                 Console.WriteLine("Начинается построение матрицы #{0}...", matrixNumber);
                 float[][] generatedOutputMatrix =
                     GenerateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees,
-                    minPercentOfValues, maxPercentOfValues);
+                    minPercentOfValues, maxPercentOfValues, noRelationPercent);
                 float[][] generatedInputMatrix =
                     GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
                 Console.WriteLine("Завершено построение матрицы #{0}!", matrixNumber);
@@ -106,11 +110,11 @@ namespace FamilyMatrixCreator
          * Построение выходной матрицы (матрицы родственных отношений).
          */
         private static float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
-            int minPercentOfValues, int maxPercentOfValues)
+            int minPercentOfValues, int maxPercentOfValues, double noRelationPercent)
         {
             float[][] generatedOutputMatrix = OutputBuildRightTopPart(
                 generatedMatrixSize, existingRelationshipDegrees,
-                minPercentOfValues, maxPercentOfValues);
+                minPercentOfValues, maxPercentOfValues, noRelationPercent);
             generatedOutputMatrix =
                 Modules.BuildLeftBottomPartOfOutput(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband);
 
@@ -123,7 +127,7 @@ namespace FamilyMatrixCreator
          * Построение правой (верхней) стороны.
          */
         public static float[][] OutputBuildRightTopPart(int generatedMatrixSize, List<int> existingRelationshipDegrees,
-            int minPercent, int maxPercent)
+            int minPercent, int maxPercent, double noRelationPercent)
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
             int[][] ancestorsCurrentCountMatrix = new int[generatedMatrixSize][];
@@ -157,8 +161,26 @@ namespace FamilyMatrixCreator
                      */
                     try
                     {
-                        generatedOutputMatrix[persons[person]][relatives[relative]] =
-                            allPossibleRelationships[Modules.GetNextRnd(0, allPossibleRelationships.Count)];
+                        if (allPossibleRelationships.Contains(0) && allPossibleRelationships.Count > 1)
+                        {
+                            if (random.NextDouble() < noRelationPercent)
+                            {
+                                generatedOutputMatrix[persons[person]][relatives[relative]] = 0;
+                            }
+                            else
+                            {
+                                allPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToList();
+                                generatedOutputMatrix[persons[person]][relatives[relative]] =
+                                    allPossibleRelationships[Modules.GetNextRnd(0, allPossibleRelationships.Count)];
+                            }
+                        }
+                        else
+                        {
+                            generatedOutputMatrix[persons[person]][relatives[relative]] =
+                                allPossibleRelationships[Modules.GetNextRnd(0, allPossibleRelationships.Count)];
+                        }
+
+
                         ancestorsCurrentCountMatrix = Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
                             ancestorsCurrentCountMatrix, persons, person, relatives, relative, _ancestorsMaxCountMatrix);
                     }
@@ -189,6 +211,15 @@ namespace FamilyMatrixCreator
 
                     if (percentOfMeaningfulValues < minPercent || percentOfMeaningfulValues > maxPercent)
                     {
+                        if (percentOfMeaningfulValues < minPercent)
+                        {
+                            Console.WriteLine("[ОШИБКА] Процент значащих значений у полученной матрицы ниже заданного! " + percentOfMeaningfulValues);
+                        }
+                        else if (percentOfMeaningfulValues > maxPercent)
+                        {
+                            Console.WriteLine("[ОШИБКА] Процент значащих значений у полученной матрицы выше заданного! " + percentOfMeaningfulValues);
+                        }
+
                         generatedOutputMatrix = new float[generatedMatrixSize][];
                         ancestorsCurrentCountMatrix = new int[generatedMatrixSize][];
 
