@@ -259,6 +259,8 @@ namespace FamilyMatrixCreator
         {
             bool personAndRelativeAreRelatives = false;
 
+            List<int> siblinstorsRelationships = new List<int> { 4, 7, 12, 18, 25, 33, 42, 52, 63 };
+
             if ((!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
                  !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
                 (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
@@ -267,6 +269,7 @@ namespace FamilyMatrixCreator
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
                                                  where
                                                  (persons[i] < persons[person] &&
+                                                 (!siblinstorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&

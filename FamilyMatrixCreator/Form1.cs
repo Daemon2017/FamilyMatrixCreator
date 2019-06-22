@@ -179,8 +179,7 @@ namespace FamilyMatrixCreator
                             generatedOutputMatrix[persons[person]][relatives[relative]] =
                                 allPossibleRelationships[Modules.GetNextRnd(0, allPossibleRelationships.Count)];
                         }
-
-
+                        
                         ancestorsCurrentCountMatrix = Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
                             ancestorsCurrentCountMatrix, persons, person, relatives, relative, _ancestorsMaxCountMatrix);
                     }
