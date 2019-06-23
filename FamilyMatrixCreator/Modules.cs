@@ -268,6 +268,8 @@ namespace FamilyMatrixCreator
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
                                                  where
                                                  (persons[i] < persons[person] &&
+                                                 (!siblinstorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+                                                 generatedOutputMatrix[0][persons[i]] != generatedOutputMatrix[0][persons[person]]) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
