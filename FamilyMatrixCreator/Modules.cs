@@ -275,6 +275,8 @@ namespace FamilyMatrixCreator
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                  (persons[i] > persons[person] &&
+                                                 (!siblinstorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+                                                 generatedOutputMatrix[0][persons[i]] != generatedOutputMatrix[0][persons[person]]) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
