@@ -2626,9 +2626,13 @@ namespace FamilyMatrixCreator
             int[] descendantsMatrix =
                 FileSaverLoader.LoadFromFile1dInt(TestContext.CurrentContext.TestDirectory + "\\descendantsMatrix.csv");
 
+            List<int> existingRelationshipDegrees =
+                Modules.GetAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband);
+
             Assert.That(
                 Integrations.DetectAllPossibleRelationships(
-                    relationshipsMatrix, numberOfProband,
+                    relationshipsMatrix, existingRelationshipDegrees,
+                    numberOfProband,
                     ancestorsMaxCountMatrix, descendantsMatrix,
                     generatedOutputMatrix, currentCountMatrix,
                     persons, person,

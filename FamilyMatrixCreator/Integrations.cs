@@ -32,7 +32,9 @@ namespace FamilyMatrixCreator
             return 100 * (sumOfMeaningfulValues / Math.Pow(generatedMatrixSize, 2));
         }
 
-        public static List<int> DetectAllPossibleRelationships(int[,][] relationshipsMatrix, int numberOfProband,
+        public static List<int> DetectAllPossibleRelationships(
+            int[,][] relationshipsMatrix, List<int> existingRelationshipDegrees,
+            int numberOfProband,
             int[][] ancestorsMaxCountMatrix, int[] descendantsMatrix,
             float[][] generatedOutputMatrix, int[][] ancestorsCurrentCountMatrix,
             List<int> persons, int person,
@@ -43,7 +45,7 @@ namespace FamilyMatrixCreator
             if (0 == persons[person])
             {
                 allPossibleRelationships =
-                    Modules.GetAllPossibleRelationshipsOfProband(relationshipsMatrix, numberOfProband);
+                    Modules.GetAllPossibleRelationshipsOfProband(relationshipsMatrix, existingRelationshipDegrees, numberOfProband);
             }
             else
             {

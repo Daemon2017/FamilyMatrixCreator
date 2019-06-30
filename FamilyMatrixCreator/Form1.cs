@@ -150,7 +150,8 @@ namespace FamilyMatrixCreator
                 for (int relative = 0; relative < relatives.Count; relative++)
                 {
                     List<int> allPossibleRelationships = Integrations.DetectAllPossibleRelationships(
-                        _relationshipsMatrix, _numberOfProband,
+                        _relationshipsMatrix, existingRelationshipDegrees,
+                        _numberOfProband,
                         _ancestorsMaxCountMatrix, _descendantsMatrix,
                         generatedOutputMatrix, ancestorsCurrentCountMatrix,
                         persons, person,
@@ -179,7 +180,7 @@ namespace FamilyMatrixCreator
                             generatedOutputMatrix[persons[person]][relatives[relative]] =
                                 allPossibleRelationships[Modules.GetNextRnd(0, allPossibleRelationships.Count)];
                         }
-                        
+
                         ancestorsCurrentCountMatrix = Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
                             ancestorsCurrentCountMatrix, persons, person, relatives, relative, _ancestorsMaxCountMatrix);
                     }
