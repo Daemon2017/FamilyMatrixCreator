@@ -87,13 +87,15 @@ namespace FamilyMatrixCreator
          */
         public static List<int> GetAllPossibleRelationshipsOfProband(int[,][] relationshipsMatrix, List<int> existingRelationshipDegrees, int numberOfProband)
         {
+            existingRelationshipDegrees = existingRelationshipDegrees.Where(var => var != 1).ToList();
+
             List<int> allPossibleRelationshipsOfProband = new List<int>();
 
-            for (int i = 0; i < relationshipsMatrix.GetLength(0); i++)
+            for (int i = 1; i < relationshipsMatrix.GetLength(0); i++)
             {
                 int numberOfPossibleRelationships = 0;
 
-                for (int j = 0; j < relationshipsMatrix.GetLength(1); j++)
+                for (int j = 1; j < relationshipsMatrix.GetLength(1); j++)
                 {
                     for (int k = 0; k < relationshipsMatrix[i, j].Length; k++)
                     {
@@ -105,7 +107,7 @@ namespace FamilyMatrixCreator
                     }
                 }
 
-                if (numberOfPossibleRelationships > 0.75 * existingRelationshipDegrees.Count)
+                if (numberOfPossibleRelationships > 0.5 * existingRelationshipDegrees.Count)
                 {
                     allPossibleRelationshipsOfProband.Add(relationshipsMatrix[numberOfProband, i][0]);
                 }
