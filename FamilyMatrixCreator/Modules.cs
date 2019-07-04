@@ -270,87 +270,87 @@ namespace FamilyMatrixCreator
         {
             bool personAndRelativeAreRelatives = false;
 
-            List<int> siblinstorsRelationships = new List<int> { 4, 7, 12, 18, 25, 33, 42, 52, 63 };
+            //List<int> siblinstorsRelationships = new List<int> { 4, 7, 12, 18, 25, 33, 42, 52, 63 };
 
-            if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                generatedOutputMatrix[0][relatives[relative]] != generatedOutputMatrix[0][persons[person]])
-            {
-                personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
-                                                 where
-                                                 (persons[i] < persons[person] &&
-                                                 (!siblinstorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                 generatedOutputMatrix[0][persons[i]] != generatedOutputMatrix[0][persons[person]]) &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                 (persons[i] > persons[person] &&
-                                                 (!siblinstorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                 generatedOutputMatrix[0][persons[i]] != generatedOutputMatrix[0][persons[person]]) &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                 select i).Any();
-            }
-            else if ((!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                 !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
-                (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                 !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
-            {
-                personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
-                                                 where
-                                                 (persons[i] < persons[person] &&
-                                                 (!siblinstorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                 (persons[i] > persons[person] &&
-                                                 (!siblinstorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                 select i).Any();
-            }
-            else if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                    (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                    !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
-            {
-                personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
-                                                 where
-                                                 (persons[i] < persons[person] &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                 (persons[i] > persons[person] &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                 select i).Any();
-            }
-            else if ((!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
-                     ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-                personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
-                                                 where
-                                                 (persons[i] < persons[person] &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                 (persons[i] > persons[person] &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                 select i).Any();
-            }
+            //if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //    ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //    generatedOutputMatrix[0][relatives[relative]] != generatedOutputMatrix[0][persons[person]])
+            //{
+            //    personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
+            //                                     where
+            //                                     (persons[i] < persons[person] &&
+            //                                     (!siblinstorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                     generatedOutputMatrix[0][persons[i]] != generatedOutputMatrix[0][persons[person]]) &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                     (persons[i] > persons[person] &&
+            //                                     (!siblinstorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                     generatedOutputMatrix[0][persons[i]] != generatedOutputMatrix[0][persons[person]]) &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                     select i).Any();
+            //}
+            //else if ((!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //     !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
+            //    (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //     !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
+            //{
+            //    personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
+            //                                     where
+            //                                     (persons[i] < persons[person] &&
+            //                                     (!siblinstorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                     (persons[i] > persons[person] &&
+            //                                     (!siblinstorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                     select i).Any();
+            //}
+            //else if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //        (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //        !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
+            //{
+            //    personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
+            //                                     where
+            //                                     (persons[i] < persons[person] &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                     (persons[i] > persons[person] &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                     select i).Any();
+            //}
+            //else if ((!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //         !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
+            //         ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            //{
+            //    personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
+            //                                     where
+            //                                     (persons[i] < persons[person] &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                     (persons[i] > persons[person] &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                     select i).Any();
+            //}
 
             return personAndRelativeAreRelatives;
         }
@@ -365,98 +365,100 @@ namespace FamilyMatrixCreator
         {
             bool personAndRelativeAreNotRelatives = false;
 
-            if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
-                                                    where
-                                                    (persons[i] < persons[person] &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                    (persons[i] > persons[person] &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                    select i).Any();
-            }
-            else if ((!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                      !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
-                     (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                      !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
-            {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
-                                                    where
-                                                    (persons[i] < persons[person] &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                    (persons[i] > persons[person] &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                    select i).Any();
-            }
-            else if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                    (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                     !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
-            {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
-                                                    where
-                                                    (persons[i] < persons[person] &&
-                                                    (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
-                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]))) &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                    (persons[i] > persons[person] &&
-                                                    (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
-                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]))) &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                    select i).Any();
-            }
-            else if ((!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                      !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
-                     ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
-                                                    where
-                                                    (persons[i] < persons[person] &&
-                                                    (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
-                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]))) &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                    (persons[i] > persons[person] &&
-                                                    (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
-                                                    (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                                                    generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]))) &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                    select i).Any();
-            }
+            //List<int> siblinstorsRelationships = new List<int> { 4, 7, 12, 18, 25, 33, 42, 52, 63 };
+
+            //if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //    ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            //{
+            //    personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
+            //                                        where
+            //                                        (persons[i] < persons[person] &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                        (persons[i] > persons[person] &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                        select i).Any();
+            //}
+            //else if ((!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //          !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
+            //         (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //          !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
+            //{
+            //    personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
+            //                                        where
+            //                                        (persons[i] < persons[person] &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                        (persons[i] > persons[person] &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                        select i).Any();
+            //}
+            //else if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //        (!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //         !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])))
+            //{
+            //    personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
+            //                                        where
+            //                                        (persons[i] < persons[person] &&
+            //                                        (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        ((ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //                                        generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
+            //                                        (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //                                        generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]])))) &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                        (persons[i] > persons[person] &&
+            //                                        (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        ((ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //                                        generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
+            //                                        (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //                                        generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]])))) &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                        select i).Any();
+            //}
+            //else if ((!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //          !descendantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])) &&
+            //         ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            //{
+            //    personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
+            //                                        where
+            //                                        (persons[i] < persons[person] &&
+            //                                        (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        ((ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //                                        generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
+            //                                        (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //                                        generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]])))) &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                        (persons[i] > persons[person] &&
+            //                                        (!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        ((ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //                                        generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) ||
+            //                                        (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //                                        generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]])))) &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                        select i).Any();
+            //}
 
             if ((!descendantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]])) &&
                 (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]])))
