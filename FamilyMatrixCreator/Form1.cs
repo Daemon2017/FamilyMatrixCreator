@@ -15,7 +15,7 @@ namespace FamilyMatrixCreator
         private static int[,][] _relationshipsMatrix;
         private static Dictionary<int, float> _centimorgansDictionary;
         private static int[][] _ancestorsMaxCountMatrix;
-        private static int[] _descendantsMatrix;
+        private static int[] _siblindantsMatrix;
         private static int _numberOfProband;
         private static Random random = new Random();
 
@@ -28,7 +28,7 @@ namespace FamilyMatrixCreator
             _numberOfProband = 0;
             float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1dFloat("centimorgans.csv");
             _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2dInt("ancestorsMatrix.csv");
-            _descendantsMatrix = FileSaverLoader.LoadFromFile1dInt("descendantsMatrix.csv");
+            _siblindantsMatrix = FileSaverLoader.LoadFromFile1dInt("siblindantsMatrix.csv");
             Console.WriteLine("Необходимые файлы успешно подготовлены!");
 
             Console.WriteLine("Введите число пар матриц, которое необходимо построить (0;+inf):");
@@ -152,7 +152,7 @@ namespace FamilyMatrixCreator
                     List<int> allPossibleRelationships = Integrations.DetectAllPossibleRelationships(
                         _relationshipsMatrix, existingRelationshipDegrees,
                         _numberOfProband,
-                        _ancestorsMaxCountMatrix, _descendantsMatrix,
+                        _ancestorsMaxCountMatrix, _siblindantsMatrix,
                         generatedOutputMatrix, ancestorsCurrentCountMatrix,
                         persons, person,
                         relatives, relative);
