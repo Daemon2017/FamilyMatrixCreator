@@ -277,6 +277,7 @@ namespace FamilyMatrixCreator
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
                                                  where
                                                  (persons[i] < persons[person] &&
+                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  //!(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                  //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -284,6 +285,7 @@ namespace FamilyMatrixCreator
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                  (persons[i] > persons[person] &&
+                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  //!(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                  //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -300,13 +302,13 @@ namespace FamilyMatrixCreator
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
                                                  where
                                                  (persons[i] < persons[person] &&
-                                                 //!(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                  (persons[i] > persons[person] &&
-                                                 //!(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -320,11 +322,13 @@ namespace FamilyMatrixCreator
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
                                                  where
                                                  (persons[i] < persons[person] &&
+                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                  (persons[i] > persons[person] &&
+                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -338,11 +342,13 @@ namespace FamilyMatrixCreator
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
                                                  where
                                                  (persons[i] < persons[person] &&
+                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                  (persons[i] > persons[person] &&
+                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -369,11 +375,13 @@ namespace FamilyMatrixCreator
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
+                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                     (persons[i] > persons[person] &&
+                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -388,11 +396,13 @@ namespace FamilyMatrixCreator
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
+                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                     (persons[i] > persons[person] &&
+                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -406,6 +416,7 @@ namespace FamilyMatrixCreator
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
+                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     //!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                     //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -413,6 +424,7 @@ namespace FamilyMatrixCreator
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                     (persons[i] > persons[person] &&
+                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     //!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                     //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -428,6 +440,7 @@ namespace FamilyMatrixCreator
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
+                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     //!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                     //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -435,6 +448,7 @@ namespace FamilyMatrixCreator
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                     (persons[i] > persons[person] &&
+                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     //!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                     //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
