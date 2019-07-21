@@ -46,6 +46,17 @@ namespace FamilyMatrixCreator
             Console.WriteLine("Введите % случаев, когда необходимо предпочитать отсутствие родства (0;1):");
             double noRelationPercent = Convert.ToDouble(Console.ReadLine());
 
+            int[] _ancestorsMatrix = Enumerable
+                .Range(0, _ancestorsMaxCountMatrix.GetLength(0))
+                .Select(x => _ancestorsMaxCountMatrix[x][0])
+                .ToArray();
+
+            Dictionary<int, int> maxCountDictionary = new Dictionary<int, int>();
+            for (int i = 0; i < _ancestorsMaxCountMatrix.GetLength(0); i++)
+            {
+                maxCountDictionary.Add(_ancestorsMaxCountMatrix[i][0], _ancestorsMaxCountMatrix[i][1]);
+            }
+
             List<int> existingRelationshipDegrees =
                 Modules.GetAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
 
@@ -56,6 +67,32 @@ namespace FamilyMatrixCreator
             }
 
             existingRelationshipDegrees.Insert(0, 0);
+
+            List<Relationship> relationships = new List<Relationship>();
+            foreach (int degree in existingRelationshipDegrees)
+            {
+                int relationshipNumber = degree;
+                double commonCm = _centimorgansDictionary[degree];
+                bool isAncestorOfProband = _ancestorsMatrix.Contains(degree);
+                bool isSiblindantOfProband = _siblindantsMatrix.Contains(degree);
+                int relationshipMaxCount;
+                if (maxCountDictionary.ContainsKey(degree))
+                {
+                    relationshipMaxCount = maxCountDictionary[degree];
+                }
+                else
+                {
+                    relationshipMaxCount = int.MaxValue;
+                }
+
+                Relationship rel = new Relationship(
+                    relationshipNumber,
+                    commonCm,
+                    isAncestorOfProband,
+                    isSiblindantOfProband,
+                    relationshipMaxCount);
+                relationships.Add(rel);
+            }
 
             int quantityOfMatrixes = numberOfMatrices;
 
