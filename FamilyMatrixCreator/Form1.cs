@@ -13,6 +13,7 @@ namespace FamilyMatrixCreator
     public class Form1
     {
         private static int[,][] _relationshipsMatrix;
+        private static Dictionary<int, Relationship> _relationshipDictionary;
         private static Dictionary<int, float> _centimorgansDictionary;
         private static int[][] _ancestorsMaxCountMatrix;
         private static int[] _siblindantsMatrix;
@@ -92,6 +93,12 @@ namespace FamilyMatrixCreator
                     isSiblindantOfProband,
                     relationshipMaxCount);
                 relationships.Add(rel);
+            }
+
+            _relationshipDictionary = new Dictionary<int, Relationship>();
+            foreach (Relationship relationship in relationships)
+            {
+                _relationshipDictionary.Add(relationship.RelationshipNumber, relationship);
             }
 
             int quantityOfMatrixes = numberOfMatrices;

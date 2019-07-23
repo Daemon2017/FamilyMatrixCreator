@@ -81,7 +81,7 @@ namespace FamilyMatrixCreator
             int[][] ancestorsCurrentCountMatrix)
         {
             List<int> currentPossibleRelationships = new List<int>();
-
+            
             /*
              * Составление списка предковых степеней родства.
              */
