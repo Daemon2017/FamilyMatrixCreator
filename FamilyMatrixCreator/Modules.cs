@@ -14,17 +14,17 @@ namespace FamilyMatrixCreator
          * Преобразование видов родства в сантиморганы.
          */
         public static float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative,
-            int relationship, Dictionary<int, float> centimorgansDictionary)
+            int relationship)
         {
-            if (centimorgansDictionary[relationship] > 3950)
+            if (Form1.RelationshipDictionary[relationship].CommonCm > 3950)
             {
-                return generatedInputMatrix[person][relative] = centimorgansDictionary[relationship];
+                return generatedInputMatrix[person][relative] = Form1.RelationshipDictionary[relationship].CommonCm;
             }
 
             if (0 != relationship)
             {
-                double mean = centimorgansDictionary[relationship];
-                double std = mean * (-0.2819 * Math.Log(mean) + 2.335) / 3;
+                float mean = Form1.RelationshipDictionary[relationship].CommonCm;
+                double std = mean * ((-0.2819 * Math.Log(mean)) + 2.335) / 3;
                 Normal normalDist = new Normal(mean, std);
 
                 float normalyDistributedValue = (float)normalDist.Sample();

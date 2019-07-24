@@ -2,17 +2,17 @@
 
 namespace FamilyMatrixCreator
 {
-    class Relationship
+    public class Relationship
     {
         public int RelationshipNumber { get; set; }
         public int CoordY { get; set; }
-        public double CommonCm { get; set; }
+        public float CommonCm { get; set; }
         public bool IsAncestorOfProband { get; set; }
         public bool IsSiblindantOfProband { get; set; }
         public int RelationshipMaxCount { get; set; }
         public Dictionary<int, List<string>> PossibleRelationships { get; set; }
 
-        public Relationship(int relationshipNumber, double commonCm, bool isAncestorOfProband, bool isSiblindantOfProband, int relationshipMaxCount)
+        public Relationship(int relationshipNumber, float commonCm, bool isAncestorOfProband, bool isSiblindantOfProband, int relationshipMaxCount)
         {
             RelationshipNumber = relationshipNumber;
             CommonCm = commonCm;
