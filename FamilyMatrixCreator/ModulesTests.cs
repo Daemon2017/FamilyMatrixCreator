@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FamilyMatrixCreator
 {
@@ -126,12 +127,17 @@ namespace FamilyMatrixCreator
         {
             int[][] ancestorsMaxCountMatrix =
                 FileSaverLoader.LoadFromFile2dInt(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
+            int[] ancestorsMatrix = Enumerable
+                .Range(0, ancestorsMaxCountMatrix.GetLength(0))
+                .Select(x => ancestorsMaxCountMatrix[x][0])
+                .ToArray();
+            List<int> ancestorsList = ancestorsMatrix.ToList();
 
             Assert.That(
                 Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix,
                     persons, person,
                     relatives, relative,
-                    ancestorsMaxCountMatrix),
+                    ancestorsList),
                 Is.EqualTo(result));
         }
 

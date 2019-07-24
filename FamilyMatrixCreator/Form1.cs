@@ -12,24 +12,18 @@ namespace FamilyMatrixCreator
 {
     public class Form1
     {
-        private static int[,][] _relationshipsMatrix;
         public static Dictionary<int, Relationship> RelationshipDictionary;
-        private static int[][] _ancestorsMaxCountMatrix;
-        private static int[] _siblindantsMatrix;
+        public static Dictionary<int, int> ancestorsMaxCountDictionary;
+        private static List<int> existingRelationshipDegrees;
+        private static int[,][] _relationshipsMatrix;
+        private static List<int> _siblindantsList;
+        private static List<int> _ancestorList;
         private static int _numberOfProband;
         private static Random random = new Random();
 
         public static void Main(string[] args)
         {
-            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
-
-            Console.WriteLine("Подготовка необходимых файлов...");
-            _relationshipsMatrix = FileSaverLoader.LoadFromFile2dJagged("relationships.csv");
-            _numberOfProband = 0;
-            float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1dFloat("centimorgans.csv");
-            _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2dInt("ancestorsMatrix.csv");
-            _siblindantsMatrix = FileSaverLoader.LoadFromFile1dInt("siblindantsMatrix.csv");
-            Console.WriteLine("Необходимые файлы успешно подготовлены!");
+            PrepareData();
 
             Console.WriteLine("Введите число пар матриц, которое необходимо построить (0;+inf):");
             int numberOfMatrices = Convert.ToInt32(Console.ReadLine());
@@ -45,60 +39,6 @@ namespace FamilyMatrixCreator
 
             Console.WriteLine("Введите % случаев, когда необходимо предпочитать отсутствие родства (0;1):");
             double noRelationPercent = Convert.ToDouble(Console.ReadLine());
-
-            int[] _ancestorsMatrix = Enumerable
-                .Range(0, _ancestorsMaxCountMatrix.GetLength(0))
-                .Select(x => _ancestorsMaxCountMatrix[x][0])
-                .ToArray();
-
-            Dictionary<int, int> maxCountDictionary = new Dictionary<int, int>();
-            for (int i = 0; i < _ancestorsMaxCountMatrix.GetLength(0); i++)
-            {
-                maxCountDictionary.Add(_ancestorsMaxCountMatrix[i][0], _ancestorsMaxCountMatrix[i][1]);
-            }
-
-            List<int> existingRelationshipDegrees =
-                Modules.GetAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
-
-            Dictionary<int, float> _centimorgansDictionary = new Dictionary<int, float> { { 0, 0 } };
-            for (int i = 0; i < centimorgansMatrix.Length; i++)
-            {
-                _centimorgansDictionary.Add(existingRelationshipDegrees[i], centimorgansMatrix[i]);
-            }
-
-            existingRelationshipDegrees.Insert(0, 0);
-
-            List<Relationship> relationships = new List<Relationship>();
-            foreach (int degree in existingRelationshipDegrees)
-            {
-                int relationshipNumber = degree;
-                float commonCm = _centimorgansDictionary[degree];
-                bool isAncestorOfProband = _ancestorsMatrix.Contains(degree);
-                bool isSiblindantOfProband = _siblindantsMatrix.Contains(degree);
-                int relationshipMaxCount;
-                if (maxCountDictionary.ContainsKey(degree))
-                {
-                    relationshipMaxCount = maxCountDictionary[degree];
-                }
-                else
-                {
-                    relationshipMaxCount = int.MaxValue;
-                }
-
-                Relationship rel = new Relationship(
-                    relationshipNumber,
-                    commonCm,
-                    isAncestorOfProband,
-                    isSiblindantOfProband,
-                    relationshipMaxCount);
-                relationships.Add(rel);
-            }
-
-            RelationshipDictionary = new Dictionary<int, Relationship>();
-            foreach (Relationship relationship in relationships)
-            {
-                RelationshipDictionary.Add(relationship.RelationshipNumber, relationship);
-            }
 
             int quantityOfMatrixes = numberOfMatrices;
 
@@ -120,6 +60,74 @@ namespace FamilyMatrixCreator
             }
 
             Console.ReadLine();
+        }
+
+        public static void PrepareData()
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+
+            Console.WriteLine("Подготовка необходимых файлов...");
+            _relationshipsMatrix = FileSaverLoader.LoadFromFile2dJagged("relationships.csv");
+            _numberOfProband = 0;
+            float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1dFloat("centimorgans.csv");
+            int[][] _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2dInt("ancestorsMatrix.csv");
+            int[] siblindantsMatrix = FileSaverLoader.LoadFromFile1dInt("siblindantsMatrix.csv");
+            _siblindantsList = siblindantsMatrix.ToList();
+            Console.WriteLine("Необходимые файлы успешно подготовлены!");
+
+            _ancestorList = Enumerable
+                .Range(0, _ancestorsMaxCountMatrix.GetLength(0))
+                .Select(x => _ancestorsMaxCountMatrix[x][0])
+                .ToList();
+
+            ancestorsMaxCountDictionary = new Dictionary<int, int>();
+            for (int i = 0; i < _ancestorsMaxCountMatrix.GetLength(0); i++)
+            {
+                ancestorsMaxCountDictionary.Add(_ancestorsMaxCountMatrix[i][0], _ancestorsMaxCountMatrix[i][1]);
+            }
+
+            existingRelationshipDegrees =
+                Modules.GetAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
+
+            Dictionary<int, float> _centimorgansDictionary = new Dictionary<int, float> { { 0, 0 } };
+            for (int i = 0; i < centimorgansMatrix.Length; i++)
+            {
+                _centimorgansDictionary.Add(existingRelationshipDegrees[i], centimorgansMatrix[i]);
+            }
+
+            existingRelationshipDegrees.Insert(0, 0);
+
+            List<Relationship> relationships = new List<Relationship>();
+            foreach (int degree in existingRelationshipDegrees)
+            {
+                int relationshipNumber = degree;
+                float commonCm = _centimorgansDictionary[degree];
+                bool isAncestorOfProband = _ancestorList.Contains(degree);
+                bool isSiblindantOfProband = _siblindantsList.Contains(degree);
+                int relationshipMaxCount;
+                if (ancestorsMaxCountDictionary.ContainsKey(degree))
+                {
+                    relationshipMaxCount = ancestorsMaxCountDictionary[degree];
+                }
+                else
+                {
+                    relationshipMaxCount = int.MaxValue;
+                }
+
+                Relationship rel = new Relationship(
+                    relationshipNumber,
+                    commonCm,
+                    isAncestorOfProband,
+                    isSiblindantOfProband,
+                    relationshipMaxCount);
+                relationships.Add(rel);
+            }
+
+            RelationshipDictionary = new Dictionary<int, Relationship>();
+            foreach (Relationship relationship in relationships)
+            {
+                RelationshipDictionary.Add(relationship.RelationshipNumber, relationship);
+            }
         }
 
         private static void CreateMatrices(List<int> existingRelationshipDegrees, int quantityOfMatrixes, int generatedMatrixSize,
@@ -183,7 +191,7 @@ namespace FamilyMatrixCreator
             for (int person = 0; person < persons.Count; person++)
             {
                 generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
-                ancestorsCurrentCountMatrix[persons[person]] = new int[_ancestorsMaxCountMatrix.Length];
+                ancestorsCurrentCountMatrix[persons[person]] = new int[_ancestorList.Count];
 
                 List<int> relatives = (from x in Enumerable.Range(persons[person] + 1,
                                        generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
@@ -195,7 +203,7 @@ namespace FamilyMatrixCreator
                     List<int> allPossibleRelationships = Integrations.DetectAllPossibleRelationships(
                         _relationshipsMatrix, existingRelationshipDegrees,
                         _numberOfProband,
-                        _ancestorsMaxCountMatrix, _siblindantsMatrix,
+                        _ancestorList, _siblindantsList,
                         generatedOutputMatrix, ancestorsCurrentCountMatrix,
                         persons, person,
                         relatives, relative);
@@ -225,7 +233,7 @@ namespace FamilyMatrixCreator
                         }
 
                         ancestorsCurrentCountMatrix = Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
-                            ancestorsCurrentCountMatrix, persons, person, relatives, relative, _ancestorsMaxCountMatrix);
+                            ancestorsCurrentCountMatrix, persons, person, relatives, relative, _ancestorList);
                     }
                     catch (ArgumentOutOfRangeException)
                     {

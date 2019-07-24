@@ -35,7 +35,7 @@ namespace FamilyMatrixCreator
         public static List<int> DetectAllPossibleRelationships(
             int[,][] relationshipsMatrix, List<int> existingRelationshipDegrees,
             int numberOfProband,
-            int[][] ancestorsMaxCountMatrix, int[] siblindantsMatrix,
+            List<int> ancestorsList, List<int> siblindantsList,
             float[][] generatedOutputMatrix, int[][] ancestorsCurrentCountMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative)
@@ -53,7 +53,7 @@ namespace FamilyMatrixCreator
                     persons, person,
                     relatives, relative,
                     relationshipsMatrix, numberOfProband,
-                    ancestorsMaxCountMatrix, siblindantsMatrix,
+                    ancestorsList, siblindantsList,
                     ancestorsCurrentCountMatrix);
             }
 
@@ -63,8 +63,9 @@ namespace FamilyMatrixCreator
              */
             allPossibleRelationships =
                 (from relationship in allPossibleRelationships
-                 where !ancestorsMaxCountMatrix.Where((raw, column) =>
-                     relationship == raw[0] && ancestorsCurrentCountMatrix[persons[person]][column] == raw[1]).Any()
+                 where !ancestorsList.Where((ancestor) =>
+                     relationship == ancestor && 
+                     ancestorsCurrentCountMatrix[persons[person]][ancestorsList.IndexOf(ancestor)] == Form1.ancestorsMaxCountDictionary[ancestor]).Any()
                  select relationship).ToList();
 
             return allPossibleRelationships;
@@ -77,24 +78,10 @@ namespace FamilyMatrixCreator
             List<int> persons, int person,
             List<int> relatives, int relative,
             int[,][] relationshipsMatrix, int numberOfProband,
-            int[][] ancestorsMaxCountMatrix, int[] siblindantsMatrix,
+            List<int> ancestorsList, List<int> siblindantsList,
             int[][] ancestorsCurrentCountMatrix)
         {
             List<int> currentPossibleRelationships = new List<int>();
-            
-            /*
-             * Составление списка предковых степеней родства.
-             */
-            List<int> ancestorsRelationships =
-                (from j in Enumerable.Range(0, ancestorsMaxCountMatrix.GetLength(0))
-                 select ancestorsMaxCountMatrix[j][0]).ToList();
-
-            /*
-             * Составление списка потомковых степеней родства.
-             */
-            List<int> siblindantsRelationships =
-                (from j in Enumerable.Range(0, siblindantsMatrix.GetLength(0))
-                 select siblindantsMatrix[j]).ToList();
 
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
@@ -132,11 +119,11 @@ namespace FamilyMatrixCreator
                             bool numberOfAncestorsOfRelativeIsNotZero = Modules.IsNumberOfAncestorsNotZero(generatedOutputMatrix,
                             persons, person,
                             relatives, relative,
-                            ancestorsRelationships);
+                            ancestorsList);
 
                             if (numberOfAncestorsOfRelativeIsNotZero)
                             {
-                                allPossibleRelationships.AddRange(ancestorsRelationships);
+                                allPossibleRelationships.AddRange(ancestorsList);
                             }
                         }
                         else
@@ -151,14 +138,12 @@ namespace FamilyMatrixCreator
                         bool personsCountOfRelativesOfThisTypeAlreadyMax =
                             Modules.IsCountOfRelativesOfThisTypeAlreadyMax(generatedOutputMatrix,
                                                                           persons, person,
-                                                                          ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
-                                                                          ancestorsRelationships);
+                                                                          ancestorsList, ancestorsCurrentCountMatrix);
 
                         bool relativesCountOfRelativesOfThisTypeAlreadyMax =
                             Modules.IsCountOfRelativesOfThisTypeAlreadyMax(generatedOutputMatrix,
                                                                           relatives, relative,
-                                                                          ancestorsMaxCountMatrix, ancestorsCurrentCountMatrix,
-                                                                          ancestorsRelationships);
+                                                                          ancestorsList, ancestorsCurrentCountMatrix);
 
                         if ((personsCountOfRelativesOfThisTypeAlreadyMax || relativesCountOfRelativesOfThisTypeAlreadyMax) &&
                             ((int)generatedOutputMatrix[0][relatives[relative]] != (int)generatedOutputMatrix[0][persons[person]]))
@@ -172,12 +157,12 @@ namespace FamilyMatrixCreator
                 bool personAndRelativeAreRelatives = Modules.IsPersonAndRelativeAreRelatives(generatedOutputMatrix,
                     persons, person,
                     relatives, relative,
-                    ancestorsRelationships, siblindantsRelationships);
+                    ancestorsList, siblindantsList);
 
                 bool personAndRelativeAreNotRelatives = Modules.IsPersonAndRelativeAreNotRelatives(generatedOutputMatrix,
                     persons, person,
                     relatives, relative,
-                    ancestorsRelationships, siblindantsRelationships);
+                    ancestorsList, siblindantsList);
 
                 if (personAndRelativeAreRelatives && !personAndRelativeAreNotRelatives)
                 {

@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FamilyMatrixCreator
 {
@@ -2608,13 +2609,21 @@ namespace FamilyMatrixCreator
         public void FindAllPossibleRelationships_Test(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
+            Form1.PrepareData();
+
             int[,][] relationshipsMatrix =
                 FileSaverLoader.LoadFromFile2dJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = 0;
             int[][] ancestorsMaxCountMatrix =
                 FileSaverLoader.LoadFromFile2dInt(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
+            int[] ancestorsMatrix = Enumerable
+                .Range(0, ancestorsMaxCountMatrix.GetLength(0))
+                .Select(x => ancestorsMaxCountMatrix[x][0])
+                .ToArray();
+            List<int> ancestorsList = ancestorsMatrix.ToList();
             int[] siblindantsMatrix =
                 FileSaverLoader.LoadFromFile1dInt(TestContext.CurrentContext.TestDirectory + "\\siblindantsMatrix.csv");
+            List<int> siblindantsList = siblindantsMatrix.ToList();
 
             string firstRow = "";
 
@@ -2629,7 +2638,7 @@ namespace FamilyMatrixCreator
                     persons, person,
                     relatives, relative,
                     relationshipsMatrix, numberOfProband,
-                    ancestorsMaxCountMatrix, siblindantsMatrix,
+                    ancestorsList, siblindantsList,
                     currentCountMatrix),
                 Is.EquivalentTo(result),
                 "First row: " + firstRow);
@@ -2714,13 +2723,21 @@ namespace FamilyMatrixCreator
         public void DetectAllPossibleRelationships_Test(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
+            Form1.PrepareData();
+
             int[,][] relationshipsMatrix =
                 FileSaverLoader.LoadFromFile2dJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = 0;
             int[][] ancestorsMaxCountMatrix =
                 FileSaverLoader.LoadFromFile2dInt(TestContext.CurrentContext.TestDirectory + "\\ancestorsMatrix.csv");
+            int[] ancestorsMatrix = Enumerable
+                .Range(0, ancestorsMaxCountMatrix.GetLength(0))
+                .Select(x => ancestorsMaxCountMatrix[x][0])
+                .ToArray();
+            List<int> ancestorsList = ancestorsMatrix.ToList();
             int[] siblindantsMatrix =
                 FileSaverLoader.LoadFromFile1dInt(TestContext.CurrentContext.TestDirectory + "\\siblindantsMatrix.csv");
+            List<int> siblindantsList = siblindantsMatrix.ToList();
 
             List<int> existingRelationshipDegrees =
                 Modules.GetAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband);
@@ -2729,7 +2746,7 @@ namespace FamilyMatrixCreator
                 Integrations.DetectAllPossibleRelationships(
                     relationshipsMatrix, existingRelationshipDegrees,
                     numberOfProband,
-                    ancestorsMaxCountMatrix, siblindantsMatrix,
+                    ancestorsList, siblindantsList,
                     generatedOutputMatrix, currentCountMatrix,
                     persons, person,
                     relatives, relative),

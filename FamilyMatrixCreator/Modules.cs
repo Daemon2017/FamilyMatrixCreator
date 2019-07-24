@@ -64,14 +64,13 @@ namespace FamilyMatrixCreator
 
         /*
          * Увеличение числа родственников данного вида у указанного лица.
-         * TODO: возможно, что массив ancestorsMaxCountMatrix стоит преобразовать в словарь
          */
         public static int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] ancestorsCurrentCountMatrix,
-            List<int> persons, int person, List<int> relatives, int relative, int[][] ancestorsMaxCountMatrix)
+            List<int> persons, int person, List<int> relatives, int relative, List<int> ancestorsMatrix)
         {
-            for (int i = 0; i < ancestorsMaxCountMatrix.Length; i++)
+            for (int i = 0; i < ancestorsMatrix.Count; i++)
             {
-                if (ancestorsMaxCountMatrix[i][0] == generatedOutputMatrix[persons[person]][relatives[relative]])
+                if (ancestorsMatrix[i] == generatedOutputMatrix[persons[person]][relatives[relative]])
                 {
                     ancestorsCurrentCountMatrix[persons[person]][i]++;
 
@@ -203,17 +202,16 @@ namespace FamilyMatrixCreator
          */
         public static bool IsCountOfRelativesOfThisTypeAlreadyMax(float[][] generatedOutputMatrix,
             List<int> relatives, int relative,
-            int[][] ancestorsMaxCountMatrix, int[][] ancestorsCurrentCountMatrix,
-            List<int> ancestorsRelationships)
+            List<int> ancestorsList, int[][] ancestorsCurrentCountMatrix)
         {
             bool countOfRelativesOfThisTypeAlreadyMax = false;
 
-            if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
+            if (ancestorsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
             {
                 countOfRelativesOfThisTypeAlreadyMax =
-                    (from i in Enumerable.Range(0, ancestorsMaxCountMatrix.GetLength(0))
-                     where ancestorsMaxCountMatrix[i][0] == (int)generatedOutputMatrix[0][relatives[relative]]
-                     where ancestorsMaxCountMatrix[i][1] == ancestorsCurrentCountMatrix[0][i]
+                    (from i in Enumerable.Range(0, ancestorsList.Count)
+                     where ancestorsList[i] == (int)generatedOutputMatrix[0][relatives[relative]]
+                     where Form1.RelationshipDictionary[ancestorsList[i]].RelationshipMaxCount == ancestorsCurrentCountMatrix[0][i]
                      select i).Any();
             }
 
