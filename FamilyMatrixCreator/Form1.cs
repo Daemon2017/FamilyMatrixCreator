@@ -16,8 +16,8 @@ namespace FamilyMatrixCreator
         public static Dictionary<int, int> ancestorsMaxCountDictionary;
         private static List<int> existingRelationshipDegrees;
         private static int[,][] _relationshipsMatrix;
-        private static List<int> _siblindantsList;
-        private static List<int> _ancestorList;
+        public static List<int> SiblindantsList;
+        public static List<int> AncestorList;
         private static int _numberOfProband;
         private static Random random = new Random();
 
@@ -72,10 +72,10 @@ namespace FamilyMatrixCreator
             float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1dFloat("centimorgans.csv");
             int[][] _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2dInt("ancestorsMatrix.csv");
             int[] siblindantsMatrix = FileSaverLoader.LoadFromFile1dInt("siblindantsMatrix.csv");
-            _siblindantsList = siblindantsMatrix.ToList();
+            SiblindantsList = siblindantsMatrix.ToList();
             Console.WriteLine("Необходимые файлы успешно подготовлены!");
 
-            _ancestorList = Enumerable
+            AncestorList = Enumerable
                 .Range(0, _ancestorsMaxCountMatrix.GetLength(0))
                 .Select(x => _ancestorsMaxCountMatrix[x][0])
                 .ToList();
@@ -102,8 +102,8 @@ namespace FamilyMatrixCreator
             {
                 int relationshipNumber = degree;
                 float commonCm = _centimorgansDictionary[degree];
-                bool isAncestorOfProband = _ancestorList.Contains(degree);
-                bool isSiblindantOfProband = _siblindantsList.Contains(degree);
+                bool isAncestorOfProband = AncestorList.Contains(degree);
+                bool isSiblindantOfProband = SiblindantsList.Contains(degree);
                 int relationshipMaxCount;
                 if (ancestorsMaxCountDictionary.ContainsKey(degree))
                 {
@@ -191,7 +191,7 @@ namespace FamilyMatrixCreator
             for (int person = 0; person < persons.Count; person++)
             {
                 generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
-                ancestorsCurrentCountMatrix[persons[person]] = new int[_ancestorList.Count];
+                ancestorsCurrentCountMatrix[persons[person]] = new int[AncestorList.Count];
 
                 List<int> relatives = (from x in Enumerable.Range(persons[person] + 1,
                                        generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
@@ -203,7 +203,6 @@ namespace FamilyMatrixCreator
                     List<int> allPossibleRelationships = Integrations.DetectAllPossibleRelationships(
                         _relationshipsMatrix, existingRelationshipDegrees,
                         _numberOfProband,
-                        _ancestorList, _siblindantsList,
                         generatedOutputMatrix, ancestorsCurrentCountMatrix,
                         persons, person,
                         relatives, relative);
@@ -233,7 +232,7 @@ namespace FamilyMatrixCreator
                         }
 
                         ancestorsCurrentCountMatrix = Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix,
-                            ancestorsCurrentCountMatrix, persons, person, relatives, relative, _ancestorList);
+                            ancestorsCurrentCountMatrix, persons, person, relatives, relative, AncestorList);
                     }
                     catch (ArgumentOutOfRangeException)
                     {

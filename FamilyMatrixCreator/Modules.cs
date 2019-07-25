@@ -202,16 +202,16 @@ namespace FamilyMatrixCreator
          */
         public static bool IsCountOfRelativesOfThisTypeAlreadyMax(float[][] generatedOutputMatrix,
             List<int> relatives, int relative,
-            List<int> ancestorsList, int[][] ancestorsCurrentCountMatrix)
+            int[][] ancestorsCurrentCountMatrix)
         {
             bool countOfRelativesOfThisTypeAlreadyMax = false;
 
-            if (ancestorsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
+            if (Form1.AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
             {
                 countOfRelativesOfThisTypeAlreadyMax =
-                    (from i in Enumerable.Range(0, ancestorsList.Count)
-                     where ancestorsList[i] == (int)generatedOutputMatrix[0][relatives[relative]]
-                     where Form1.RelationshipDictionary[ancestorsList[i]].RelationshipMaxCount == ancestorsCurrentCountMatrix[0][i]
+                    (from i in Enumerable.Range(0, Form1.AncestorList.Count)
+                     where Form1.AncestorList[i] == (int)generatedOutputMatrix[0][relatives[relative]]
+                     where Form1.RelationshipDictionary[Form1.AncestorList[i]].RelationshipMaxCount == ancestorsCurrentCountMatrix[0][i]
                      select i).Any();
             }
 
@@ -248,13 +248,12 @@ namespace FamilyMatrixCreator
          */
         public static bool IsNumberOfAncestorsNotZero(float[][] generatedOutputMatrix,
             List<int> persons, int person,
-            List<int> relatives, int relative,
-            List<int> ancestorsRelationships)
+            List<int> relatives, int relative)
         {
             bool numberOfAncestorsNotZero = false;
 
             numberOfAncestorsNotZero = (from prevPerson in Enumerable.Range(1, person - 1)
-                                        where ancestorsRelationships.Contains((int)generatedOutputMatrix[persons[prevPerson]][relatives[relative]]) &&
+                                        where Form1.AncestorList.Contains((int)generatedOutputMatrix[persons[prevPerson]][relatives[relative]]) &&
                                               0 != generatedOutputMatrix[persons[prevPerson]][persons[person]]
                                         select prevPerson).Any();
 
@@ -263,19 +262,18 @@ namespace FamilyMatrixCreator
 
         public static bool IsPersonAndRelativeAreRelatives(float[][] generatedOutputMatrix,
             List<int> persons, int person,
-            List<int> relatives, int relative,
-            List<int> ancestorsRelationships, List<int> siblindantsRelationships)
+            List<int> relatives, int relative)
         {
             bool personAndRelativeAreRelatives = false;
 
-            if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            if (Form1.AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                Form1.AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
                 generatedOutputMatrix[0][relatives[relative]] != generatedOutputMatrix[0][persons[person]])
             {
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
                                                  where
                                                  (persons[i] < persons[person] &&
-                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                 !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  //!(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                  //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -283,7 +281,7 @@ namespace FamilyMatrixCreator
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                  (persons[i] > persons[person] &&
-                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                 !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  //!(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                  //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -292,61 +290,61 @@ namespace FamilyMatrixCreator
                                                  0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
                                                  select i).Any();
             }
-            else if (!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !siblindantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                     !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            else if (!Form1.AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                     !Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                     !Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+                     !Form1.AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
                                                  where
                                                  (persons[i] < persons[person] &&
-                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                 !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                  (persons[i] > persons[person] &&
-                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                 !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
                                                  select i).Any();
             }
-            else if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                    !siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                    !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            else if (Form1.AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                    !Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+                    !Form1.AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
                                                  where
                                                  (persons[i] < persons[person] &&
-                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                 !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                  (persons[i] > persons[person] &&
-                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                 !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
                                                  select i).Any();
             }
-            else if (!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !siblindantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            else if (!Form1.AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                     !Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                     Form1.AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
                                                  where
                                                  (persons[i] < persons[person] &&
-                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                 !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                  (persons[i] > persons[person] &&
-                                                 !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                 !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -362,59 +360,58 @@ namespace FamilyMatrixCreator
          */
         public static bool IsPersonAndRelativeAreNotRelatives(float[][] generatedOutputMatrix,
             List<int> persons, int person,
-            List<int> relatives, int relative,
-            List<int> ancestorsRelationships, List<int> siblindantsRelationships)
+            List<int> relatives, int relative)
         {
             bool personAndRelativeAreNotRelatives = false;
 
-            if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            if (Form1.AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                Form1.AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
-                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                    !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                     (persons[i] > persons[person] &&
-                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                    !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
                                                     select i).Any();
             }
-            else if (!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !siblindantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                     !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            else if (!Form1.AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                     !Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                     !Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+                     !Form1.AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
-                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                    !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                     (persons[i] > persons[person] &&
-                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                    !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
                                                     select i).Any();
             }
-            else if (ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                     !ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            else if (Form1.AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                     !Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+                     !Form1.AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
-                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                    !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     //!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                     //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -422,7 +419,7 @@ namespace FamilyMatrixCreator
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                     (persons[i] > persons[person] &&
-                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                    !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     //!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                     //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][relatives[relative]]) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -431,14 +428,14 @@ namespace FamilyMatrixCreator
                                                     0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
                                                     select i).Any();
             }
-            else if (!ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !siblindantsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            else if (!Form1.AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                     !Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+                     Form1.AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
             {
                 personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
                                                     where
                                                     (persons[i] < persons[person] &&
-                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                    !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     //!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                     //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -446,7 +443,7 @@ namespace FamilyMatrixCreator
                                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                     (persons[i] > persons[person] &&
-                                                    !(siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+                                                    !(Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
                                                     //!(ancestorsRelationships.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                     //generatedOutputMatrix[0][persons[i]] == generatedOutputMatrix[0][persons[person]]) &&
                                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
@@ -456,13 +453,13 @@ namespace FamilyMatrixCreator
                                                     select i).Any();
             }
 
-            if (!siblindantsRelationships.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                ancestorsRelationships.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
+            if (!Form1.SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+                Form1.AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
             {
                 for (int i = persons[person] + 1; i < relatives[relative]; i++)
                 {
                     if (((int)generatedOutputMatrix[0][relatives[relative]] == (int)generatedOutputMatrix[0][i]) &&
-                        (!ancestorsRelationships.Contains((int)generatedOutputMatrix[persons[person]][i])))
+                        (!Form1.AncestorList.Contains((int)generatedOutputMatrix[persons[person]][i])))
                     {
                         personAndRelativeAreNotRelatives = true;
                     }

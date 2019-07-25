@@ -35,7 +35,6 @@ namespace FamilyMatrixCreator
         public static List<int> DetectAllPossibleRelationships(
             int[,][] relationshipsMatrix, List<int> existingRelationshipDegrees,
             int numberOfProband,
-            List<int> ancestorsList, List<int> siblindantsList,
             float[][] generatedOutputMatrix, int[][] ancestorsCurrentCountMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative)
@@ -53,7 +52,6 @@ namespace FamilyMatrixCreator
                     persons, person,
                     relatives, relative,
                     relationshipsMatrix, numberOfProband,
-                    ancestorsList, siblindantsList,
                     ancestorsCurrentCountMatrix);
             }
 
@@ -63,9 +61,9 @@ namespace FamilyMatrixCreator
              */
             allPossibleRelationships =
                 (from relationship in allPossibleRelationships
-                 where !ancestorsList.Where((ancestor) =>
-                     relationship == ancestor && 
-                     ancestorsCurrentCountMatrix[persons[person]][ancestorsList.IndexOf(ancestor)] == Form1.ancestorsMaxCountDictionary[ancestor]).Any()
+                 where !Form1.AncestorList.Where((ancestor) =>
+                     relationship == ancestor &&
+                     ancestorsCurrentCountMatrix[persons[person]][Form1.AncestorList.IndexOf(ancestor)] == Form1.ancestorsMaxCountDictionary[ancestor]).Any()
                  select relationship).ToList();
 
             return allPossibleRelationships;
@@ -78,7 +76,6 @@ namespace FamilyMatrixCreator
             List<int> persons, int person,
             List<int> relatives, int relative,
             int[,][] relationshipsMatrix, int numberOfProband,
-            List<int> ancestorsList, List<int> siblindantsList,
             int[][] ancestorsCurrentCountMatrix)
         {
             List<int> currentPossibleRelationships = new List<int>();
@@ -118,12 +115,11 @@ namespace FamilyMatrixCreator
 
                             bool numberOfAncestorsOfRelativeIsNotZero = Modules.IsNumberOfAncestorsNotZero(generatedOutputMatrix,
                             persons, person,
-                            relatives, relative,
-                            ancestorsList);
+                            relatives, relative);
 
                             if (numberOfAncestorsOfRelativeIsNotZero)
                             {
-                                allPossibleRelationships.AddRange(ancestorsList);
+                                allPossibleRelationships.AddRange(Form1.AncestorList);
                             }
                         }
                         else
@@ -138,12 +134,12 @@ namespace FamilyMatrixCreator
                         bool personsCountOfRelativesOfThisTypeAlreadyMax =
                             Modules.IsCountOfRelativesOfThisTypeAlreadyMax(generatedOutputMatrix,
                                                                           persons, person,
-                                                                          ancestorsList, ancestorsCurrentCountMatrix);
+                                                                          ancestorsCurrentCountMatrix);
 
                         bool relativesCountOfRelativesOfThisTypeAlreadyMax =
                             Modules.IsCountOfRelativesOfThisTypeAlreadyMax(generatedOutputMatrix,
                                                                           relatives, relative,
-                                                                          ancestorsList, ancestorsCurrentCountMatrix);
+                                                                          ancestorsCurrentCountMatrix);
 
                         if ((personsCountOfRelativesOfThisTypeAlreadyMax || relativesCountOfRelativesOfThisTypeAlreadyMax) &&
                             ((int)generatedOutputMatrix[0][relatives[relative]] != (int)generatedOutputMatrix[0][persons[person]]))
@@ -156,13 +152,11 @@ namespace FamilyMatrixCreator
 
                 bool personAndRelativeAreRelatives = Modules.IsPersonAndRelativeAreRelatives(generatedOutputMatrix,
                     persons, person,
-                    relatives, relative,
-                    ancestorsList, siblindantsList);
+                    relatives, relative);
 
                 bool personAndRelativeAreNotRelatives = Modules.IsPersonAndRelativeAreNotRelatives(generatedOutputMatrix,
                     persons, person,
-                    relatives, relative,
-                    ancestorsList, siblindantsList);
+                    relatives, relative);
 
                 if (personAndRelativeAreRelatives && !personAndRelativeAreNotRelatives)
                 {
