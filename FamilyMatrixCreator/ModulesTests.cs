@@ -39,7 +39,7 @@ namespace FamilyMatrixCreator
         public void CollectStatistics_Test(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees, int[] result)
         {
             Assert.That(
-                Modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees),
+                Form1.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees),
                 Is.EqualTo(result));
         }
 
@@ -140,7 +140,7 @@ namespace FamilyMatrixCreator
             List<int> ancestorsList = ancestorsMatrix.ToList();
 
             Assert.That(
-                Modules.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix,
+                Form1.IncreaseCurrentRelationshipCount(generatedOutputMatrix, currentCountMatrix,
                     persons, person,
                     relatives, relative,
                     ancestorsList),
@@ -163,9 +163,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(FindAllExistingRelationshipDegrees_DataProvider))]
         public void FindAllExistingRelationshipDegrees_Test(List<int> result)
         {            
-            int numberOfProband = 0;
-
-            Assert.That(Modules.GetAllExistingRelationshipDegrees(numberOfProband),
+            Assert.That(Form1.GetAllExistingRelationshipDegrees(),
                 Is.EquivalentTo(result));
         }
 
@@ -191,9 +189,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(OutputBuildLeftBottomPart_DataProvider))]
         public void OutputBuildLeftBottomPart_Test(float[][] generatedOutputMatrix, float[][] result)
         {
-            int numberOfProband = 0;
-
-            Assert.That(Modules.BuildLeftBottomPartOfOutput(generatedOutputMatrix, numberOfProband),
+            Assert.That(Form1.BuildLeftBottomPartOfOutput(generatedOutputMatrix),
                 Is.EqualTo(result));
         }
 
@@ -209,7 +205,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(InputBuildLeftBottomPart_DataProvider))]
         public void InputBuildLeftBottomPart_Test(float[][] generatedInputMatrix, float[][] result)
         {
-            Assert.That(Modules.BuildLeftBottomPartOfInput(generatedInputMatrix), Is.EqualTo(result));
+            Assert.That(Form1.BuildLeftBottomPartOfInput(generatedInputMatrix), Is.EqualTo(result));
         }
 
         private static readonly object[] FillMainDiagonal_DataProvider =
@@ -234,7 +230,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(FillMainDiagonal_DataProvider))]
         public void FillMainDiagonal_Test(float[][] generatedOutputMatrix, float[][] result)
         {
-            Assert.That(Modules.FillMainDiagonal(generatedOutputMatrix), Is.EqualTo(result));
+            Assert.That(Form1.FillMainDiagonal(generatedOutputMatrix), Is.EqualTo(result));
         }
 
         private static readonly object[] GetNextRnd_DataProvider =
@@ -259,7 +255,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(GetNextRnd_DataProvider))]
         public void GetNextRnd_Test(int min, int max)
         {
-            Assert.That(Modules.GetNextRnd(min, max), Is.GreaterThan(min - 1).And.LessThan(max + 1));
+            Assert.That(Form1.GetNextRnd(min, max), Is.GreaterThan(min - 1).And.LessThan(max + 1));
         }
     }
 }

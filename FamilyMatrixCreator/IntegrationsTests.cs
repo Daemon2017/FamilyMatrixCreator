@@ -51,7 +51,7 @@ namespace FamilyMatrixCreator
             List<int> existingRelationshipDegrees, float[][] generatedOutputMatrix, double result)
         {
             Assert.That(
-                Integrations.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees,
+                Form1.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees,
                     generatedOutputMatrix),
                 Is.EqualTo(result));
         }
@@ -2614,8 +2614,6 @@ namespace FamilyMatrixCreator
         public void FindAllPossibleRelationships_Test(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
-            int numberOfProband = 0;
-
             string firstRow = "";
 
             foreach (float column in generatedOutputMatrix[0])
@@ -2624,11 +2622,10 @@ namespace FamilyMatrixCreator
             }
 
             Assert.That(
-                Integrations.FindAllPossibleRelationships(
+                Form1.FindAllPossibleRelationships(
                     generatedOutputMatrix,
                     persons, person,
                     relatives, relative,
-                    numberOfProband,
                     currentCountMatrix),
                 Is.EquivalentTo(result),
                 "First row: " + firstRow);
@@ -2713,15 +2710,12 @@ namespace FamilyMatrixCreator
         public void DetectAllPossibleRelationships_Test(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
-            int numberOfProband = 0;
-
             List<int> existingRelationshipDegrees =
-                Modules.GetAllExistingRelationshipDegrees(numberOfProband);
+                Form1.GetAllExistingRelationshipDegrees();
 
             Assert.That(
-                Integrations.DetectAllPossibleRelationships(
+                Form1.DetectAllPossibleRelationships(
                     existingRelationshipDegrees,
-                    numberOfProband,
                     generatedOutputMatrix, currentCountMatrix,
                     persons, person,
                     relatives, relative),

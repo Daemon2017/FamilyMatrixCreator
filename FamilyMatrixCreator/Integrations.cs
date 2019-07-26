@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace FamilyMatrixCreator
 {
-    public static class Integrations
+    public static partial class Form1
     {
         /*
          * Подсчет процента значащих значений
@@ -12,7 +12,7 @@ namespace FamilyMatrixCreator
         public static double CalculatePercentOfMeaningfulValues(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             float[][] generatedOutputMatrix)
         {
-            int[] quantityOfEachRelationship = Modules.CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
+            int[] quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
 
             float sumOfMeaningfulValues =
                 quantityOfEachRelationship.Aggregate<int, float>(0, (current, quantity) => current + quantity);
@@ -34,7 +34,6 @@ namespace FamilyMatrixCreator
 
         public static List<int> DetectAllPossibleRelationships(
             List<int> existingRelationshipDegrees,
-            int numberOfProband,
             float[][] generatedOutputMatrix, int[][] ancestorsCurrentCountMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative)
@@ -44,14 +43,13 @@ namespace FamilyMatrixCreator
             if (0 == persons[person])
             {
                 allPossibleRelationships =
-                    Modules.GetAllPossibleRelationshipsOfProband(existingRelationshipDegrees, numberOfProband);
+                    GetAllPossibleRelationshipsOfProband(existingRelationshipDegrees);
             }
             else
             {
                 allPossibleRelationships = FindAllPossibleRelationships(generatedOutputMatrix,
                     persons, person,
                     relatives, relative,
-                    numberOfProband,
                     ancestorsCurrentCountMatrix);
             }
 
@@ -63,7 +61,7 @@ namespace FamilyMatrixCreator
                 (from relationship in allPossibleRelationships
                  where !Form1.AncestorList.Where((ancestor) =>
                      relationship == ancestor &&
-                     ancestorsCurrentCountMatrix[persons[person]][Form1.AncestorList.IndexOf(ancestor)] == Form1.ancestorsMaxCountDictionary[ancestor]).Any()
+                     ancestorsCurrentCountMatrix[persons[person]][Form1.AncestorList.IndexOf(ancestor)] == Form1.AncestorsMaxCountDictionary[ancestor]).Any()
                  select relationship).ToList();
 
             return allPossibleRelationships;
@@ -75,22 +73,21 @@ namespace FamilyMatrixCreator
         public static List<int> FindAllPossibleRelationships(float[][] generatedOutputMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative,
-            int numberOfProband,
             int[][] ancestorsCurrentCountMatrix)
         {
             List<int> currentPossibleRelationships = new List<int>();
 
             for (int previousPerson = 0; previousPerson < person; previousPerson++)
             {
-                int numberOfI = Modules.GetSerialNumberInListOfPossibleRelationships(
+                int numberOfI = GetSerialNumberInListOfPossibleRelationships(
                     generatedOutputMatrix, persons,
                     persons, person,
-                    numberOfProband, previousPerson);
+                    previousPerson);
 
-                int numberOfJ = Modules.GetSerialNumberInListOfPossibleRelationships(
+                int numberOfJ = GetSerialNumberInListOfPossibleRelationships(
                     generatedOutputMatrix, persons,
                     relatives, relative,
-                    numberOfProband, previousPerson);
+                    previousPerson);
 
                 List<int> allPossibleRelationships;
 
@@ -100,7 +97,7 @@ namespace FamilyMatrixCreator
                         Form1.RelationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
                     allPossibleRelationships =
                         (from j in Enumerable.Range(0, Form1.RelationshipsMatrix.GetLength(1))
-                         select Form1.RelationshipsMatrix[numberOfProband, j][0]).ToList();
+                         select Form1.RelationshipsMatrix[NumberOfProband, j][0]).ToList();
                     allPossibleRelationships.Add(0);
                 }
                 else
@@ -113,7 +110,7 @@ namespace FamilyMatrixCreator
                             allPossibleRelationships =
                                 Form1.RelationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
 
-                            bool numberOfAncestorsOfRelativeIsNotZero = Modules.IsNumberOfAncestorsNotZero(generatedOutputMatrix,
+                            bool numberOfAncestorsOfRelativeIsNotZero = IsNumberOfAncestorsNotZero(generatedOutputMatrix,
                             persons, person,
                             relatives, relative);
 
@@ -132,12 +129,12 @@ namespace FamilyMatrixCreator
                         allPossibleRelationships = currentPossibleRelationships;
 
                         bool personsCountOfRelativesOfThisTypeAlreadyMax =
-                            Modules.IsCountOfRelativesOfThisTypeAlreadyMax(generatedOutputMatrix,
+                            IsCountOfRelativesOfThisTypeAlreadyMax(generatedOutputMatrix,
                                                                           persons, person,
                                                                           ancestorsCurrentCountMatrix);
 
                         bool relativesCountOfRelativesOfThisTypeAlreadyMax =
-                            Modules.IsCountOfRelativesOfThisTypeAlreadyMax(generatedOutputMatrix,
+                            IsCountOfRelativesOfThisTypeAlreadyMax(generatedOutputMatrix,
                                                                           relatives, relative,
                                                                           ancestorsCurrentCountMatrix);
 
@@ -150,11 +147,11 @@ namespace FamilyMatrixCreator
                     }
                 }
 
-                bool personAndRelativeAreRelatives = Modules.IsPersonAndRelativeAreRelatives(generatedOutputMatrix,
+                bool personAndRelativeAreRelatives = IsPersonAndRelativeAreRelatives(generatedOutputMatrix,
                     persons, person,
                     relatives, relative);
 
-                bool personAndRelativeAreNotRelatives = Modules.IsPersonAndRelativeAreNotRelatives(generatedOutputMatrix,
+                bool personAndRelativeAreNotRelatives = IsPersonAndRelativeAreNotRelatives(generatedOutputMatrix,
                     persons, person,
                     relatives, relative);
 

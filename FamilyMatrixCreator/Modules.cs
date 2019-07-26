@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 
 namespace FamilyMatrixCreator
 {
-    public static class Modules
+    public static partial class Form1
     {
         private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
 
@@ -84,7 +84,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение списка возможных степеней родства пробанда.
          */
-        public static List<int> GetAllPossibleRelationshipsOfProband(List<int> existingRelationshipDegrees, int numberOfProband)
+        public static List<int> GetAllPossibleRelationshipsOfProband(List<int> existingRelationshipDegrees)
         {
             existingRelationshipDegrees = existingRelationshipDegrees.Where(var => var != 1).ToList();
 
@@ -108,7 +108,7 @@ namespace FamilyMatrixCreator
 
                 if (numberOfPossibleRelationships > 0.5 * existingRelationshipDegrees.Count)
                 {
-                    allPossibleRelationshipsOfProband.Add(Form1.RelationshipsMatrix[numberOfProband, i][0]);
+                    allPossibleRelationshipsOfProband.Add(Form1.RelationshipsMatrix[NumberOfProband, i][0]);
                 }
             }
 
@@ -118,12 +118,12 @@ namespace FamilyMatrixCreator
         /*
          * Нахождение всех существующих степеней родства.
          */
-        public static List<int> GetAllExistingRelationshipDegrees(int numberOfProband)
+        public static List<int> GetAllExistingRelationshipDegrees()
         {
             List<int> existingRelationshipDegrees = new List<int>();
 
             existingRelationshipDegrees.AddRange((from i in Enumerable.Range(0, Form1.RelationshipsMatrix.GetLength(0))
-                                                  select Form1.RelationshipsMatrix[numberOfProband, i][0]).ToList());
+                                                  select Form1.RelationshipsMatrix[NumberOfProband, i][0]).ToList());
 
             return existingRelationshipDegrees.Distinct().ToList();
         }
@@ -131,7 +131,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение левой (нижней) стороны.
          */
-        public static float[][] BuildLeftBottomPartOfOutput(float[][] generatedOutputMatrix, int numberOfProband)
+        public static float[][] BuildLeftBottomPartOfOutput(float[][] generatedOutputMatrix)
         {
             for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
             {
@@ -141,9 +141,9 @@ namespace FamilyMatrixCreator
                     {
                         generatedOutputMatrix[genPerson][genRelative] =
                             (from genRelationship in Enumerable.Range(0, Form1.RelationshipsMatrix.GetLength(1))
-                             where Form1.RelationshipsMatrix[numberOfProband, genRelationship][0] ==
+                             where Form1.RelationshipsMatrix[NumberOfProband, genRelationship][0] ==
                                    generatedOutputMatrix[genRelative][genPerson]
-                             select Form1.RelationshipsMatrix[genRelationship, numberOfProband][0]).Single();
+                             select Form1.RelationshipsMatrix[genRelationship, NumberOfProband][0]).Single();
                     }
                     catch (InvalidOperationException)
                     {
@@ -222,7 +222,7 @@ namespace FamilyMatrixCreator
          */
         public static int GetSerialNumberInListOfPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons,
             List<int> relatives, int relative,
-            int numberOfProband, int previousPerson)
+            int previousPerson)
         {
             int numberOfJ = -1;
 
@@ -230,7 +230,7 @@ namespace FamilyMatrixCreator
             {
                 numberOfJ =
                     (from number in Enumerable.Range(0, Form1.RelationshipsMatrix.GetLength(1))
-                     where Form1.RelationshipsMatrix[numberOfProband, number][0] ==
+                     where Form1.RelationshipsMatrix[NumberOfProband, number][0] ==
                            generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
                      select number).Single();
             }
