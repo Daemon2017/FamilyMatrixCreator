@@ -15,10 +15,11 @@ namespace FamilyMatrixCreator
         public static Dictionary<int, Relationship> RelationshipDictionary;
         public static Dictionary<int, int> ancestorsMaxCountDictionary;
         private static List<int> existingRelationshipDegrees;
-        private static int[,][] _relationshipsMatrix;
+        public static int[,][] RelationshipsMatrix;
         public static List<int> SiblindantsList;
         public static List<int> AncestorList;
         private static int _numberOfProband;
+
         private static Random random = new Random();
 
         public static void Main(string[] args)
@@ -67,7 +68,7 @@ namespace FamilyMatrixCreator
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
             Console.WriteLine("Подготовка необходимых файлов...");
-            _relationshipsMatrix = FileSaverLoader.LoadFromFile2dJagged("relationships.csv");
+            RelationshipsMatrix = FileSaverLoader.LoadFromFile2dJagged("relationships.csv");
             _numberOfProband = 0;
             float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1dFloat("centimorgans.csv");
             int[][] _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2dInt("ancestorsMatrix.csv");
@@ -87,7 +88,7 @@ namespace FamilyMatrixCreator
             }
 
             existingRelationshipDegrees =
-                Modules.GetAllExistingRelationshipDegrees(_relationshipsMatrix, _numberOfProband);
+                Modules.GetAllExistingRelationshipDegrees(_numberOfProband);
 
             Dictionary<int, float> _centimorgansDictionary = new Dictionary<int, float> { { 0, 0 } };
             for (int i = 0; i < centimorgansMatrix.Length; i++)
@@ -167,7 +168,7 @@ namespace FamilyMatrixCreator
                 generatedMatrixSize, existingRelationshipDegrees,
                 minPercentOfValues, maxPercentOfValues, noRelationPercent);
             generatedOutputMatrix =
-                Modules.BuildLeftBottomPartOfOutput(generatedOutputMatrix, _relationshipsMatrix, _numberOfProband);
+                Modules.BuildLeftBottomPartOfOutput(generatedOutputMatrix, _numberOfProband);
 
             generatedOutputMatrix = Modules.FillMainDiagonal(generatedOutputMatrix);
 
@@ -201,7 +202,7 @@ namespace FamilyMatrixCreator
                 for (int relative = 0; relative < relatives.Count; relative++)
                 {
                     List<int> allPossibleRelationships = Integrations.DetectAllPossibleRelationships(
-                        _relationshipsMatrix, existingRelationshipDegrees,
+                        existingRelationshipDegrees,
                         _numberOfProband,
                         generatedOutputMatrix, ancestorsCurrentCountMatrix,
                         persons, person,
@@ -312,9 +313,9 @@ namespace FamilyMatrixCreator
 
                 for (int relative = person; relative < generatedOutputMatrix.GetLength(0); relative++)
                 {
-                    for (int relationship = 0; relationship < _relationshipsMatrix.GetLength(1); relationship++)
+                    for (int relationship = 0; relationship < RelationshipsMatrix.GetLength(1); relationship++)
                     {
-                        if (_relationshipsMatrix[_numberOfProband, relationship][0] ==
+                        if (RelationshipsMatrix[_numberOfProband, relationship][0] ==
                             generatedOutputMatrix[person][relative])
                         {
                             generatedInputMatrix[person][relative] =
@@ -322,7 +323,7 @@ namespace FamilyMatrixCreator
                                     relationship);
                         }
 
-                        if (_relationshipsMatrix[relationship, _numberOfProband][0] ==
+                        if (RelationshipsMatrix[relationship, _numberOfProband][0] ==
                             generatedOutputMatrix[person][relative])
                         {
                             generatedInputMatrix[person][relative] =

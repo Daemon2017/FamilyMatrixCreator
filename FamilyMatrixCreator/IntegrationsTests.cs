@@ -1,12 +1,17 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FamilyMatrixCreator
 {
     [TestFixture]
     internal class IntegrationsTests
     {
+        [SetUp]
+        public void DerivedSetUp()
+        {
+            Form1.PrepareData();
+        }
+
         private static readonly object[] CalculatePercentOfMeaningfulValues_DataProvider =
         {
             new object[]
@@ -2609,10 +2614,6 @@ namespace FamilyMatrixCreator
         public void FindAllPossibleRelationships_Test(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
-            Form1.PrepareData();
-
-            int[,][] relationshipsMatrix =
-                FileSaverLoader.LoadFromFile2dJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = 0;
 
             string firstRow = "";
@@ -2627,7 +2628,7 @@ namespace FamilyMatrixCreator
                     generatedOutputMatrix,
                     persons, person,
                     relatives, relative,
-                    relationshipsMatrix, numberOfProband,
+                    numberOfProband,
                     currentCountMatrix),
                 Is.EquivalentTo(result),
                 "First row: " + firstRow);
@@ -2712,18 +2713,14 @@ namespace FamilyMatrixCreator
         public void DetectAllPossibleRelationships_Test(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
-            Form1.PrepareData();
-
-            int[,][] relationshipsMatrix =
-                FileSaverLoader.LoadFromFile2dJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = 0;
 
             List<int> existingRelationshipDegrees =
-                Modules.GetAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband);
+                Modules.GetAllExistingRelationshipDegrees(numberOfProband);
 
             Assert.That(
                 Integrations.DetectAllPossibleRelationships(
-                    relationshipsMatrix, existingRelationshipDegrees,
+                    existingRelationshipDegrees,
                     numberOfProband,
                     generatedOutputMatrix, currentCountMatrix,
                     persons, person,

@@ -7,6 +7,12 @@ namespace FamilyMatrixCreator
     [TestFixture]
     public class ModulesTests
     {
+        [SetUp]
+        public void DerivedSetUp()
+        {
+            Form1.PrepareData();
+        }
+
         private static readonly object[] CollectStatistics_DataProvider =
         {
             new object[]
@@ -156,12 +162,10 @@ namespace FamilyMatrixCreator
 
         [TestCaseSource(nameof(FindAllExistingRelationshipDegrees_DataProvider))]
         public void FindAllExistingRelationshipDegrees_Test(List<int> result)
-        {
-            int[,][] relationshipsMatrix =
-                FileSaverLoader.LoadFromFile2dJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
+        {            
             int numberOfProband = 0;
 
-            Assert.That(Modules.GetAllExistingRelationshipDegrees(relationshipsMatrix, numberOfProband),
+            Assert.That(Modules.GetAllExistingRelationshipDegrees(numberOfProband),
                 Is.EquivalentTo(result));
         }
 
@@ -187,11 +191,9 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(OutputBuildLeftBottomPart_DataProvider))]
         public void OutputBuildLeftBottomPart_Test(float[][] generatedOutputMatrix, float[][] result)
         {
-            int[,][] relationshipsMatrix =
-                FileSaverLoader.LoadFromFile2dJagged(TestContext.CurrentContext.TestDirectory + "\\relationships.csv");
             int numberOfProband = 0;
 
-            Assert.That(Modules.BuildLeftBottomPartOfOutput(generatedOutputMatrix, relationshipsMatrix, numberOfProband),
+            Assert.That(Modules.BuildLeftBottomPartOfOutput(generatedOutputMatrix, numberOfProband),
                 Is.EqualTo(result));
         }
 

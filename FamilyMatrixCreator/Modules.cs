@@ -84,21 +84,21 @@ namespace FamilyMatrixCreator
         /*
          * Построение списка возможных степеней родства пробанда.
          */
-        public static List<int> GetAllPossibleRelationshipsOfProband(int[,][] relationshipsMatrix, List<int> existingRelationshipDegrees, int numberOfProband)
+        public static List<int> GetAllPossibleRelationshipsOfProband(List<int> existingRelationshipDegrees, int numberOfProband)
         {
             existingRelationshipDegrees = existingRelationshipDegrees.Where(var => var != 1).ToList();
 
             List<int> allPossibleRelationshipsOfProband = new List<int>();
 
-            for (int i = 1; i < relationshipsMatrix.GetLength(0); i++)
+            for (int i = 1; i < Form1.RelationshipsMatrix.GetLength(0); i++)
             {
                 int numberOfPossibleRelationships = 0;
 
-                for (int j = 1; j < relationshipsMatrix.GetLength(1); j++)
+                for (int j = 1; j < Form1.RelationshipsMatrix.GetLength(1); j++)
                 {
-                    for (int k = 0; k < relationshipsMatrix[i, j].Length; k++)
+                    for (int k = 0; k < Form1.RelationshipsMatrix[i, j].Length; k++)
                     {
-                        if (existingRelationshipDegrees.Contains(relationshipsMatrix[i, j][k]))
+                        if (existingRelationshipDegrees.Contains(Form1.RelationshipsMatrix[i, j][k]))
                         {
                             numberOfPossibleRelationships++;
                             break;
@@ -108,7 +108,7 @@ namespace FamilyMatrixCreator
 
                 if (numberOfPossibleRelationships > 0.5 * existingRelationshipDegrees.Count)
                 {
-                    allPossibleRelationshipsOfProband.Add(relationshipsMatrix[numberOfProband, i][0]);
+                    allPossibleRelationshipsOfProband.Add(Form1.RelationshipsMatrix[numberOfProband, i][0]);
                 }
             }
 
@@ -118,12 +118,12 @@ namespace FamilyMatrixCreator
         /*
          * Нахождение всех существующих степеней родства.
          */
-        public static List<int> GetAllExistingRelationshipDegrees(int[,][] relationshipsMatrix, int numberOfProband)
+        public static List<int> GetAllExistingRelationshipDegrees(int numberOfProband)
         {
             List<int> existingRelationshipDegrees = new List<int>();
 
-            existingRelationshipDegrees.AddRange((from i in Enumerable.Range(0, relationshipsMatrix.GetLength(0))
-                                                  select relationshipsMatrix[numberOfProband, i][0]).ToList());
+            existingRelationshipDegrees.AddRange((from i in Enumerable.Range(0, Form1.RelationshipsMatrix.GetLength(0))
+                                                  select Form1.RelationshipsMatrix[numberOfProband, i][0]).ToList());
 
             return existingRelationshipDegrees.Distinct().ToList();
         }
@@ -131,8 +131,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение левой (нижней) стороны.
          */
-        public static float[][] BuildLeftBottomPartOfOutput(float[][] generatedOutputMatrix, int[,][] relationshipsMatrix,
-            int numberOfProband)
+        public static float[][] BuildLeftBottomPartOfOutput(float[][] generatedOutputMatrix, int numberOfProband)
         {
             for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
             {
@@ -141,10 +140,10 @@ namespace FamilyMatrixCreator
                     try
                     {
                         generatedOutputMatrix[genPerson][genRelative] =
-                            (from genRelationship in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                             where relationshipsMatrix[numberOfProband, genRelationship][0] ==
+                            (from genRelationship in Enumerable.Range(0, Form1.RelationshipsMatrix.GetLength(1))
+                             where Form1.RelationshipsMatrix[numberOfProband, genRelationship][0] ==
                                    generatedOutputMatrix[genRelative][genPerson]
-                             select relationshipsMatrix[genRelationship, numberOfProband][0]).Single();
+                             select Form1.RelationshipsMatrix[genRelationship, numberOfProband][0]).Single();
                     }
                     catch (InvalidOperationException)
                     {
@@ -223,15 +222,15 @@ namespace FamilyMatrixCreator
          */
         public static int GetSerialNumberInListOfPossibleRelationships(float[][] generatedOutputMatrix, List<int> persons,
             List<int> relatives, int relative,
-            int[,][] relationshipsMatrix, int numberOfProband, int previousPerson)
+            int numberOfProband, int previousPerson)
         {
             int numberOfJ = -1;
 
             try
             {
                 numberOfJ =
-                    (from number in Enumerable.Range(0, relationshipsMatrix.GetLength(1))
-                     where relationshipsMatrix[numberOfProband, number][0] ==
+                    (from number in Enumerable.Range(0, Form1.RelationshipsMatrix.GetLength(1))
+                     where Form1.RelationshipsMatrix[numberOfProband, number][0] ==
                            generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
                      select number).Single();
             }
