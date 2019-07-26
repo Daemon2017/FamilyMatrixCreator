@@ -59,9 +59,9 @@ namespace FamilyMatrixCreator
              */
             allPossibleRelationships =
                 (from relationship in allPossibleRelationships
-                 where !Form1.AncestorList.Where((ancestor) =>
+                 where !AncestorList.Where((ancestor) =>
                      relationship == ancestor &&
-                     ancestorsCurrentCountMatrix[persons[person]][Form1.AncestorList.IndexOf(ancestor)] == Form1.AncestorsMaxCountDictionary[ancestor]).Any()
+                     ancestorsCurrentCountMatrix[persons[person]][AncestorList.IndexOf(ancestor)] == RelationshipDictionary[ancestor].RelationshipMaxCount).Any()
                  select relationship).ToList();
 
             return allPossibleRelationships;
@@ -94,10 +94,10 @@ namespace FamilyMatrixCreator
                 if (0 == persons[previousPerson])
                 {
                     currentPossibleRelationships =
-                        Form1.RelationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
+                        RelationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
                     allPossibleRelationships =
-                        (from j in Enumerable.Range(0, Form1.RelationshipsMatrix.GetLength(1))
-                         select Form1.RelationshipsMatrix[NumberOfProband, j][0]).ToList();
+                        (from j in Enumerable.Range(0, RelationshipsMatrix.GetLength(1))
+                         select RelationshipsMatrix[NumberOfProband, j][0]).ToList();
                     allPossibleRelationships.Add(0);
                 }
                 else
@@ -108,7 +108,7 @@ namespace FamilyMatrixCreator
                         if (-1 != numberOfI && -1 != numberOfJ)
                         {
                             allPossibleRelationships =
-                                Form1.RelationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
+                                RelationshipsMatrix[numberOfI, numberOfJ].Where(val => val != 1).ToList();
 
                             bool numberOfAncestorsOfRelativeIsNotZero = IsNumberOfAncestorsNotZero(generatedOutputMatrix,
                             persons, person,
@@ -116,7 +116,7 @@ namespace FamilyMatrixCreator
 
                             if (numberOfAncestorsOfRelativeIsNotZero)
                             {
-                                allPossibleRelationships.AddRange(Form1.AncestorList);
+                                allPossibleRelationships.AddRange(AncestorList);
                             }
                         }
                         else

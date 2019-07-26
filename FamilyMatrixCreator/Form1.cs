@@ -13,7 +13,6 @@ namespace FamilyMatrixCreator
     public static partial class Form1
     {
         private static Dictionary<int, Relationship> RelationshipDictionary;
-        private static Dictionary<int, int> AncestorsMaxCountDictionary;
         private static List<int> ExistingRelationshipDegrees;
         private static int[,][] RelationshipsMatrix;
         private static List<int> SiblindantsList;
@@ -81,7 +80,7 @@ namespace FamilyMatrixCreator
                 .Select(x => _ancestorsMaxCountMatrix[x][0])
                 .ToList();
 
-            AncestorsMaxCountDictionary = new Dictionary<int, int>();
+            Dictionary<int, int> AncestorsMaxCountDictionary = new Dictionary<int, int>();
             for (int i = 0; i < _ancestorsMaxCountMatrix.GetLength(0); i++)
             {
                 AncestorsMaxCountDictionary.Add(_ancestorsMaxCountMatrix[i][0], _ancestorsMaxCountMatrix[i][1]);
