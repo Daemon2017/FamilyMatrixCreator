@@ -70,6 +70,7 @@ namespace FamilyMatrixCreator
             RelationshipsMatrix = FileSaverLoader.LoadFromFile2dJagged("relationships.csv");
             NumberOfProband = 0;
             float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1dFloat("centimorgans.csv");
+            int[] coordYMatrix = Array.ConvertAll(FileSaverLoader.LoadFromFile1dFloat("ys.csv"), x => (int)x);
             int[][] _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2dInt("ancestorsMatrix.csv");
             int[] siblindantsMatrix = FileSaverLoader.LoadFromFile1dInt("siblindantsMatrix.csv");
             SiblindantsList = siblindantsMatrix.ToList();
@@ -95,6 +96,12 @@ namespace FamilyMatrixCreator
                 _centimorgansDictionary.Add(ExistingRelationshipDegrees[i], centimorgansMatrix[i]);
             }
 
+            Dictionary<int, int> coordYDictionary = new Dictionary<int, int> { { 0, 0 } };
+            for (int i = 0; i < coordYMatrix.Length; i++)
+            {
+                coordYDictionary.Add(ExistingRelationshipDegrees[i], coordYMatrix[i]);
+            }
+
             ExistingRelationshipDegrees.Insert(0, 0);
 
             List<Relationship> relationships = new List<Relationship>();
@@ -102,6 +109,7 @@ namespace FamilyMatrixCreator
             {
                 int relationshipNumber = degree;
                 float commonCm = _centimorgansDictionary[degree];
+                int coordY = coordYDictionary[degree];
                 bool isAncestorOfProband = AncestorList.Contains(degree);
                 bool isSiblindantOfProband = SiblindantsList.Contains(degree);
                 int relationshipMaxCount;
@@ -117,6 +125,7 @@ namespace FamilyMatrixCreator
                 Relationship rel = new Relationship(
                     relationshipNumber,
                     commonCm,
+                    coordY,
                     isAncestorOfProband,
                     isSiblindantOfProband,
                     relationshipMaxCount);

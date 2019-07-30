@@ -12,10 +12,11 @@ namespace FamilyMatrixCreator
         public int RelationshipMaxCount { get; set; }
         public Dictionary<int, List<string>> PossibleRelationships { get; set; }
 
-        public Relationship(int relationshipNumber, float commonCm, bool isAncestorOfProband, bool isSiblindantOfProband, int relationshipMaxCount)
+        public Relationship(int relationshipNumber, float commonCm, int coordY, bool isAncestorOfProband, bool isSiblindantOfProband, int relationshipMaxCount)
         {
             RelationshipNumber = relationshipNumber;
             CommonCm = commonCm;
+            CoordY = coordY;
             IsAncestorOfProband = isAncestorOfProband;
             IsSiblindantOfProband = isSiblindantOfProband;
             RelationshipMaxCount = relationshipMaxCount;
