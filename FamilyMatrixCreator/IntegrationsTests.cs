@@ -152,7 +152,7 @@ namespace FamilyMatrixCreator
                 2,
                 new List<int> {2, 3, 4},
                 2,
-                new int[] {7}
+                new int[] {0}
             },
             new object[]
             {
