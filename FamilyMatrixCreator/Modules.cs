@@ -271,16 +271,16 @@ namespace FamilyMatrixCreator
             {
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
                                                  let condition = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
+                                                                 (RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                 (RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >=
+                                                                 ((RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >=
                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY ||
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY) ||
+                                                                 (RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <=
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY)
+                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY)))
                                                  where
                                                  (persons[i] < persons[person] &&
                                                  !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
