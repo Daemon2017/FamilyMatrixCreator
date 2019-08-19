@@ -270,48 +270,49 @@ namespace FamilyMatrixCreator
                 generatedOutputMatrix[0][relatives[relative]] != generatedOutputMatrix[0][persons[person]])
             {
                 personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
-                                                 let condition = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                                 ((RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                 ((RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >=
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY) ||
-                                                                 (RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <=
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY))) ||
-                                                                 (RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                 ((RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY ==
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY) ||
-                                                                 (RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <=
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY))) ||
-                                                                 (RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY ==
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                 ((RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY) ||
-                                                                 (RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                 RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY))))
+                                                 let condition1 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+                                                                                                                  ((RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >=
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY) ||
+                                                                                                                  (RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <=
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY))
+                                                 let condition2 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+                                                                                                                  ((RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY ==
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY) ||
+                                                                                                                  (RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <=
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY))
+                                                 let condition3 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY ==
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+                                                                                                                  ((RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY) ||
+                                                                                                                  (RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+                                                                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY))
+                                                 let unitedCondition = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+                                                                       (condition1 || condition2 || condition3)
                                                  where
                                                  (persons[i] < persons[person] &&
                                                  !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                 !condition &&
+                                                 !unitedCondition &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                  (persons[i] > persons[person] &&
                                                  !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                 !condition &&
+                                                 !unitedCondition &&
                                                  ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
                                                  (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
