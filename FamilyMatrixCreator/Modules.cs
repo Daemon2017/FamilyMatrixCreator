@@ -293,11 +293,12 @@ namespace FamilyMatrixCreator
                                                                   RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
                                                                   RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
                                                                   RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                 let unitedCondition1 = condition1 || condition2 || condition3
-                                                 let unitedCondition2 = condition1 || condition2 || condition3 || condition4
+                                                 let unitedCondition1 = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+                                                                        (condition1 || condition2 || condition3)
+                                                 let unitedCondition2 = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+                                                                        (condition1 || condition2 || condition3 || condition4)
                                                  where
                                                  (persons[i] < persons[person] &&
-                                                 AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                  ((unitedCondition1 &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
@@ -305,7 +306,6 @@ namespace FamilyMatrixCreator
                                                  0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
                                                  (persons[i] > persons[person] &&
-                                                 AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                  ((unitedCondition1 &&
                                                  0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
                                                  0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
