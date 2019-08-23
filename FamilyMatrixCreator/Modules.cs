@@ -294,7 +294,7 @@ namespace FamilyMatrixCreator
                                                                   RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
                                                                   RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
                                                  let unitedCondition1 = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                                        (condition1 || condition2 || condition3)
+                                                                        (condition2 || condition3)
                                                  let unitedCondition2 = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
                                                                         (condition1 || condition2 || condition3 || condition4)
                                                  where

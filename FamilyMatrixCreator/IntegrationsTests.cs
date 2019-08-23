@@ -364,7 +364,7 @@ namespace FamilyMatrixCreator
                 2,
                 new List<int> {3},
                 0,
-                new int[] {2}
+                new int[] {2, 0}
             },
             new object[]
             {
