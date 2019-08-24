@@ -335,8 +335,8 @@ namespace FamilyMatrixCreator
                                                                         (condition1 || condition2 || condition3 || condition4)) ||
                                                                         (!(AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) ||
                                                                         SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
-                                                                        (condition1 || condition2 || condition3 || condition4 || condition5
-                                                                         || condition6 || condition7 || condition8 || condition9 || condition10))
+                                                                        (condition1 || condition2 || condition3 || condition4 || condition5 ||
+                                                                         condition6 || condition7 || condition8 || condition9 || condition10))
                                                  where
                                                  (persons[i] < persons[person] &&
                                                  ((unitedCondition1 &&
