@@ -4374,7 +4374,7 @@ namespace FamilyMatrixCreator
         public void FindAllPossibleRelationships_Test(float[][] generatedOutputMatrix, int[][] currentCountMatrix,
             List<int> persons, int person, List<int> relatives, int relative, int[] result)
         {
-            string firstRow = "";
+            string matrix = "\n";
 
             foreach (float[] row in generatedOutputMatrix)
             {
@@ -4382,11 +4382,11 @@ namespace FamilyMatrixCreator
                 {
                     foreach (float column in row)
                     {
-                        firstRow += column + ", ";
+                        matrix += column + ", ";
                     }
-                }
 
-                firstRow += "\n";
+                    matrix += "\n";
+                }
             }
 
             Assert.That(
@@ -4396,7 +4396,7 @@ namespace FamilyMatrixCreator
                     relatives, relative,
                     currentCountMatrix),
                 Is.EquivalentTo(result),
-                "First row: " + firstRow);
+                matrix);
         }
 
         private static readonly object[] DetectAllPossibleRelationships_DataProvider =
