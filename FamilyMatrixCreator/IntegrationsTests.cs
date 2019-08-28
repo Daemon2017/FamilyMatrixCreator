@@ -4376,9 +4376,17 @@ namespace FamilyMatrixCreator
         {
             string firstRow = "";
 
-            foreach (float column in generatedOutputMatrix[0])
+            foreach (float[] row in generatedOutputMatrix)
             {
-                firstRow += column + ", ";
+                if (row != null)
+                {
+                    foreach (float column in row)
+                    {
+                        firstRow += column + ", ";
+                    }
+                }
+
+                firstRow += "\n";
             }
 
             Assert.That(
