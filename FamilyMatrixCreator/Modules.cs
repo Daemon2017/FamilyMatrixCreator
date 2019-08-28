@@ -265,156 +265,156 @@ namespace FamilyMatrixCreator
         {
             bool personAndRelativeAreRelatives = false;
 
-            if (AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-                personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
-                                                 let condition1 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                 let condition2 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                 let condition3 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                 let condition4 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                 let condition5 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                 let condition6 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                 let condition7 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY ==
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                 let condition8 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY ==
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                 let condition9 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY ==
-                                                                  RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                 let condition10 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY ==
-                                                                   RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                   RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
-                                                                   RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                   RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                   RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                 let unitedCondition1 = !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                                        (condition2 || condition3)
-                                                 let unitedCondition2 = (AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                                        (condition1 || condition2 || condition3 || condition4)) ||
-                                                                        (!(AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) ||
-                                                                        SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
-                                                                        (condition1 || condition2 || condition3 || condition4 || condition5 ||
-                                                                         condition6 || condition7 || condition8 || condition9 || condition10))
-                                                 where
-                                                 (persons[i] < persons[person] &&
-                                                 ((unitedCondition1 &&
-                                                 0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                 (unitedCondition2 &&
-                                                 0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                 (persons[i] > persons[person] &&
-                                                 ((unitedCondition1 &&
-                                                 0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                 (unitedCondition2 &&
-                                                 0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                 select i).Any();
-            }
-            else if (!AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                     !AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-                personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
-                                                 where
-                                                 (persons[i] < persons[person] &&
-                                                 !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                 (persons[i] > persons[person] &&
-                                                 !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                 select i).Any();
-            }
-            else if (AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                    !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                    !AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-                personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
-                                                 where
-                                                 (persons[i] < persons[person] &&
-                                                 !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                 (persons[i] > persons[person] &&
-                                                 !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                 select i).Any();
-            }
-            else if (!AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-                personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
-                                                 where
-                                                 (persons[i] < persons[person] &&
-                                                 !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                 (persons[i] > persons[person] &&
-                                                 !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                 ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                 (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                 0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                 select i).Any();
-            }
+            //if (AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //    AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            //{
+            //    personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
+            //                                     let condition1 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
+            //                                     let condition2 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
+            //                                     let condition3 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
+            //                                     let condition4 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
+            //                                     let condition5 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
+            //                                     let condition6 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
+            //                                     let condition7 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY ==
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
+            //                                     let condition8 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY ==
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
+            //                                     let condition9 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY <
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY ==
+            //                                                      RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
+            //                                     let condition10 = RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY ==
+            //                                                       RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                       RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
+            //                                                       RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+            //                                                       RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+            //                                                       RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
+            //                                     let unitedCondition1 = !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                                            (condition2 || condition3)
+            //                                     let unitedCondition2 = (AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                                            (condition1 || condition2 || condition3 || condition4)) ||
+            //                                                            (!(AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) ||
+            //                                                            SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]])) &&
+            //                                                            (condition1 || condition2 || condition3 || condition4 || condition5 ||
+            //                                                             condition6 || condition7 || condition8 || condition9 || condition10))
+            //                                     where
+            //                                     (persons[i] < persons[person] &&
+            //                                     ((unitedCondition1 &&
+            //                                     0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                     (unitedCondition2 &&
+            //                                     0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                     (persons[i] > persons[person] &&
+            //                                     ((unitedCondition1 &&
+            //                                     0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                     (unitedCondition2 &&
+            //                                     0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                     select i).Any();
+            //}
+            //else if (!AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //         !SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //         !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //         !AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            //{
+            //    personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
+            //                                     where
+            //                                     (persons[i] < persons[person] &&
+            //                                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                     (persons[i] > persons[person] &&
+            //                                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                     select i).Any();
+            //}
+            //else if (AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //        !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //        !AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            //{
+            //    personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
+            //                                     where
+            //                                     (persons[i] < persons[person] &&
+            //                                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                     (persons[i] > persons[person] &&
+            //                                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                     select i).Any();
+            //}
+            //else if (!AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //         !SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //         AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            //{
+            //    personAndRelativeAreRelatives = (from i in Enumerable.Range(1, person)
+            //                                     where
+            //                                     (persons[i] < persons[person] &&
+            //                                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                     (persons[i] > persons[person] &&
+            //                                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                     ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 == (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                     (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                     0 != (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                     select i).Any();
+            //}
 
             return personAndRelativeAreRelatives;
         }
@@ -428,107 +428,107 @@ namespace FamilyMatrixCreator
         {
             bool personAndRelativeAreNotRelatives = false;
 
-            if (AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
-                                                    let condition = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY >
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY
-                                                    where
-                                                    (persons[i] < persons[person] &&
-                                                    !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    !condition &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                    (persons[i] > persons[person] &&
-                                                    !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    !condition &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                    select i).Any();
-            }
-            else if (!AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                     !AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
-                                                    where
-                                                    (persons[i] < persons[person] &&
-                                                    !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                    (persons[i] > persons[person] &&
-                                                    !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                    select i).Any();
-            }
-            else if (AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
-                     !AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
-                                                    let condition = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY >
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY
-                                                    where
-                                                    (persons[i] < persons[person] &&
-                                                    !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    !condition &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                    (persons[i] > persons[person] &&
-                                                    !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    !condition &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                    select i).Any();
-            }
-            else if (!AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     !SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
-                     AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
-            {
-                personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
-                                                    let condition = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
-                                                                    RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
-                                                    where
-                                                    (persons[i] < persons[person] &&
-                                                    !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    !condition &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
-                                                    (persons[i] > persons[person] &&
-                                                    !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
-                                                    !condition &&
-                                                    ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
-                                                    (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
-                                                    0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
-                                                    select i).Any();
-            }
+            //if (AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //    AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            //{
+            //    personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
+            //                                        let condition = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY >
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY
+            //                                        where
+            //                                        (persons[i] < persons[person] &&
+            //                                        !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        !condition &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                        (persons[i] > persons[person] &&
+            //                                        !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        !condition &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                        select i).Any();
+            //}
+            //else if (!AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //         !SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //         !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //         !AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            //{
+            //    personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
+            //                                        where
+            //                                        (persons[i] < persons[person] &&
+            //                                        !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                        (persons[i] > persons[person] &&
+            //                                        !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                        select i).Any();
+            //}
+            //else if (AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //         !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
+            //         !AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            //{
+            //    personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
+            //                                        let condition = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY &&
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY >
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY
+            //                                        where
+            //                                        (persons[i] < persons[person] &&
+            //                                        !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        !condition &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                        (persons[i] > persons[person] &&
+            //                                        !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        !condition &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                        select i).Any();
+            //}
+            //else if (!AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //         !SiblindantsList.Contains((int)generatedOutputMatrix[0][relatives[relative]]) &&
+            //         AncestorList.Contains((int)generatedOutputMatrix[0][persons[person]]))
+            //{
+            //    personAndRelativeAreNotRelatives = (from i in Enumerable.Range(1, person)
+            //                                        let condition = AncestorList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][persons[i]]].CoordY >
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY &&
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][persons[person]]].CoordY >
+            //                                                        RelationshipDictionary[(int)generatedOutputMatrix[0][relatives[relative]]].CoordY
+            //                                        where
+            //                                        (persons[i] < persons[person] &&
+            //                                        !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        !condition &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[i]][persons[person]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[i]][persons[person]]))) ||
+            //                                        (persons[i] > persons[person] &&
+            //                                        !SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[i]]) &&
+            //                                        !condition &&
+            //                                        ((0 == (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 != (int)generatedOutputMatrix[persons[person]][persons[i]]) ||
+            //                                        (0 != (int)generatedOutputMatrix[persons[i]][relatives[relative]] &&
+            //                                        0 == (int)generatedOutputMatrix[persons[person]][persons[i]])))
+            //                                        select i).Any();
+            //}
 
             if (!SiblindantsList.Contains((int)generatedOutputMatrix[0][persons[person]]) &&
                 AncestorList.Contains((int)generatedOutputMatrix[0][relatives[relative]]))
