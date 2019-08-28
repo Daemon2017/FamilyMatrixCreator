@@ -188,7 +188,7 @@ namespace FamilyMatrixCreator
                 2,
                 new List<int> {3},
                 0,
-                new int[] {12}
+                new int[] {12, 0}
             },
             new object[]
             {
@@ -210,7 +210,7 @@ namespace FamilyMatrixCreator
                 2,
                 new List<int> {3},
                 0,
-                new int[] {10}
+                new int[] {10, 0}
             },
             new object[]
             {
@@ -232,7 +232,7 @@ namespace FamilyMatrixCreator
                 2,
                 new List<int> {3},
                 0,
-                new int[] {6}
+                new int[] {6, 0}
             },
             new object[]
             {
@@ -276,7 +276,7 @@ namespace FamilyMatrixCreator
                 2,
                 new List<int> {3},
                 0,
-                new int[] {7}
+                new int[] {7, 0}
             },
             new object[]
             {
