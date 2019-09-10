@@ -63,25 +63,6 @@ namespace FamilyMatrixCreator
         }
 
         /*
-         * Увеличение числа родственников данного вида у указанного лица.
-         */
-        public static int[][] IncreaseCurrentRelationshipCount(float[][] generatedOutputMatrix, int[][] ancestorsCurrentCountMatrix,
-            List<int> persons, int person, List<int> relatives, int relative, List<int> ancestorsMatrix)
-        {
-            for (int i = 0; i < ancestorsMatrix.Count; i++)
-            {
-                if (ancestorsMatrix[i] == generatedOutputMatrix[persons[person]][relatives[relative]])
-                {
-                    ancestorsCurrentCountMatrix[persons[person]][i]++;
-
-                    return ancestorsCurrentCountMatrix;
-                }
-            }
-
-            return ancestorsCurrentCountMatrix;
-        }
-
-        /*
          * Построение списка возможных степеней родства пробанда.
          */
         public static List<int> GetAllPossibleRelationshipsOfProband(List<int> existingRelationshipDegrees)

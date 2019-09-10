@@ -34,11 +34,12 @@ namespace FamilyMatrixCreator
 
         public static List<int> DetectAllPossibleRelationships(
             List<int> existingRelationshipDegrees,
-            float[][] generatedOutputMatrix, int[][] ancestorsCurrentCountMatrix,
+            float[][] generatedOutputMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative)
         {
             List<int> allPossibleRelationships;
+            int[][] ancestorsCurrentCountMatrix = getAncestorsCurrentCountMatrix(generatedOutputMatrix);
 
             if (0 == persons[person])
             {
@@ -65,6 +66,34 @@ namespace FamilyMatrixCreator
                  select relationship).ToList();
 
             return allPossibleRelationships;
+        }
+
+        public static int[][] getAncestorsCurrentCountMatrix(float[][] generatedOutputMatrix)
+        {
+            int[][] ancestorsCurrentCountMatrix = new int[generatedOutputMatrix.Length][];
+
+            for (int row = 0; row < generatedOutputMatrix.Length; row++)
+            {
+                ancestorsCurrentCountMatrix[row] = new int[AncestorList.Count];
+
+                if (null != generatedOutputMatrix[row])
+                {
+                    for (int column = row + 1; column < generatedOutputMatrix[0].Length; column++)
+                    {
+                        for (int i = 0; i < AncestorList.Count; i++)
+                        {
+                            if (generatedOutputMatrix[row][column] == AncestorList[i])
+                            {
+                                ancestorsCurrentCountMatrix[row][i]++;
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return ancestorsCurrentCountMatrix;
         }
 
         /*
