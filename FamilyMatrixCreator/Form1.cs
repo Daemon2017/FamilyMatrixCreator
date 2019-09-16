@@ -12,7 +12,7 @@ namespace FamilyMatrixCreator
 {
     public static partial class Form1
     {
-        private static Dictionary<int, Relationship> RelationshipDictionary;
+        private static Dictionary<int, RelationshipDegree> RelationshipDictionary;
         private static List<int> ExistingRelationshipDegrees;
         private static int[,][] RelationshipsMatrix;
         private static List<int> SiblindantsList;
@@ -70,7 +70,8 @@ namespace FamilyMatrixCreator
             RelationshipsMatrix = FileSaverLoader.LoadFromFile2dJagged("relationships.csv");
             NumberOfProband = 0;
             float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1dFloat("centimorgans.csv");
-            int[] coordYMatrix = Array.ConvertAll(FileSaverLoader.LoadFromFile1dFloat("ys.csv"), x => (int)x);
+            int[] coordXMatrix = Array.ConvertAll(FileSaverLoader.LoadFromFile1dFloat("xs.csv"), x => (int)x);
+            int[] coordYMatrix = Array.ConvertAll(FileSaverLoader.LoadFromFile1dFloat("ys.csv"), y => (int)y);
             int[][] _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2dInt("ancestorsMatrix.csv");
             int[] siblindantsMatrix = FileSaverLoader.LoadFromFile1dInt("siblindantsMatrix.csv");
             SiblindantsList = siblindantsMatrix.ToList();
@@ -96,6 +97,12 @@ namespace FamilyMatrixCreator
                 _centimorgansDictionary.Add(ExistingRelationshipDegrees[i], centimorgansMatrix[i]);
             }
 
+            Dictionary<int, int> coordXDictionary = new Dictionary<int, int> { { 0, 0 } };
+            for (int i = 0; i < coordXMatrix.Length; i++)
+            {
+                coordXDictionary.Add(ExistingRelationshipDegrees[i], coordXMatrix[i]);
+            }
+
             Dictionary<int, int> coordYDictionary = new Dictionary<int, int> { { 0, 0 } };
             for (int i = 0; i < coordYMatrix.Length; i++)
             {
@@ -104,11 +111,12 @@ namespace FamilyMatrixCreator
 
             ExistingRelationshipDegrees.Insert(0, 0);
 
-            List<Relationship> relationships = new List<Relationship>();
+            List<RelationshipDegree> relationships = new List<RelationshipDegree>();
             foreach (int degree in ExistingRelationshipDegrees)
             {
                 int relationshipNumber = degree;
                 float commonCm = _centimorgansDictionary[degree];
+                int coordX = coordXDictionary[degree];
                 int coordY = coordYDictionary[degree];
                 bool isAncestorOfProband = AncestorList.Contains(degree);
                 bool isSiblindantOfProband = SiblindantsList.Contains(degree);
@@ -122,9 +130,10 @@ namespace FamilyMatrixCreator
                     relationshipMaxCount = int.MaxValue;
                 }
 
-                Relationship rel = new Relationship(
+                RelationshipDegree rel = new RelationshipDegree(
                     relationshipNumber,
                     commonCm,
+                    coordX,
                     coordY,
                     isAncestorOfProband,
                     isSiblindantOfProband,
@@ -132,8 +141,8 @@ namespace FamilyMatrixCreator
                 relationships.Add(rel);
             }
 
-            RelationshipDictionary = new Dictionary<int, Relationship>();
-            foreach (Relationship relationship in relationships)
+            RelationshipDictionary = new Dictionary<int, RelationshipDegree>();
+            foreach (RelationshipDegree relationship in relationships)
             {
                 RelationshipDictionary.Add(relationship.RelationshipNumber, relationship);
             }

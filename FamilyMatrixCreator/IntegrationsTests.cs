@@ -3369,7 +3369,7 @@ namespace FamilyMatrixCreator
                 }
             }
 
-            int[][] ancestorsCurrentCountMatrix = Form1.getAncestorsCurrentCountMatrix(generatedOutputMatrix);
+            int[][] ancestorsCurrentCountMatrix = Form1.GetAncestorsCurrentCountMatrix(generatedOutputMatrix);
 
             Assert.That(
                 Form1.FindAllPossibleRelationships(

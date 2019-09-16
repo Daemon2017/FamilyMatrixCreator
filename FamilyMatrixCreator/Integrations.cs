@@ -39,7 +39,7 @@ namespace FamilyMatrixCreator
             List<int> relatives, int relative)
         {
             List<int> allPossibleRelationships;
-            int[][] ancestorsCurrentCountMatrix = getAncestorsCurrentCountMatrix(generatedOutputMatrix);
+            int[][] ancestorsCurrentCountMatrix = GetAncestorsCurrentCountMatrix(generatedOutputMatrix);
 
             if (0 == persons[person])
             {
@@ -68,7 +68,7 @@ namespace FamilyMatrixCreator
             return allPossibleRelationships;
         }
 
-        public static int[][] getAncestorsCurrentCountMatrix(float[][] generatedOutputMatrix)
+        public static int[][] GetAncestorsCurrentCountMatrix(float[][] generatedOutputMatrix)
         {
             int[][] ancestorsCurrentCountMatrix = new int[generatedOutputMatrix.Length][];
 
