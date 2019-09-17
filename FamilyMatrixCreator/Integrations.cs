@@ -175,24 +175,7 @@ namespace FamilyMatrixCreator
                         }
                     }
                 }
-
-                bool personAndRelativeAreRelatives = IsPersonAndRelativeAreRelatives(generatedOutputMatrix,
-                    persons, person,
-                    relatives, relative);
-
-                bool personAndRelativeAreNotRelatives = IsPersonAndRelativeAreNotRelatives(generatedOutputMatrix,
-                    persons, person,
-                    relatives, relative);
-
-                if (personAndRelativeAreRelatives && !personAndRelativeAreNotRelatives)
-                {
-                    currentPossibleRelationships = currentPossibleRelationships.Where(val => val != 0).ToList();
-                }
-                else if (!personAndRelativeAreRelatives && personAndRelativeAreNotRelatives)
-                {
-                    currentPossibleRelationships = currentPossibleRelationships.Where(val => val == 0).ToList();
-                }
-
+                
                 /*
                  * Исключение возможных видов родства, которые невозможно сгенерировать.
                  */
