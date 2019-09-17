@@ -11,9 +11,9 @@ namespace FamilyMatrixCreator
         private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
 
         /*
-         * Преобразование видов родства в сантиморганы.
+         * Получить число сМ, эквивалентное указанной степени родства.
          */
-        public static float TransformRelationshipTypeToCm(float[][] generatedInputMatrix, int person, int relative,
+        public static float GetCmEquivalentOfRelationshipType(float[][] generatedInputMatrix, int person, int relative,
             int relationship)
         {
             if (RelationshipDictionary[relationship].CommonCm > 3950)
@@ -138,9 +138,9 @@ namespace FamilyMatrixCreator
         }
 
         /*
-         * Построение левой (нижней) стороны.
+         * Построение левой (нижней) стороны выходной матрицы.
          */
-        public static float[][] CreateLeftBottomPartOfOutputMatrix(float[][] generatedOutputMatrix)
+        public static float[][] GetLeftBottomPartOfOutputMatrix(float[][] generatedOutputMatrix)
         {
             for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
             {
@@ -165,9 +165,9 @@ namespace FamilyMatrixCreator
         }
 
         /*
-         * Построение левой (нижней) стороны (сМ).
+         * Построение левой (нижней) стороны входной матрицы.
          */
-        public static float[][] CreateLeftBottomPartOfInputMatrix(float[][] generatedInputMatrix)
+        public static float[][] GetLeftBottomPartOfInputMatrix(float[][] generatedInputMatrix)
         {
             for (int genPerson = 1; genPerson < generatedInputMatrix.GetLength(0); genPerson++)
             {
@@ -181,9 +181,9 @@ namespace FamilyMatrixCreator
         }
 
         /*
-         * Заполнение главной диагонали.
+         * Заполнение главной диагонали выходной матрицы.
          */
-        public static float[][] FillMainDiagonal(float[][] generatedOutputMatrix)
+        public static float[][] FillMainDiagonalOfOutputMatrix(float[][] generatedOutputMatrix)
         {
             for (int i = 0; i < generatedOutputMatrix.GetLength(0); i++)
             {

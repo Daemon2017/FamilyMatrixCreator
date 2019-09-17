@@ -9,7 +9,7 @@ namespace FamilyMatrixCreator
         /*
          * Подсчет процента значащих значений
          */
-        public static double CalculatePercentOfMeaningfulValues(int generatedMatrixSize, List<int> existingRelationshipDegrees,
+        public static double GetPercentOfMeaningfulValues(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             float[][] generatedOutputMatrix)
         {
             int[] quantityOfEachRelationship = GetRelationshipStatistics(generatedOutputMatrix, existingRelationshipDegrees);
@@ -32,7 +32,10 @@ namespace FamilyMatrixCreator
             return 100 * (sumOfMeaningfulValues / Math.Pow(generatedMatrixSize, 2));
         }
 
-        public static List<int> DetectAllPossibleRelationships(
+        /*
+         * Поиск всех возможных видов родства.
+         */
+        public static List<int> GetListOfAllPossibleRelationships(
             List<int> existingRelationshipDegrees,
             float[][] generatedOutputMatrix,
             List<int> persons, int person,
@@ -48,7 +51,7 @@ namespace FamilyMatrixCreator
             }
             else
             {
-                allPossibleRelationships = FindAllPossibleRelationships(generatedOutputMatrix,
+                allPossibleRelationships = GetListOfAllPossibleRelationshipsOfRelative(generatedOutputMatrix,
                     persons, person,
                     relatives, relative,
                     ancestorsCurrentCountMatrix);
@@ -69,9 +72,9 @@ namespace FamilyMatrixCreator
         }
 
         /*
-         * Поиск всех возможных видов родства.
+         * Поиск всех возможных видов родства указанного родственника.
          */
-        public static List<int> FindAllPossibleRelationships(float[][] generatedOutputMatrix,
+        public static List<int> GetListOfAllPossibleRelationshipsOfRelative(float[][] generatedOutputMatrix,
             List<int> persons, int person,
             List<int> relatives, int relative,
             int[][] ancestorsCurrentCountMatrix)
@@ -147,7 +150,7 @@ namespace FamilyMatrixCreator
                         }
                     }
                 }
-                
+
                 /*
                  * Исключение возможных видов родства, которые невозможно сгенерировать.
                  */

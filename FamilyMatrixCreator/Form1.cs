@@ -23,7 +23,7 @@ namespace FamilyMatrixCreator
 
         public static void Main(string[] args)
         {
-            PrepareData();
+            GetStaticData();
 
             Console.WriteLine("Введите число пар матриц, которое необходимо построить (0;+inf):");
             int numberOfMatrices = Convert.ToInt32(Console.ReadLine());
@@ -62,7 +62,7 @@ namespace FamilyMatrixCreator
             Console.ReadLine();
         }
 
-        public static void PrepareData()
+        public static void GetStaticData()
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
@@ -155,10 +155,10 @@ namespace FamilyMatrixCreator
             {
                 Console.WriteLine("Начинается построение матрицы #{0}...", matrixNumber);
                 float[][] generatedOutputMatrix =
-                    CreateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees,
+                    GetOutputMatrix(generatedMatrixSize, existingRelationshipDegrees,
                     minPercentOfValues, maxPercentOfValues, noRelationPercent);
                 float[][] generatedInputMatrix =
-                    CreateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
+                    GetInputMatrix(generatedOutputMatrix, generatedMatrixSize);
                 Console.WriteLine("Завершено построение матрицы #{0}!", matrixNumber);
 
                 /*
@@ -178,24 +178,24 @@ namespace FamilyMatrixCreator
         /*
          * Построение выходной матрицы (матрицы родственных отношений).
          */
-        private static float[][] CreateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
+        private static float[][] GetOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             int minPercentOfValues, int maxPercentOfValues, double noRelationPercent)
         {
-            float[][] generatedOutputMatrix = CreateRightTopPartOfOutputMatrix(
+            float[][] generatedOutputMatrix = GetRightTopPartOfOutputMatrix(
                 generatedMatrixSize, existingRelationshipDegrees,
                 minPercentOfValues, maxPercentOfValues, noRelationPercent);
             generatedOutputMatrix =
-                CreateLeftBottomPartOfOutputMatrix(generatedOutputMatrix);
+                GetLeftBottomPartOfOutputMatrix(generatedOutputMatrix);
 
-            generatedOutputMatrix = FillMainDiagonal(generatedOutputMatrix);
+            generatedOutputMatrix = FillMainDiagonalOfOutputMatrix(generatedOutputMatrix);
 
             return generatedOutputMatrix;
         }
 
         /*
-         * Построение правой (верхней) стороны.
+         * Построение правой (верхней) стороны выходной матрицы.
          */
-        public static float[][] CreateRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
+        public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             int minPercent, int maxPercent, double noRelationPercent)
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
@@ -216,7 +216,7 @@ namespace FamilyMatrixCreator
 
                 for (int relative = 0; relative < relatives.Count; relative++)
                 {
-                    List<int> allPossibleRelationships = DetectAllPossibleRelationships(
+                    List<int> allPossibleRelationships = GetListOfAllPossibleRelationships(
                         existingRelationshipDegrees,
                         generatedOutputMatrix,
                         persons, person,
@@ -228,7 +228,7 @@ namespace FamilyMatrixCreator
                  */
                 if (generatedOutputMatrix.GetLength(0) - 1 == person)
                 {
-                    double percentOfMeaningfulValues = 2 * CalculatePercentOfMeaningfulValues(
+                    double percentOfMeaningfulValues = 2 * GetPercentOfMeaningfulValues(
                                                            generatedMatrixSize,
                                                            existingRelationshipDegrees, generatedOutputMatrix);
 
@@ -261,21 +261,21 @@ namespace FamilyMatrixCreator
         /*
          * Построение входной матрицы (матрицы сМ).
          */
-        private static float[][] CreateInputMatrix(float[][] generatedOutputMatrix, int generatedMatrixSize)
+        private static float[][] GetInputMatrix(float[][] generatedOutputMatrix, int generatedMatrixSize)
         {
             float[][] generatedInputMatrix = new float[generatedMatrixSize][];
 
-            generatedInputMatrix = CreateRightTopPartOfInputMatrix(generatedOutputMatrix,
+            generatedInputMatrix = GetRightTopPartOfInputMatrix(generatedOutputMatrix,
                 generatedInputMatrix);
-            generatedInputMatrix = CreateLeftBottomPartOfInputMatrix(generatedInputMatrix);
+            generatedInputMatrix = GetLeftBottomPartOfInputMatrix(generatedInputMatrix);
 
             return generatedInputMatrix;
         }
 
         /*
-         * Построение правой (верхней) стороны  (сМ).
+         * Построение правой (верхней) стороны входной матрицы.
          */
-        public static float[][] CreateRightTopPartOfInputMatrix(float[][] generatedOutputMatrix,
+        public static float[][] GetRightTopPartOfInputMatrix(float[][] generatedOutputMatrix,
             float[][] generatedInputMatrix)
         {
             for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)
@@ -290,7 +290,7 @@ namespace FamilyMatrixCreator
                             generatedOutputMatrix[person][relative])
                         {
                             generatedInputMatrix[person][relative] =
-                                TransformRelationshipTypeToCm(generatedInputMatrix, person, relative,
+                                GetCmEquivalentOfRelationshipType(generatedInputMatrix, person, relative,
                                     relationship);
                         }
 
@@ -298,7 +298,7 @@ namespace FamilyMatrixCreator
                             generatedOutputMatrix[person][relative])
                         {
                             generatedInputMatrix[person][relative] =
-                                TransformRelationshipTypeToCm(generatedInputMatrix, person, relative,
+                                GetCmEquivalentOfRelationshipType(generatedInputMatrix, person, relative,
                                     relationship);
                         }
                     }

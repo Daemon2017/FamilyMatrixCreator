@@ -10,7 +10,7 @@ namespace FamilyMatrixCreator
         [SetUp]
         public void DerivedSetUp()
         {
-            Form1.PrepareData();
+            Form1.GetStaticData();
         }
 
         private static readonly object[] CollectStatistics_DataProvider =
@@ -85,7 +85,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(OutputBuildLeftBottomPart_DataProvider))]
         public void OutputBuildLeftBottomPart_Test(float[][] generatedOutputMatrix, float[][] result)
         {
-            Assert.That(Form1.CreateLeftBottomPartOfOutputMatrix(generatedOutputMatrix),
+            Assert.That(Form1.GetLeftBottomPartOfOutputMatrix(generatedOutputMatrix),
                 Is.EqualTo(result));
         }
 
@@ -101,7 +101,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(InputBuildLeftBottomPart_DataProvider))]
         public void InputBuildLeftBottomPart_Test(float[][] generatedInputMatrix, float[][] result)
         {
-            Assert.That(Form1.CreateLeftBottomPartOfInputMatrix(generatedInputMatrix), Is.EqualTo(result));
+            Assert.That(Form1.GetLeftBottomPartOfInputMatrix(generatedInputMatrix), Is.EqualTo(result));
         }
 
         private static readonly object[] FillMainDiagonal_DataProvider =
@@ -126,7 +126,7 @@ namespace FamilyMatrixCreator
         [TestCaseSource(nameof(FillMainDiagonal_DataProvider))]
         public void FillMainDiagonal_Test(float[][] generatedOutputMatrix, float[][] result)
         {
-            Assert.That(Form1.FillMainDiagonal(generatedOutputMatrix), Is.EqualTo(result));
+            Assert.That(Form1.FillMainDiagonalOfOutputMatrix(generatedOutputMatrix), Is.EqualTo(result));
         }
 
         private static readonly object[] GetNextRnd_DataProvider =
