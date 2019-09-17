@@ -12,7 +12,7 @@ namespace FamilyMatrixCreator
         public static double CalculatePercentOfMeaningfulValues(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             float[][] generatedOutputMatrix)
         {
-            int[] quantityOfEachRelationship = CollectStatistics(generatedOutputMatrix, existingRelationshipDegrees);
+            int[] quantityOfEachRelationship = GetRelationshipStatistics(generatedOutputMatrix, existingRelationshipDegrees);
 
             float sumOfMeaningfulValues =
                 quantityOfEachRelationship.Aggregate<int, float>(0, (current, quantity) => current + quantity);
@@ -44,7 +44,7 @@ namespace FamilyMatrixCreator
             if (0 == persons[person])
             {
                 allPossibleRelationships =
-                    GetAllPossibleRelationshipsOfProband(existingRelationshipDegrees);
+                    GetListOfAllPossibleRelationshipsOfProband(existingRelationshipDegrees);
             }
             else
             {

@@ -155,10 +155,10 @@ namespace FamilyMatrixCreator
             {
                 Console.WriteLine("Начинается построение матрицы #{0}...", matrixNumber);
                 float[][] generatedOutputMatrix =
-                    GenerateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees,
+                    CreateOutputMatrix(generatedMatrixSize, existingRelationshipDegrees,
                     minPercentOfValues, maxPercentOfValues, noRelationPercent);
                 float[][] generatedInputMatrix =
-                    GenerateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
+                    CreateInputMatrix(generatedOutputMatrix, generatedMatrixSize);
                 Console.WriteLine("Завершено построение матрицы #{0}!", matrixNumber);
 
                 /*
@@ -178,14 +178,14 @@ namespace FamilyMatrixCreator
         /*
          * Построение выходной матрицы (матрицы родственных отношений).
          */
-        private static float[][] GenerateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
+        private static float[][] CreateOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             int minPercentOfValues, int maxPercentOfValues, double noRelationPercent)
         {
-            float[][] generatedOutputMatrix = OutputBuildRightTopPart(
+            float[][] generatedOutputMatrix = CreateRightTopPartOfOutputMatrix(
                 generatedMatrixSize, existingRelationshipDegrees,
                 minPercentOfValues, maxPercentOfValues, noRelationPercent);
             generatedOutputMatrix =
-                BuildLeftBottomPartOfOutput(generatedOutputMatrix);
+                CreateLeftBottomPartOfOutputMatrix(generatedOutputMatrix);
 
             generatedOutputMatrix = FillMainDiagonal(generatedOutputMatrix);
 
@@ -195,7 +195,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение правой (верхней) стороны.
          */
-        public static float[][] OutputBuildRightTopPart(int generatedMatrixSize, List<int> existingRelationshipDegrees,
+        public static float[][] CreateRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             int minPercent, int maxPercent, double noRelationPercent)
         {
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
@@ -237,13 +237,13 @@ namespace FamilyMatrixCreator
                             {
                                 allPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToList();
                                 generatedOutputMatrix[persons[person]][relatives[relative]] =
-                                    allPossibleRelationships[GetNextRnd(0, allPossibleRelationships.Count)];
+                                    allPossibleRelationships[GetNextRandomValue(0, allPossibleRelationships.Count)];
                             }
                         }
                         else
                         {
                             generatedOutputMatrix[persons[person]][relatives[relative]] =
-                                allPossibleRelationships[GetNextRnd(0, allPossibleRelationships.Count)];
+                                allPossibleRelationships[GetNextRandomValue(0, allPossibleRelationships.Count)];
                         }
                     }
                     catch (ArgumentOutOfRangeException)
@@ -299,13 +299,13 @@ namespace FamilyMatrixCreator
         /*
          * Построение входной матрицы (матрицы сМ).
          */
-        private static float[][] GenerateInputMatrix(float[][] generatedOutputMatrix, int generatedMatrixSize)
+        private static float[][] CreateInputMatrix(float[][] generatedOutputMatrix, int generatedMatrixSize)
         {
             float[][] generatedInputMatrix = new float[generatedMatrixSize][];
 
-            generatedInputMatrix = InputBuildRightTopPart(generatedOutputMatrix,
+            generatedInputMatrix = CreateRightTopPartOfInputMatrix(generatedOutputMatrix,
                 generatedInputMatrix);
-            generatedInputMatrix = BuildLeftBottomPartOfInput(generatedInputMatrix);
+            generatedInputMatrix = CreateLeftBottomPartOfInputMatrix(generatedInputMatrix);
 
             return generatedInputMatrix;
         }
@@ -313,7 +313,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение правой (верхней) стороны  (сМ).
          */
-        public static float[][] InputBuildRightTopPart(float[][] generatedOutputMatrix,
+        public static float[][] CreateRightTopPartOfInputMatrix(float[][] generatedOutputMatrix,
             float[][] generatedInputMatrix)
         {
             for (int person = 0; person < generatedOutputMatrix.GetLength(0); person++)

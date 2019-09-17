@@ -45,7 +45,7 @@ namespace FamilyMatrixCreator
         /*
         * Сбор статистики по родству.
         */
-        public static int[] CollectStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
+        public static int[] GetRelationshipStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
         {
             int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count];
 
@@ -65,7 +65,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение списка возможных степеней родства пробанда.
          */
-        public static List<int> GetAllPossibleRelationshipsOfProband(List<int> existingRelationshipDegrees)
+        public static List<int> GetListOfAllPossibleRelationshipsOfProband(List<int> existingRelationshipDegrees)
         {
             existingRelationshipDegrees = existingRelationshipDegrees.Where(var => var != 1).ToList();
 
@@ -112,7 +112,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение левой (нижней) стороны.
          */
-        public static float[][] BuildLeftBottomPartOfOutput(float[][] generatedOutputMatrix)
+        public static float[][] CreateLeftBottomPartOfOutputMatrix(float[][] generatedOutputMatrix)
         {
             for (int genPerson = 1; genPerson < generatedOutputMatrix.GetLength(0); genPerson++)
             {
@@ -139,7 +139,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение левой (нижней) стороны (сМ).
          */
-        public static float[][] BuildLeftBottomPartOfInput(float[][] generatedInputMatrix)
+        public static float[][] CreateLeftBottomPartOfInputMatrix(float[][] generatedInputMatrix)
         {
             for (int genPerson = 1; genPerson < generatedInputMatrix.GetLength(0); genPerson++)
             {
@@ -168,7 +168,7 @@ namespace FamilyMatrixCreator
         /*
          * Создание случайного значения.
          */
-        public static int GetNextRnd(int min, int max)
+        public static int GetNextRandomValue(int min, int max)
         {
             byte[] rndBytes = new byte[4];
             Rng.GetBytes(rndBytes);
