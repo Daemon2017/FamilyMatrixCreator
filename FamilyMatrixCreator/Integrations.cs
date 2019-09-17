@@ -68,34 +68,6 @@ namespace FamilyMatrixCreator
             return allPossibleRelationships;
         }
 
-        public static int[][] GetAncestorsCurrentCountMatrix(float[][] generatedOutputMatrix)
-        {
-            int[][] ancestorsCurrentCountMatrix = new int[generatedOutputMatrix.Length][];
-
-            for (int row = 0; row < generatedOutputMatrix.Length; row++)
-            {
-                ancestorsCurrentCountMatrix[row] = new int[AncestorList.Count];
-
-                if (null != generatedOutputMatrix[row])
-                {
-                    for (int column = row + 1; column < generatedOutputMatrix[0].Length; column++)
-                    {
-                        for (int i = 0; i < AncestorList.Count; i++)
-                        {
-                            if (generatedOutputMatrix[row][column] == AncestorList[i])
-                            {
-                                ancestorsCurrentCountMatrix[row][i]++;
-
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return ancestorsCurrentCountMatrix;
-        }
-
         /*
          * Поиск всех возможных видов родства.
          */

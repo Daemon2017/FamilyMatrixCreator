@@ -221,44 +221,6 @@ namespace FamilyMatrixCreator
                         generatedOutputMatrix,
                         persons, person,
                         relatives, relative);
-
-                    /*
-                     * Создание родственника со случайным видом родства.
-                     */
-                    try
-                    {
-                        if (allPossibleRelationships.Contains(0) && allPossibleRelationships.Count > 1)
-                        {
-                            if (random.NextDouble() < noRelationPercent)
-                            {
-                                generatedOutputMatrix[persons[person]][relatives[relative]] = 0;
-                            }
-                            else
-                            {
-                                allPossibleRelationships = allPossibleRelationships.Where(val => val != 0).ToList();
-                                generatedOutputMatrix[persons[person]][relatives[relative]] =
-                                    allPossibleRelationships[GetNextRandomValue(0, allPossibleRelationships.Count)];
-                            }
-                        }
-                        else
-                        {
-                            generatedOutputMatrix[persons[person]][relatives[relative]] =
-                                allPossibleRelationships[GetNextRandomValue(0, allPossibleRelationships.Count)];
-                        }
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        generatedOutputMatrix = new float[generatedMatrixSize][];
-
-                        persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                                   orderby new ContinuousUniform().Sample()
-                                   select x).ToList();
-                        persons.Insert(0, 0);
-
-                        person = -1;
-
-                        break;
-                    }
                 }
 
                 /*
