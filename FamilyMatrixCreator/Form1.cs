@@ -210,14 +210,14 @@ namespace FamilyMatrixCreator
             {
                 RelationshipDegree selectedRandomRelationship = RelationshipDictionary[allPossibleRelationships[GetNextRandomValue(0, allPossibleRelationships.Count)]];
 
-                int distanceY = selectedRandomRelationship.CoordY - relativesList[0].RelationshipDegree.CoordY;
                 int distanceX = selectedRandomRelationship.CoordX - relativesList[0].RelationshipDegree.CoordX;
+                int distanceY = selectedRandomRelationship.CoordY - relativesList[0].RelationshipDegree.CoordY;
 
-                if (distanceY > 0)
+                if (distanceX != 0)
                 {
-                    for (int stepX = 0; stepX < distanceY - 1; stepX++)
+                    for (int stepY = 0; stepY < distanceX; stepY++)
                     {
-                        int relationship = RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == stepX + 1).Key;
+                        int relationship = RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == stepY + 1).Key;
 
                         relativesList.Add(new Relative(
                             currentFakeRelative,
@@ -225,7 +225,7 @@ namespace FamilyMatrixCreator
                             new List<Relative>(),
                             new List<Relative>()));
 
-                        if (stepX == 0)
+                        if (stepY == 0)
                         {
                             relativesList[0].ParentsList.Add(relativesList[relativesList.Count - 1]);
                         }
