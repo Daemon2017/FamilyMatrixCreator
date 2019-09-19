@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics.Distributions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -198,62 +197,104 @@ namespace FamilyMatrixCreator
         public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             int minPercent, int maxPercent, double noRelationPercent)
         {
-            float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
-
-            List<int> persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                                 orderby new ContinuousUniform().Sample()
-                                 select x).ToList();
-            persons.Insert(0, 0);
-
-            for (int person = 0; person < persons.Count; person++)
+            List<Relative> relativesList = new List<Relative>
             {
-                generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
+                { new Relative(0, RelationshipDictionary[1], new List<Relative>(), new List<Relative>()) }
+            };
 
-                List<int> relatives = (from x in Enumerable.Range(persons[person] + 1,
-                                       generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
-                                       orderby new ContinuousUniform().Sample()
-                                       select x).ToList();
+            int currentFakeRelative = generatedMatrixSize;
 
-                for (int relative = 0; relative < relatives.Count; relative++)
+            List<int> allPossibleRelationships = GetListOfAllPossibleRelationshipsOfProband(existingRelationshipDegrees);
+
+            for (int currentTrueRelative = 1; currentTrueRelative < generatedMatrixSize; currentTrueRelative++)
+            {
+                RelationshipDegree selectedRandomRelationship = RelationshipDictionary[allPossibleRelationships[GetNextRandomValue(0, allPossibleRelationships.Count)]];
+
+                int distanceY = selectedRandomRelationship.CoordY - relativesList[0].RelationshipDegree.CoordY;
+                int distanceX = selectedRandomRelationship.CoordX - relativesList[0].RelationshipDegree.CoordX;
+
+                if (distanceY > 0)
                 {
-                    List<int> allPossibleRelationships = GetListOfAllPossibleRelationships(
-                        existingRelationshipDegrees,
-                        generatedOutputMatrix,
-                        persons, person,
-                        relatives, relative);
-                }
-
-                /*
-                 * Проверка того, что выполняется требование по проценту значащих значений
-                 */
-                if (generatedOutputMatrix.GetLength(0) - 1 == person)
-                {
-                    double percentOfMeaningfulValues = 2 * GetPercentOfMeaningfulValues(
-                                                           generatedMatrixSize,
-                                                           existingRelationshipDegrees, generatedOutputMatrix);
-
-                    if (percentOfMeaningfulValues < minPercent || percentOfMeaningfulValues > maxPercent)
+                    for (int stepX = 0; stepX < distanceY - 1; stepX++)
                     {
-                        if (percentOfMeaningfulValues < minPercent)
+                        int relationship = RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == stepX + 1).Key;
+
+                        relativesList.Add(new Relative(
+                            currentFakeRelative,
+                            RelationshipDictionary[relationship],
+                            new List<Relative>(),
+                            new List<Relative>()));
+
+                        if (stepX == 0)
                         {
-                            Console.WriteLine("[ОШИБКА] Процент значащих значений у полученной матрицы ниже заданного! " + percentOfMeaningfulValues);
+                            relativesList[0].ParentsList.Add(relativesList[relativesList.Count - 1]);
                         }
-                        else if (percentOfMeaningfulValues > maxPercent)
+                        else
                         {
-                            Console.WriteLine("[ОШИБКА] Процент значащих значений у полученной матрицы выше заданного! " + percentOfMeaningfulValues);
+                            relativesList[relativesList.Count - 2].ParentsList.Add(relativesList[relativesList.Count - 1]);
                         }
 
-                        generatedOutputMatrix = new float[generatedMatrixSize][];
-
-                        persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
-                                   orderby new ContinuousUniform().Sample()
-                                   select x).ToList();
-                        persons.Insert(0, 0);
-
-                        person = -1;
+                        currentFakeRelative++;
                     }
                 }
             }
+
+            float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
+
+            //List<int> persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
+            //                     orderby new ContinuousUniform().Sample()
+            //                     select x).ToList();
+            //persons.Insert(0, 0);
+
+            //for (int person = 0; person < persons.Count; person++)
+            //{
+            //    generatedOutputMatrix[persons[person]] = new float[generatedOutputMatrix.GetLength(0)];
+
+            //    List<int> relatives = (from x in Enumerable.Range(persons[person] + 1,
+            //                           generatedOutputMatrix.GetLength(0) - (persons[person] + 1))
+            //                           orderby new ContinuousUniform().Sample()
+            //                           select x).ToList();
+
+            //    for (int relative = 0; relative < relatives.Count; relative++)
+            //    {
+            //        List<int> allPossibleRelationships = GetListOfAllPossibleRelationships(
+            //            existingRelationshipDegrees,
+            //            generatedOutputMatrix,
+            //            persons, person,
+            //            relatives, relative);
+            //    }
+
+            //    /*
+            //     * Проверка того, что выполняется требование по проценту значащих значений
+            //     */
+            //    if (generatedOutputMatrix.GetLength(0) - 1 == person)
+            //    {
+            //        double percentOfMeaningfulValues = 2 * GetPercentOfMeaningfulValues(
+            //                                               generatedMatrixSize,
+            //                                               existingRelationshipDegrees, generatedOutputMatrix);
+
+            //        if (percentOfMeaningfulValues < minPercent || percentOfMeaningfulValues > maxPercent)
+            //        {
+            //            if (percentOfMeaningfulValues < minPercent)
+            //            {
+            //                Console.WriteLine("[ОШИБКА] Процент значащих значений у полученной матрицы ниже заданного! " + percentOfMeaningfulValues);
+            //            }
+            //            else if (percentOfMeaningfulValues > maxPercent)
+            //            {
+            //                Console.WriteLine("[ОШИБКА] Процент значащих значений у полученной матрицы выше заданного! " + percentOfMeaningfulValues);
+            //            }
+
+            //            generatedOutputMatrix = new float[generatedMatrixSize][];
+
+            //            persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
+            //                       orderby new ContinuousUniform().Sample()
+            //                       select x).ToList();
+            //            persons.Insert(0, 0);
+
+            //            person = -1;
+            //        }
+            //    }
+            //}
 
             return generatedOutputMatrix;
         }
