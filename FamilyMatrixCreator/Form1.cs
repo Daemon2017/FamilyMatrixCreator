@@ -245,8 +245,16 @@ namespace FamilyMatrixCreator
                             new List<Relative>(),
                             new List<Relative>()));
 
-                        relativesList[relativesList.Count - 2].ParentsList.Add(relativesList[relativesList.Count - 1]);
-                        relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[relativesList.Count - 2]);
+                        if (distanceY == 1)
+                        {
+                            relativesList[0].ParentsList.Add(relativesList[relativesList.Count - 1]);
+                            relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[0]);
+                        }
+                        else
+                        {
+                            relativesList[relativesList.Count - 2].ParentsList.Add(relativesList[relativesList.Count - 1]);
+                            relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[relativesList.Count - 2]);
+                        }
                     }
                     else
                     {
@@ -278,8 +286,16 @@ namespace FamilyMatrixCreator
                             new List<Relative>(),
                             new List<Relative>()));
 
-                        relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
-                        relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
+                        if (distanceY == -1)
+                        {
+                            relativesList[0].ChildsList.Add(relativesList[relativesList.Count - 1]);
+                            relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[0]);
+                        }
+                        else
+                        {
+                            relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
+                            relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
+                        }
                     }
                 }
                 else
