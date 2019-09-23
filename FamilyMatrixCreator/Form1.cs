@@ -221,7 +221,7 @@ namespace FamilyMatrixCreator
                         {
                             relativesList.Add(new Relative(
                                 currentFakeRelative,
-                                RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == distanceX && x.Value.CoordY == stepY + 1).Key],
+                                RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == stepY + 1).Key],
                                 new List<Relative>(),
                                 new List<Relative>()));
 
@@ -241,7 +241,7 @@ namespace FamilyMatrixCreator
 
                         relativesList.Add(new Relative(
                             currentTrueRelative,
-                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == distanceX && x.Value.CoordY == distanceY).Key],
+                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == distanceY).Key],
                             new List<Relative>(),
                             new List<Relative>()));
 
@@ -262,7 +262,7 @@ namespace FamilyMatrixCreator
                         {
                             relativesList.Add(new Relative(
                                 currentFakeRelative,
-                                RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == distanceX && x.Value.CoordY == stepY - 1).Key],
+                                RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == stepY - 1).Key],
                                 new List<Relative>(),
                                 new List<Relative>()));
 
@@ -282,7 +282,7 @@ namespace FamilyMatrixCreator
 
                         relativesList.Add(new Relative(
                             currentTrueRelative,
-                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == distanceX && x.Value.CoordY == distanceY).Key],
+                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == distanceY).Key],
                             new List<Relative>(),
                             new List<Relative>()));
 
@@ -300,7 +300,50 @@ namespace FamilyMatrixCreator
                 }
                 else
                 {
+                    for (int stepY = 0; stepY < distanceX; stepY++)
+                    {
+                        relativesList.Add(new Relative(
+                            currentFakeRelative,
+                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == stepY + 1).Key],
+                            new List<Relative>(),
+                            new List<Relative>()));
 
+                        if (stepY == 0)
+                        {
+                            relativesList[0].ParentsList.Add(relativesList[relativesList.Count - 1]);
+                            relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[0]);
+                        }
+                        else
+                        {
+                            relativesList[relativesList.Count - 2].ParentsList.Add(relativesList[relativesList.Count - 1]);
+                            relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[relativesList.Count - 2]);
+                        }
+
+                        currentFakeRelative++;
+                    }
+
+                    for (int stepY = distanceX; stepY > distanceY + 1; stepY--)
+                    {
+                        relativesList.Add(new Relative(
+                            currentFakeRelative,
+                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == distanceX && x.Value.CoordY == stepY - 1).Key],
+                            new List<Relative>(),
+                            new List<Relative>()));
+
+                        relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
+                        relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
+
+                        currentFakeRelative++;
+                    }
+
+                    relativesList.Add(new Relative(
+                        currentTrueRelative,
+                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == distanceX && x.Value.CoordY == distanceY).Key],
+                        new List<Relative>(),
+                        new List<Relative>()));
+
+                    relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
+                    relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
                 }
             }
 
