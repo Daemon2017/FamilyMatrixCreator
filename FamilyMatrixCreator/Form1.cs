@@ -219,42 +219,12 @@ namespace FamilyMatrixCreator
                     {
                         for (int stepY = 0; stepY < distanceY - 1; stepY++)
                         {
-                            relativesList.Add(new Relative(
-                                currentFakeRelative,
-                                RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == stepY + 1).Key],
-                                new List<Relative>(),
-                                new List<Relative>()));
-
-                            if (stepY == 0)
-                            {
-                                relativesList[0].ParentsList.Add(relativesList[relativesList.Count - 1]);
-                                relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[0]);
-                            }
-                            else
-                            {
-                                relativesList[relativesList.Count - 2].ParentsList.Add(relativesList[relativesList.Count - 1]);
-                                relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[relativesList.Count - 2]);
-                            }
+                            relativesList = AddParentalRelationship(relativesList, currentFakeRelative, 0, stepY + 1, stepY == 0);
 
                             currentFakeRelative++;
                         }
 
-                        relativesList.Add(new Relative(
-                            currentTrueRelative,
-                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == distanceY).Key],
-                            new List<Relative>(),
-                            new List<Relative>()));
-
-                        if (distanceY == 1)
-                        {
-                            relativesList[0].ParentsList.Add(relativesList[relativesList.Count - 1]);
-                            relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[0]);
-                        }
-                        else
-                        {
-                            relativesList[relativesList.Count - 2].ParentsList.Add(relativesList[relativesList.Count - 1]);
-                            relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[relativesList.Count - 2]);
-                        }
+                        relativesList = AddParentalRelationship(relativesList, currentTrueRelative, 0, distanceY, distanceY == 1);
                     }
                     else
                     {
@@ -302,22 +272,7 @@ namespace FamilyMatrixCreator
                 {
                     for (int stepY = 0; stepY < distanceX; stepY++)
                     {
-                        relativesList.Add(new Relative(
-                            currentFakeRelative,
-                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == stepY + 1).Key],
-                            new List<Relative>(),
-                            new List<Relative>()));
-
-                        if (stepY == 0)
-                        {
-                            relativesList[0].ParentsList.Add(relativesList[relativesList.Count - 1]);
-                            relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[0]);
-                        }
-                        else
-                        {
-                            relativesList[relativesList.Count - 2].ParentsList.Add(relativesList[relativesList.Count - 1]);
-                            relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[relativesList.Count - 2]);
-                        }
+                        relativesList = AddParentalRelationship(relativesList, currentFakeRelative, 0, stepY + 1, stepY == 0);
 
                         currentFakeRelative++;
                     }
