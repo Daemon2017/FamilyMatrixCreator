@@ -268,13 +268,13 @@ namespace FamilyMatrixCreator
 
                             if (stepY == 0)
                             {
-                                relativesList[0].ChildsList.Add(relativesList[relativesList.Count - 1]);
                                 relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[0]);
+                                relativesList[0].ChildsList.Add(relativesList[relativesList.Count - 1]);
                             }
                             else
                             {
-                                relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
                                 relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
+                                relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
                             }
 
                             currentFakeRelative++;
@@ -288,13 +288,13 @@ namespace FamilyMatrixCreator
 
                         if (distanceY == -1)
                         {
-                            relativesList[0].ChildsList.Add(relativesList[relativesList.Count - 1]);
                             relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[0]);
+                            relativesList[0].ChildsList.Add(relativesList[relativesList.Count - 1]);
                         }
                         else
                         {
-                            relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
                             relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
+                            relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
                         }
                     }
                 }
@@ -330,8 +330,8 @@ namespace FamilyMatrixCreator
                             new List<Relative>(),
                             new List<Relative>()));
 
-                        relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
                         relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
+                        relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
 
                         currentFakeRelative++;
                     }
@@ -342,8 +342,8 @@ namespace FamilyMatrixCreator
                         new List<Relative>(),
                         new List<Relative>()));
 
-                    relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
                     relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
+                    relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
                 }
             }
 
