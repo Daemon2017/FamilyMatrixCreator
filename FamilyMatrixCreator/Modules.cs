@@ -289,5 +289,27 @@ namespace FamilyMatrixCreator
 
             return relativesList;
         }
+
+        private static List<Relative> AddDescendantRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY, bool condition)
+        {
+            relativesList.Add(new Relative(
+                relativeNumber,
+                RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == coordX && x.Value.CoordY == coordY).Key],
+                new List<Relative>(),
+                new List<Relative>()));
+
+            if (condition)
+            {
+                relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[0]);
+                relativesList[0].ChildsList.Add(relativesList[relativesList.Count - 1]);
+            }
+            else
+            {
+                relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
+                relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
+            }
+
+            return relativesList;
+        }
     }
 }

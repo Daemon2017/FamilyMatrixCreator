@@ -230,42 +230,12 @@ namespace FamilyMatrixCreator
                     {
                         for (int stepY = 0; stepY > distanceY + 1; stepY--)
                         {
-                            relativesList.Add(new Relative(
-                                currentFakeRelative,
-                                RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == stepY - 1).Key],
-                                new List<Relative>(),
-                                new List<Relative>()));
-
-                            if (stepY == 0)
-                            {
-                                relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[0]);
-                                relativesList[0].ChildsList.Add(relativesList[relativesList.Count - 1]);
-                            }
-                            else
-                            {
-                                relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
-                                relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
-                            }
+                            relativesList = AddDescendantRelationship(relativesList, currentFakeRelative, 0, stepY - 1, stepY == 0);
 
                             currentFakeRelative++;
                         }
 
-                        relativesList.Add(new Relative(
-                            currentTrueRelative,
-                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == 0 && x.Value.CoordY == distanceY).Key],
-                            new List<Relative>(),
-                            new List<Relative>()));
-
-                        if (distanceY == -1)
-                        {
-                            relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[0]);
-                            relativesList[0].ChildsList.Add(relativesList[relativesList.Count - 1]);
-                        }
-                        else
-                        {
-                            relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
-                            relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
-                        }
+                        relativesList = AddDescendantRelationship(relativesList, currentTrueRelative, 0, distanceY, distanceY == -1);
                     }
                 }
                 else
@@ -279,26 +249,12 @@ namespace FamilyMatrixCreator
 
                     for (int stepY = distanceX; stepY > distanceY + 1; stepY--)
                     {
-                        relativesList.Add(new Relative(
-                            currentFakeRelative,
-                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == distanceX && x.Value.CoordY == stepY - 1).Key],
-                            new List<Relative>(),
-                            new List<Relative>()));
-
-                        relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
-                        relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
+                        relativesList = AddDescendantRelationship(relativesList, currentFakeRelative, distanceX, stepY - 1, 1 == 0);
 
                         currentFakeRelative++;
                     }
 
-                    relativesList.Add(new Relative(
-                        currentTrueRelative,
-                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == distanceX && x.Value.CoordY == distanceY).Key],
-                        new List<Relative>(),
-                        new List<Relative>()));
-
-                    relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
-                    relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
+                    relativesList = AddDescendantRelationship(relativesList, currentTrueRelative, distanceX, distanceY, 1 == 0);
                 }
             }
 
