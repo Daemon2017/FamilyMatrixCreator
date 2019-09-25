@@ -202,11 +202,11 @@ namespace FamilyMatrixCreator
                 { new Relative(0, RelationshipDictionary[1], new List<Relative>(), new List<Relative>()) }
             };
 
-            int currentFakeRelative = generatedMatrixSize;
+            int relativeNumber = 1;
 
             List<int> allPossibleRelationships = GetListOfAllPossibleRelationshipsOfProband(existingRelationshipDegrees);
 
-            for (int currentTrueRelative = 1; currentTrueRelative < generatedMatrixSize; currentTrueRelative++)
+            for (int i = 1; i < generatedMatrixSize; i++)
             {
                 RelationshipDegree selectedRandomRelationship = RelationshipDictionary[allPossibleRelationships[GetNextRandomValue(0, allPossibleRelationships.Count)]];
 
@@ -217,44 +217,38 @@ namespace FamilyMatrixCreator
                 {
                     if (distanceY > 0)
                     {
-                        for (int stepY = 0; stepY < distanceY - 1; stepY++)
+                        for (int stepY = 0; stepY < distanceY; stepY++)
                         {
-                            relativesList = AddParentalRelationship(relativesList, currentFakeRelative, 0, stepY + 1, stepY == 0);
+                            relativesList = AddParentalRelationship(relativesList, relativeNumber, 0, stepY + 1, stepY == 0);
 
-                            currentFakeRelative++;
+                            relativeNumber++;
                         }
-
-                        relativesList = AddParentalRelationship(relativesList, currentTrueRelative, 0, distanceY, distanceY == 1);
                     }
                     else
                     {
-                        for (int stepY = 0; stepY > distanceY + 1; stepY--)
+                        for (int stepY = 0; stepY > distanceY; stepY--)
                         {
-                            relativesList = AddDescendantRelationship(relativesList, currentFakeRelative, 0, stepY - 1, stepY == 0);
+                            relativesList = AddDescendantRelationship(relativesList, relativeNumber, 0, stepY - 1, stepY == 0);
 
-                            currentFakeRelative++;
+                            relativeNumber++;
                         }
-
-                        relativesList = AddDescendantRelationship(relativesList, currentTrueRelative, 0, distanceY, distanceY == -1);
                     }
                 }
                 else
                 {
                     for (int stepY = 0; stepY < distanceX; stepY++)
                     {
-                        relativesList = AddParentalRelationship(relativesList, currentFakeRelative, 0, stepY + 1, stepY == 0);
+                        relativesList = AddParentalRelationship(relativesList, relativeNumber, 0, stepY + 1, stepY == 0);
 
-                        currentFakeRelative++;
+                        relativeNumber++;
                     }
 
-                    for (int stepY = distanceX; stepY > distanceY + 1; stepY--)
+                    for (int stepY = distanceX; stepY > distanceY; stepY--)
                     {
-                        relativesList = AddDescendantRelationship(relativesList, currentFakeRelative, distanceX, stepY - 1, 1 == 0);
+                        relativesList = AddDescendantRelationship(relativesList, relativeNumber, distanceX, stepY - 1, 1 == 0);
 
-                        currentFakeRelative++;
+                        relativeNumber++;
                     }
-
-                    relativesList = AddDescendantRelationship(relativesList, currentTrueRelative, distanceX, distanceY, 1 == 0);
                 }
             }
 
