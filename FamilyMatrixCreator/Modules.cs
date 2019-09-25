@@ -272,23 +272,9 @@ namespace FamilyMatrixCreator
         {
             if (condition)
             {
-                if (relativesList[0].ParentsList.Count != 0)
+                if (relativesList[0].ParentsList.Count != 0 && GetNextRandomValue(0, 2) == 0)
                 {
-                    if (GetNextRandomValue(0, 2) == 0)
-                    {
-                        relativesList.Add(relativesList[0].ParentsList[GetNextRandomValue(0, relativesList[0].ParentsList.Count)]);
-                    }
-                    else
-                    {
-                        relativesList.Add(new Relative(
-                            relativeNumber,
-                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == coordX && x.Value.CoordY == coordY).Key],
-                            new List<Relative>(),
-                            new List<Relative>()));
-
-                        relativesList[0].ParentsList.Add(relativesList[relativesList.Count - 1]);
-                        relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[0]);
-                    }
+                    relativesList.Add(relativesList[0].ParentsList[GetNextRandomValue(0, relativesList[0].ParentsList.Count)]);
                 }
                 else
                 {
@@ -304,23 +290,9 @@ namespace FamilyMatrixCreator
             }
             else
             {
-                if (relativesList[relativesList.Count - 1].ParentsList.Count != 0)
+                if (relativesList[relativesList.Count - 1].ParentsList.Count != 0 && GetNextRandomValue(0, 2) == 0)
                 {
-                    if (GetNextRandomValue(0, 2) == 0)
-                    {
-                        relativesList.Add(relativesList[relativesList.Count - 1].ParentsList[GetNextRandomValue(0, relativesList[relativesList.Count - 1].ParentsList.Count)]);
-                    }
-                    else
-                    {
-                        relativesList.Add(new Relative(
-                            relativeNumber,
-                            RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == coordX && x.Value.CoordY == coordY).Key],
-                            new List<Relative>(),
-                            new List<Relative>()));
-
-                        relativesList[relativesList.Count - 2].ParentsList.Add(relativesList[relativesList.Count - 1]);
-                        relativesList[relativesList.Count - 1].ChildsList.Add(relativesList[relativesList.Count - 2]);
-                    }
+                    relativesList.Add(relativesList[relativesList.Count - 1].ParentsList[GetNextRandomValue(0, relativesList[relativesList.Count - 1].ParentsList.Count)]);
                 }
                 else
                 {
