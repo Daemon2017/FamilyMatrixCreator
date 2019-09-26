@@ -290,6 +290,7 @@ namespace FamilyMatrixCreator
             }
             else
             {
+                //Если строим последнего предка в цепи, то нельзя входить сюда!
                 if (relativesList[relativesList.Count - 1].ParentsList.Count != 0 && GetNextRandomValue(0, 2) == 0)
                 {
                     relativesList.Add(relativesList[relativesList.Count - 1].ParentsList[GetNextRandomValue(0, relativesList[relativesList.Count - 1].ParentsList.Count)]);
@@ -312,21 +313,42 @@ namespace FamilyMatrixCreator
 
         private static List<Relative> AddDescendantRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY, bool condition)
         {
-            relativesList.Add(new Relative(
-                relativeNumber,
-                RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == coordX && x.Value.CoordY == coordY).Key],
-                new List<Relative>(),
-                new List<Relative>()));
-
             if (condition)
             {
-                relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[0]);
-                relativesList[0].ChildsList.Add(relativesList[relativesList.Count - 1]);
+                if (relativesList[0].ChildsList.Count != 0 && GetNextRandomValue(0, 2) == 0)
+                {
+                    relativesList.Add(relativesList[0].ChildsList[GetNextRandomValue(0, relativesList[0].ChildsList.Count)]);
+                }
+                else
+                {
+                    relativesList.Add(new Relative(
+                        relativeNumber,
+                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == coordX && x.Value.CoordY == coordY).Key],
+                        new List<Relative>(),
+                        new List<Relative>()));
+
+                    relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[0]);
+                    relativesList[0].ChildsList.Add(relativesList[relativesList.Count - 1]);
+                }
             }
             else
             {
-                relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
-                relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
+                //Если у потомка X=0, а у строимого потомка X!=0, то такого потомка нельзя включать в список
+                if (relativesList[relativesList.Count - 1].ChildsList.Count != 0 && GetNextRandomValue(0, 2) == 0)
+                {
+                    relativesList.Add(relativesList[relativesList.Count - 1].ChildsList[GetNextRandomValue(0, relativesList[relativesList.Count - 1].ChildsList.Count)]);
+                }
+                else
+                {
+                    relativesList.Add(new Relative(
+                        relativeNumber,
+                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == coordX && x.Value.CoordY == coordY).Key],
+                        new List<Relative>(),
+                        new List<Relative>()));
+
+                    relativesList[relativesList.Count - 1].ParentsList.Add(relativesList[relativesList.Count - 2]);
+                    relativesList[relativesList.Count - 2].ChildsList.Add(relativesList[relativesList.Count - 1]);
+                }
             }
 
             return relativesList;
