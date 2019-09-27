@@ -228,7 +228,7 @@ namespace FamilyMatrixCreator
                     {
                         for (int stepY = 0; stepY > distanceY; stepY--)
                         {
-                            relativesList = AddDescendantRelationship(relativesList, relativeNumber, 0, stepY - 1, stepY == 0);
+                            relativesList = AddDescendantRelationship(relativesList, relativeNumber, 0, stepY - 1, stepY == 0, true);
 
                             relativeNumber++;
                         }
@@ -245,7 +245,7 @@ namespace FamilyMatrixCreator
 
                     for (int stepY = distanceX; stepY > distanceY; stepY--)
                     {
-                        relativesList = AddDescendantRelationship(relativesList, relativeNumber, distanceX, stepY - 1, 1 == 0);
+                        relativesList = AddDescendantRelationship(relativesList, relativeNumber, distanceX, stepY - 1, 1 == 0, false);
 
                         relativeNumber++;
                     }

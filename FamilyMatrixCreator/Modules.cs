@@ -311,7 +311,7 @@ namespace FamilyMatrixCreator
             return relativesList;
         }
 
-        private static List<Relative> AddDescendantRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY, bool condition)
+        private static List<Relative> AddDescendantRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY, bool condition, bool descendantOfProband)
         {
             if (condition)
             {
@@ -333,10 +333,19 @@ namespace FamilyMatrixCreator
             }
             else
             {
-                //Если у потомка X=0, а у строимого потомка X!=0, то такого потомка нельзя включать в список
-                if (relativesList[relativesList.Count - 1].ChildsList.Count != 0 && GetNextRandomValue(0, 2) == 0)
+                if (((descendantOfProband && relativesList[relativesList.Count - 1].ChildsList.Count != 0)
+                     || (!descendantOfProband && relativesList[relativesList.Count - 1].ChildsList.Where(child => child.RelationshipDegree.CoordX != 0).ToList().Count != 0))
+                     && GetNextRandomValue(0, 2) == 0)
                 {
-                    relativesList.Add(relativesList[relativesList.Count - 1].ChildsList[GetNextRandomValue(0, relativesList[relativesList.Count - 1].ChildsList.Count)]);
+                    if (descendantOfProband)
+                    {
+                        relativesList.Add(relativesList[relativesList.Count - 1].ChildsList[GetNextRandomValue(0, relativesList[relativesList.Count - 1].ChildsList.Count)]);
+                    }
+                    else
+                    {
+                        List<Relative> newChildsList = relativesList[relativesList.Count - 1].ChildsList.Where(child => child.RelationshipDegree.CoordX != 0).ToList();
+                        relativesList.Add(newChildsList[GetNextRandomValue(0, newChildsList.Count)]);
+                    }
                 }
                 else
                 {
