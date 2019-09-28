@@ -252,6 +252,7 @@ namespace FamilyMatrixCreator
                 }
             }
 
+            relativesList = relativesList.Distinct().ToList();
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
             //List<int> persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)

@@ -333,8 +333,9 @@ namespace FamilyMatrixCreator
             }
             else
             {
-                if (((descendantOfProband && relativesList[relativesList.Count - 1].ChildsList.Count != 0)
-                     || (!descendantOfProband && relativesList[relativesList.Count - 1].ChildsList.Where(child => child.RelationshipDegree.CoordX != 0).ToList().Count != 0))
+                List<Relative> cleanChildsList = relativesList[relativesList.Count - 1].ChildsList.Where(child => child.RelationshipDegree.CoordX != 0).ToList();
+
+                if (((descendantOfProband && relativesList[relativesList.Count - 1].ChildsList.Count != 0) || (!descendantOfProband && cleanChildsList.Count != 0))
                      && GetNextRandomValue(0, 2) == 0)
                 {
                     if (descendantOfProband)
@@ -343,8 +344,7 @@ namespace FamilyMatrixCreator
                     }
                     else
                     {
-                        List<Relative> newChildsList = relativesList[relativesList.Count - 1].ChildsList.Where(child => child.RelationshipDegree.CoordX != 0).ToList();
-                        relativesList.Add(newChildsList[GetNextRandomValue(0, newChildsList.Count)]);
+                        relativesList.Add(cleanChildsList[GetNextRandomValue(0, cleanChildsList.Count)]);
                     }
                 }
                 else
