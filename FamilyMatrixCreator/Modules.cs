@@ -268,9 +268,10 @@ namespace FamilyMatrixCreator
             return numberOfAncestorsNotZero;
         }
 
-        public static List<Relative> AddParentalRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY, bool condition)
+        public static List<Relative> AddParentalRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY, 
+            bool isFirstIteration, bool isLastIteration)
         {
-            if (condition)
+            if (isFirstIteration)
             {
                 if (relativesList[0].ParentsList.Count != 0 && GetNextRandomValue(0, 2) == 0)
                 {
@@ -290,8 +291,7 @@ namespace FamilyMatrixCreator
             }
             else
             {
-                //Если строим последнего предка в цепи, то нельзя входить сюда!
-                if (relativesList[relativesList.Count - 1].ParentsList.Count != 0 && GetNextRandomValue(0, 2) == 0)
+                if (relativesList[relativesList.Count - 1].ParentsList.Count != 0 && GetNextRandomValue(0, 2) == 0 && !isLastIteration)
                 {
                     relativesList.Add(relativesList[relativesList.Count - 1].ParentsList[GetNextRandomValue(0, relativesList[relativesList.Count - 1].ParentsList.Count)]);
                 }
@@ -311,9 +311,10 @@ namespace FamilyMatrixCreator
             return relativesList;
         }
 
-        private static List<Relative> AddDescendantRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY, bool condition, bool descendantOfProband)
+        private static List<Relative> AddDescendantRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY,
+            bool isFirstIteration, bool isLastIteration, bool descendantOfProband)
         {
-            if (condition)
+            if (isFirstIteration)
             {
                 if (relativesList[0].ChildsList.Count != 0 && GetNextRandomValue(0, 2) == 0)
                 {
@@ -336,7 +337,7 @@ namespace FamilyMatrixCreator
                 List<Relative> cleanChildsList = relativesList[relativesList.Count - 1].ChildsList.Where(child => child.RelationshipDegree.CoordX != 0).ToList();
 
                 if (((descendantOfProband && relativesList[relativesList.Count - 1].ChildsList.Count != 0) || (!descendantOfProband && cleanChildsList.Count != 0))
-                     && GetNextRandomValue(0, 2) == 0)
+                     && GetNextRandomValue(0, 2) == 0 && !isLastIteration)
                 {
                     if (descendantOfProband)
                     {
