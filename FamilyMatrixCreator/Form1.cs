@@ -197,62 +197,8 @@ namespace FamilyMatrixCreator
         public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             int minPercent, int maxPercent, double noRelationPercent)
         {
-            List<Relative> relativesList = new List<Relative>
-            {
-                { new Relative(0, RelationshipDictionary[1], new List<Relative>(), new List<Relative>()) }
-            };
+            List<Relative> relativesList = GetTree(generatedMatrixSize, existingRelationshipDegrees);
 
-            int relativeNumber = 1;
-
-            List<int> allPossibleRelationships = GetListOfAllPossibleRelationshipsOfProband(existingRelationshipDegrees);
-
-            for (int i = 1; i < generatedMatrixSize; i++)
-            {
-                RelationshipDegree selectedRandomRelationship = RelationshipDictionary[allPossibleRelationships[GetNextRandomValue(0, allPossibleRelationships.Count)]];
-
-                int distanceX = selectedRandomRelationship.CoordX - relativesList[0].RelationshipDegree.CoordX;
-                int distanceY = selectedRandomRelationship.CoordY - relativesList[0].RelationshipDegree.CoordY;
-
-                if (distanceX == 0)
-                {
-                    if (distanceY > 0)
-                    {
-                        for (int stepY = 0; stepY < distanceY; stepY++)
-                        {
-                            relativesList = AddParentalRelationship(relativesList, relativeNumber, 0, stepY + 1, stepY == 0, stepY == distanceY - 1);
-
-                            relativeNumber++;
-                        }
-                    }
-                    else
-                    {
-                        for (int stepY = 0; stepY > distanceY; stepY--)
-                        {
-                            relativesList = AddDescendantRelationship(relativesList, relativeNumber, 0, stepY - 1, stepY == 0, stepY == distanceY + 1, true);
-
-                            relativeNumber++;
-                        }
-                    }
-                }
-                else
-                {
-                    for (int stepY = 0; stepY < distanceX; stepY++)
-                    {
-                        relativesList = AddParentalRelationship(relativesList, relativeNumber, 0, stepY + 1, stepY == 0, 1 != 0);
-
-                        relativeNumber++;
-                    }
-
-                    for (int stepY = distanceX; stepY > distanceY; stepY--)
-                    {
-                        relativesList = AddDescendantRelationship(relativesList, relativeNumber, distanceX, stepY - 1, 1 == 0, stepY == distanceY + 1, false);
-
-                        relativeNumber++;
-                    }
-                }
-            }
-
-            relativesList = relativesList.Distinct().ToList();
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
             //List<int> persons = (from x in Enumerable.Range(1, generatedOutputMatrix.GetLength(0) - 1)
@@ -311,7 +257,7 @@ namespace FamilyMatrixCreator
             //}
 
             return generatedOutputMatrix;
-        }
+        }      
 
         /*
          * Построение входной матрицы (матрицы сМ).
