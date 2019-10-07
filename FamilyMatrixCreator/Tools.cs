@@ -11,8 +11,8 @@ namespace FamilyMatrixCreator
         private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
 
         /*
- * Подсчет процента значащих значений
- */
+         * Подсчет процента значащих значений
+         */
         public static double GetPercentOfMeaningfulValues(int generatedMatrixSize, List<int> existingRelationshipDegrees,
             float[][] generatedOutputMatrix)
         {
@@ -257,8 +257,8 @@ namespace FamilyMatrixCreator
         }
 
         /*
-        * Сбор статистики по родству.
-        */
+         * Сбор статистики по родству.
+         */
         public static int[] GetRelationshipStatistics(float[][] generatedOutputMatrix, List<int> existingRelationshipDegrees)
         {
             int[] quantityOfEachRelationship = new int[existingRelationshipDegrees.Count];
