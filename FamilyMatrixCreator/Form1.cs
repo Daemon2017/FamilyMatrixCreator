@@ -198,6 +198,15 @@ namespace FamilyMatrixCreator
             int minPercent, int maxPercent, double noRelationPercent)
         {
             List<Relative> relativesList = GetTree(generatedMatrixSize, existingRelationshipDegrees);
+            List<int> relativesNumbersRange = Enumerable.Range(0, relativesList.Count).ToList();
+
+            List<int> randomNumbers = new List<int> { 0 };
+            for (int i = 1; i < generatedMatrixSize; i++)
+            {
+                int randomValue = GetNextRandomValue(1, relativesNumbersRange.Count);
+                randomNumbers.Add(randomValue);
+                relativesNumbersRange.RemoveAt(randomValue);
+            }
 
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
 
@@ -257,7 +266,7 @@ namespace FamilyMatrixCreator
             //}
 
             return generatedOutputMatrix;
-        }      
+        }
 
         /*
          * Построение входной матрицы (матрицы сМ).
