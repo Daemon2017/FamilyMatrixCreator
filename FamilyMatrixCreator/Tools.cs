@@ -161,8 +161,17 @@ namespace FamilyMatrixCreator
             }
 
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
+            generatedOutputMatrix[0] = new float[generatedMatrixSize];
+            for(int i=0; i < generatedMatrixSize; i++)
+            {
+                generatedOutputMatrix[0][i] = relativesList[randomNumbers[i]].RelationshipDegree.RelationshipNumber;
+            }
 
+            //int yMrca = GetYOfMRCA(_zeroRelative.CoordX, _zeroRelative.CoordY, _firstRelative.CoordX, _firstRelative.CoordY);
 
+            //int y0Result = yMrca - _zeroRelative.CoordY;
+            //int y1Result = yMrca - _firstRelative.CoordY;
+            //List<Relative> possibleRelationshipsList = GetPossibleRelationshipsList(yMrca, y0Result, y1Result, _zeroRelative, _firstRelative, _relativesList);
 
             return generatedOutputMatrix;
         }
@@ -784,5 +793,133 @@ namespace FamilyMatrixCreator
 
             return relativesList;
         }
+
+        public static int GetYOfMRCA(int startX, int startY, int endX, int endY)
+        {
+            int yOfMRCA = 0;
+
+            /*
+             * Определение количества поколений до БОП.
+             */
+            if (startX > endX)
+            {
+                if (0 == endX)
+                {
+                    if (0 < startX && startX < endY)
+                    {
+                        yOfMRCA = endY;
+                    }
+                    else
+                    {
+                        yOfMRCA = startX;
+                    }
+                }
+                else
+                {
+                    yOfMRCA = startX;
+                }
+            }
+            else if (startX == endX)
+            {
+                yOfMRCA = startY >= endY ? startY : endY;
+            }
+            else if (startX < endX)
+            {
+                if (0 == startX)
+                {
+                    if (0 < endX && endX < startY)
+                    {
+                        yOfMRCA = startY;
+                    }
+                    else
+                    {
+                        yOfMRCA = endX;
+                    }
+                }
+                else
+                {
+                    yOfMRCA = endX;
+                }
+            }
+
+            return yOfMRCA;
+        }
+
+        public static List<RelationshipDegree> GetPossibleRelationshipsList(int yOfMrca,
+            int numberOfGenerationsBetweenMrcaAndZeroRelative, int numberOfGenerationsBetweenMrcaAndFirstRelative,
+            RelationshipDegree _zeroRelative, RelationshipDegree _firstRelative,
+            List<RelationshipDegree> _relativesList)
+        {
+            /*
+             * Определение основной степени родства.
+             */
+            List<RelationshipDegree> possibleRelationshipsList = new List<RelationshipDegree>
+            {
+                GetRelationship(
+                    numberOfGenerationsBetweenMrcaAndZeroRelative,
+                    numberOfGenerationsBetweenMrcaAndFirstRelative,
+                    _relativesList)
+            };
+
+            /*
+             * Определение дополнительных степеней родства, которые могут возникать от того, что 1-я и 2-я личности
+             * находятся в одной вертикали.
+             */
+            if (_zeroRelative.CoordX == _firstRelative.CoordX &&
+                !((_zeroRelative.CoordX == 0 && _zeroRelative.CoordY >= 0) || (_firstRelative.CoordX == 0 && _firstRelative.CoordY >= 0)))
+            {
+                int y0New = _zeroRelative.CoordY;
+                int y1New = _firstRelative.CoordY;
+
+                while (y0New < _zeroRelative.CoordX && y1New < _firstRelative.CoordX)
+                {
+                    try
+                    {
+                        yOfMrca = GetYOfMRCA(_zeroRelative.CoordX, ++y0New, _firstRelative.CoordX, ++y1New);
+                        possibleRelationshipsList.Add(GetRelationship(
+                            yOfMrca - _zeroRelative.CoordY,
+                            yOfMrca - _firstRelative.CoordY,
+                            _relativesList));
+                    }
+                    catch (InvalidOperationException)
+                    {
+
+                    }
+                }
+            }
+
+            /*
+             * Определение возможности отсутствия родства между 1-й и 2-й личностями. 
+             */
+            if (((_zeroRelative.CoordX > 1) && (_firstRelative.CoordX > 1)) ||
+                ((_zeroRelative.CoordY > 0) && (_firstRelative.CoordY > 0)) ||
+                ((_zeroRelative.CoordY > 0) && (_firstRelative.CoordX > 1) || (_firstRelative.CoordY > 0) && (_zeroRelative.CoordX > 1)))
+            {
+                possibleRelationshipsList.Add(_relativesList.Where(rel => rel.CoordX == -1 && rel.CoordY == -1).Single());
+            }
+
+            return possibleRelationshipsList;
+        }
+
+        public static RelationshipDegree GetRelationship(int distanceBetweenMrcaAndZeroPerson, int distanceBetweenMrcaAndFirstPerson,
+            List<RelationshipDegree> relatives)
+        {
+            /*
+             * Определение степени родства между парой персон по данным о расстоянии от каждого из них до БОП.
+             */
+            if (0 == distanceBetweenMrcaAndFirstPerson)
+            {
+                return relatives.Where(rel =>
+                rel.CoordX == 0 &&
+                rel.CoordY == distanceBetweenMrcaAndZeroPerson).Single();
+            }
+            else
+            {
+                return relatives.Where(rel =>
+                rel.CoordX == distanceBetweenMrcaAndZeroPerson &&
+                rel.CoordY == distanceBetweenMrcaAndZeroPerson - distanceBetweenMrcaAndFirstPerson).Single();
+            }
+        }
+
     }
 }
