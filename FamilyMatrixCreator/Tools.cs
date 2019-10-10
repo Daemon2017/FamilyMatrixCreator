@@ -48,13 +48,13 @@ namespace FamilyMatrixCreator
                 _centimorgansDictionary.Add(ExistingRelationshipDegrees[i], centimorgansMatrix[i]);
             }
 
-            Dictionary<int, int> coordXDictionary = new Dictionary<int, int> { { 0, 0 } };
+            Dictionary<int, int> coordXDictionary = new Dictionary<int, int> { { 0, -1 } };
             for (int i = 0; i < coordXMatrix.Length; i++)
             {
                 coordXDictionary.Add(ExistingRelationshipDegrees[i], coordXMatrix[i]);
             }
 
-            Dictionary<int, int> coordYDictionary = new Dictionary<int, int> { { 0, 0 } };
+            Dictionary<int, int> coordYDictionary = new Dictionary<int, int> { { 0, -1 } };
             for (int i = 0; i < coordYMatrix.Length; i++)
             {
                 coordYDictionary.Add(ExistingRelationshipDegrees[i], coordYMatrix[i]);

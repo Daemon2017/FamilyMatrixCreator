@@ -79,39 +79,39 @@ namespace FamilyMatrixCreator
 
         public static List<RelationshipDegree> GetPossibleRelationshipsList(int yOfMrca,
             int numberOfGenerationsBetweenMrcaAndZeroRelative, int numberOfGenerationsBetweenMrcaAndFirstRelative,
-            RelationshipDegree _zeroRelative, RelationshipDegree _firstRelative,
-            List<RelationshipDegree> _relativesList)
+            RelationshipDegree _zeroRelationshipDegree, RelationshipDegree _firstRelationshipDegree,
+            List<RelationshipDegree> _relationshipDegreesList)
         {
             /*
              * Определение основной степени родства.
              */
-            List<RelationshipDegree> possibleRelationshipsList = new List<RelationshipDegree>
+            List<RelationshipDegree> possibleRelationshipDegreesList = new List<RelationshipDegree>
             {
                 GetRelationship(
                     numberOfGenerationsBetweenMrcaAndZeroRelative,
                     numberOfGenerationsBetweenMrcaAndFirstRelative,
-                    _relativesList)
+                    _relationshipDegreesList)
             };
 
             /*
              * Определение дополнительных степеней родства, которые могут возникать от того, что 1-я и 2-я личности
              * находятся в одной вертикали.
              */
-            if (_zeroRelative.X == _firstRelative.X &&
-                !((_zeroRelative.X == 0 && _zeroRelative.Y >= 0) || (_firstRelative.X == 0 && _firstRelative.Y >= 0)))
+            if (_zeroRelationshipDegree.X == _firstRelationshipDegree.X &&
+                !((_zeroRelationshipDegree.X == 0 && _zeroRelationshipDegree.Y >= 0) || (_firstRelationshipDegree.X == 0 && _firstRelationshipDegree.Y >= 0)))
             {
-                int y0New = _zeroRelative.Y;
-                int y1New = _firstRelative.Y;
+                int y0New = _zeroRelationshipDegree.Y;
+                int y1New = _firstRelationshipDegree.Y;
 
-                while (y0New < _zeroRelative.X && y1New < _firstRelative.X)
+                while (y0New < _zeroRelationshipDegree.X && y1New < _firstRelationshipDegree.X)
                 {
                     try
                     {
-                        yOfMrca = GetYOfMRCA(_zeroRelative.X, ++y0New, _firstRelative.X, ++y1New);
-                        possibleRelationshipsList.Add(GetRelationship(
-                            yOfMrca - _zeroRelative.Y,
-                            yOfMrca - _firstRelative.Y,
-                            _relativesList));
+                        yOfMrca = GetYOfMRCA(_zeroRelationshipDegree.X, ++y0New, _firstRelationshipDegree.X, ++y1New);
+                        possibleRelationshipDegreesList.Add(GetRelationship(
+                            yOfMrca - _zeroRelationshipDegree.Y,
+                            yOfMrca - _firstRelationshipDegree.Y,
+                            _relationshipDegreesList));
                     }
                     catch (InvalidOperationException)
                     {
@@ -123,14 +123,14 @@ namespace FamilyMatrixCreator
             /*
              * Определение возможности отсутствия родства между 1-й и 2-й личностями. 
              */
-            if (((_zeroRelative.X > 1) && (_firstRelative.X > 1)) ||
-                ((_zeroRelative.Y > 0) && (_firstRelative.Y > 0)) ||
-                ((_zeroRelative.Y > 0) && (_firstRelative.X > 1) || (_firstRelative.Y > 0) && (_zeroRelative.X > 1)))
+            if (((_zeroRelationshipDegree.X > 1) && (_firstRelationshipDegree.X > 1)) ||
+                ((_zeroRelationshipDegree.Y > 0) && (_firstRelationshipDegree.Y > 0)) ||
+                ((_zeroRelationshipDegree.Y > 0) && (_firstRelationshipDegree.X > 1) || (_firstRelationshipDegree.Y > 0) && (_zeroRelationshipDegree.X > 1)))
             {
-                possibleRelationshipsList.Add(_relativesList.Where(rel => rel.X == -1 && rel.Y == -1).Single());
+                possibleRelationshipDegreesList.Add(_relationshipDegreesList.Where(rel => rel.X == -1 && rel.Y == -1).Single());
             }
 
-            return possibleRelationshipsList;
+            return possibleRelationshipDegreesList;
         }
     }
 }
