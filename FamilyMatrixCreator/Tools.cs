@@ -162,7 +162,7 @@ namespace FamilyMatrixCreator
 
             float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
             generatedOutputMatrix[0] = new float[generatedMatrixSize];
-            for(int i=0; i < generatedMatrixSize; i++)
+            for (int i = 0; i < generatedMatrixSize; i++)
             {
                 generatedOutputMatrix[0][i] = relativesList[randomNumbers[i]].RelationshipDegree.RelationshipNumber;
             }
@@ -438,8 +438,8 @@ namespace FamilyMatrixCreator
             {
                 RelationshipDegree selectedRandomRelationship = RelationshipDictionary[allPossibleRelationships[GetNextRandomValue(0, allPossibleRelationships.Count)]];
 
-                int distanceX = selectedRandomRelationship.CoordX - relativesList[0].RelationshipDegree.CoordX;
-                int distanceY = selectedRandomRelationship.CoordY - relativesList[0].RelationshipDegree.CoordY;
+                int distanceX = selectedRandomRelationship.X - relativesList[0].RelationshipDegree.X;
+                int distanceY = selectedRandomRelationship.Y - relativesList[0].RelationshipDegree.Y;
 
                 if (distanceX == 0)
                 {
@@ -711,7 +711,7 @@ namespace FamilyMatrixCreator
                 {
                     relativesList.Add(new Relative(
                         relativeNumber,
-                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == coordX && x.Value.CoordY == coordY).Key],
+                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
                         new List<Relative>(),
                         new List<Relative>()));
 
@@ -729,7 +729,7 @@ namespace FamilyMatrixCreator
                 {
                     relativesList.Add(new Relative(
                         relativeNumber,
-                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == coordX && x.Value.CoordY == coordY).Key],
+                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
                         new List<Relative>(),
                         new List<Relative>()));
 
@@ -754,7 +754,7 @@ namespace FamilyMatrixCreator
                 {
                     relativesList.Add(new Relative(
                         relativeNumber,
-                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == coordX && x.Value.CoordY == coordY).Key],
+                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
                         new List<Relative>(),
                         new List<Relative>()));
 
@@ -764,7 +764,7 @@ namespace FamilyMatrixCreator
             }
             else
             {
-                List<Relative> cleanChildsList = relativesList[relativesList.Count - 1].ChildsList.Where(child => child.RelationshipDegree.CoordX != 0).ToList();
+                List<Relative> cleanChildsList = relativesList[relativesList.Count - 1].ChildsList.Where(child => child.RelationshipDegree.X != 0).ToList();
 
                 if (((descendantOfProband && relativesList[relativesList.Count - 1].ChildsList.Count != 0) || (!descendantOfProband && cleanChildsList.Count != 0))
                      && GetNextRandomValue(0, 2) == 0 && !isLastIteration)
@@ -782,7 +782,7 @@ namespace FamilyMatrixCreator
                 {
                     relativesList.Add(new Relative(
                         relativeNumber,
-                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.CoordX == coordX && x.Value.CoordY == coordY).Key],
+                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
                         new List<Relative>(),
                         new List<Relative>()));
 
@@ -793,133 +793,5 @@ namespace FamilyMatrixCreator
 
             return relativesList;
         }
-
-        public static int GetYOfMRCA(int startX, int startY, int endX, int endY)
-        {
-            int yOfMRCA = 0;
-
-            /*
-             * Определение количества поколений до БОП.
-             */
-            if (startX > endX)
-            {
-                if (0 == endX)
-                {
-                    if (0 < startX && startX < endY)
-                    {
-                        yOfMRCA = endY;
-                    }
-                    else
-                    {
-                        yOfMRCA = startX;
-                    }
-                }
-                else
-                {
-                    yOfMRCA = startX;
-                }
-            }
-            else if (startX == endX)
-            {
-                yOfMRCA = startY >= endY ? startY : endY;
-            }
-            else if (startX < endX)
-            {
-                if (0 == startX)
-                {
-                    if (0 < endX && endX < startY)
-                    {
-                        yOfMRCA = startY;
-                    }
-                    else
-                    {
-                        yOfMRCA = endX;
-                    }
-                }
-                else
-                {
-                    yOfMRCA = endX;
-                }
-            }
-
-            return yOfMRCA;
-        }
-
-        public static List<RelationshipDegree> GetPossibleRelationshipsList(int yOfMrca,
-            int numberOfGenerationsBetweenMrcaAndZeroRelative, int numberOfGenerationsBetweenMrcaAndFirstRelative,
-            RelationshipDegree _zeroRelative, RelationshipDegree _firstRelative,
-            List<RelationshipDegree> _relativesList)
-        {
-            /*
-             * Определение основной степени родства.
-             */
-            List<RelationshipDegree> possibleRelationshipsList = new List<RelationshipDegree>
-            {
-                GetRelationship(
-                    numberOfGenerationsBetweenMrcaAndZeroRelative,
-                    numberOfGenerationsBetweenMrcaAndFirstRelative,
-                    _relativesList)
-            };
-
-            /*
-             * Определение дополнительных степеней родства, которые могут возникать от того, что 1-я и 2-я личности
-             * находятся в одной вертикали.
-             */
-            if (_zeroRelative.CoordX == _firstRelative.CoordX &&
-                !((_zeroRelative.CoordX == 0 && _zeroRelative.CoordY >= 0) || (_firstRelative.CoordX == 0 && _firstRelative.CoordY >= 0)))
-            {
-                int y0New = _zeroRelative.CoordY;
-                int y1New = _firstRelative.CoordY;
-
-                while (y0New < _zeroRelative.CoordX && y1New < _firstRelative.CoordX)
-                {
-                    try
-                    {
-                        yOfMrca = GetYOfMRCA(_zeroRelative.CoordX, ++y0New, _firstRelative.CoordX, ++y1New);
-                        possibleRelationshipsList.Add(GetRelationship(
-                            yOfMrca - _zeroRelative.CoordY,
-                            yOfMrca - _firstRelative.CoordY,
-                            _relativesList));
-                    }
-                    catch (InvalidOperationException)
-                    {
-
-                    }
-                }
-            }
-
-            /*
-             * Определение возможности отсутствия родства между 1-й и 2-й личностями. 
-             */
-            if (((_zeroRelative.CoordX > 1) && (_firstRelative.CoordX > 1)) ||
-                ((_zeroRelative.CoordY > 0) && (_firstRelative.CoordY > 0)) ||
-                ((_zeroRelative.CoordY > 0) && (_firstRelative.CoordX > 1) || (_firstRelative.CoordY > 0) && (_zeroRelative.CoordX > 1)))
-            {
-                possibleRelationshipsList.Add(_relativesList.Where(rel => rel.CoordX == -1 && rel.CoordY == -1).Single());
-            }
-
-            return possibleRelationshipsList;
-        }
-
-        public static RelationshipDegree GetRelationship(int distanceBetweenMrcaAndZeroPerson, int distanceBetweenMrcaAndFirstPerson,
-            List<RelationshipDegree> relatives)
-        {
-            /*
-             * Определение степени родства между парой персон по данным о расстоянии от каждого из них до БОП.
-             */
-            if (0 == distanceBetweenMrcaAndFirstPerson)
-            {
-                return relatives.Where(rel =>
-                rel.CoordX == 0 &&
-                rel.CoordY == distanceBetweenMrcaAndZeroPerson).Single();
-            }
-            else
-            {
-                return relatives.Where(rel =>
-                rel.CoordX == distanceBetweenMrcaAndZeroPerson &&
-                rel.CoordY == distanceBetweenMrcaAndZeroPerson - distanceBetweenMrcaAndFirstPerson).Single();
-            }
-        }
-
     }
 }
