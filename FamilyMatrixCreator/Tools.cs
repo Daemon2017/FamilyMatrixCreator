@@ -92,10 +92,10 @@ namespace FamilyMatrixCreator
                 relationships.Add(rel);
             }
 
-            RelationshipDictionary = new Dictionary<int, RelationshipDegree>();
+            RelationshipDegreesDictionary = new Dictionary<int, RelationshipDegree>();
             foreach (RelationshipDegree relationship in relationships)
             {
-                RelationshipDictionary.Add(relationship.RelationshipNumber, relationship);
+                RelationshipDegreesDictionary.Add(relationship.RelationshipNumber, relationship);
             }
         }
 
@@ -167,10 +167,10 @@ namespace FamilyMatrixCreator
                 generatedOutputMatrix[0][i] = relativesList[randomNumbers[i]].RelationshipDegree.RelationshipNumber;
             }
 
-            //int yMrca = GetYOfMRCA(_zeroRelative.CoordX, _zeroRelative.CoordY, _firstRelative.CoordX, _firstRelative.CoordY);
+            //int yMrca = GetYOfMRCA(_zeroRelative.X, _zeroRelative.Y, _firstRelative.X, _firstRelative.Y);
 
-            //int y0Result = yMrca - _zeroRelative.CoordY;
-            //int y1Result = yMrca - _firstRelative.CoordY;
+            //int y0Result = yMrca - _zeroRelative.Y;
+            //int y1Result = yMrca - _firstRelative.Y;
             //List<Relative> possibleRelationshipsList = GetPossibleRelationshipsList(yMrca, y0Result, y1Result, _zeroRelative, _firstRelative, _relativesList);
 
             return generatedOutputMatrix;
@@ -328,7 +328,7 @@ namespace FamilyMatrixCreator
                 (from relationship in allPossibleRelationships
                  where !AncestorList.Where((ancestor) =>
                      relationship == ancestor &&
-                     ancestorsCurrentCountMatrix[persons[person]][AncestorList.IndexOf(ancestor)] == RelationshipDictionary[ancestor].RelationshipMaxCount).Any()
+                     ancestorsCurrentCountMatrix[persons[person]][AncestorList.IndexOf(ancestor)] == RelationshipDegreesDictionary[ancestor].RelationshipMaxCount).Any()
                  select relationship).ToList();
 
             return allPossibleRelationships;
@@ -428,7 +428,7 @@ namespace FamilyMatrixCreator
         {
             List<Relative> relativesList = new List<Relative>
             {
-                { new Relative(0, RelationshipDictionary[1], new List<Relative>(), new List<Relative>()) }
+                { new Relative(0, RelationshipDegreesDictionary[1], new List<Relative>(), new List<Relative>()) }
             };
             int relativeNumber = 1;
 
@@ -436,7 +436,7 @@ namespace FamilyMatrixCreator
 
             for (int i = 1; i < generatedMatrixSize; i++)
             {
-                RelationshipDegree selectedRandomRelationship = RelationshipDictionary[allPossibleRelationships[GetNextRandomValue(0, allPossibleRelationships.Count)]];
+                RelationshipDegree selectedRandomRelationship = RelationshipDegreesDictionary[allPossibleRelationships[GetNextRandomValue(0, allPossibleRelationships.Count)]];
 
                 int distanceX = selectedRandomRelationship.X - relativesList[0].RelationshipDegree.X;
                 int distanceY = selectedRandomRelationship.Y - relativesList[0].RelationshipDegree.Y;
@@ -489,14 +489,14 @@ namespace FamilyMatrixCreator
         public static float GetCmEquivalentOfRelationshipType(float[][] generatedInputMatrix, int person, int relative,
             int relationship)
         {
-            if (RelationshipDictionary[relationship].CommonCm > 3950)
+            if (RelationshipDegreesDictionary[relationship].CommonCm > 3950)
             {
-                return generatedInputMatrix[person][relative] = RelationshipDictionary[relationship].CommonCm;
+                return generatedInputMatrix[person][relative] = RelationshipDegreesDictionary[relationship].CommonCm;
             }
 
             if (0 != relationship)
             {
-                float mean = RelationshipDictionary[relationship].CommonCm;
+                float mean = RelationshipDegreesDictionary[relationship].CommonCm;
                 double std = mean * ((-0.2819 * Math.Log(mean)) + 2.335) / 3;
                 Normal normalDist = new Normal(mean, std);
 
@@ -649,7 +649,7 @@ namespace FamilyMatrixCreator
                 countOfRelativesOfThisTypeAlreadyMax =
                     (from i in Enumerable.Range(0, AncestorList.Count)
                      where AncestorList[i] == (int)generatedOutputMatrix[0][relatives[relative]]
-                     where RelationshipDictionary[AncestorList[i]].RelationshipMaxCount == ancestorsCurrentCountMatrix[0][i]
+                     where RelationshipDegreesDictionary[AncestorList[i]].RelationshipMaxCount == ancestorsCurrentCountMatrix[0][i]
                      select i).Any();
             }
 
@@ -711,7 +711,7 @@ namespace FamilyMatrixCreator
                 {
                     relativesList.Add(new Relative(
                         relativeNumber,
-                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
+                        RelationshipDegreesDictionary[RelationshipDegreesDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
                         new List<Relative>(),
                         new List<Relative>()));
 
@@ -729,7 +729,7 @@ namespace FamilyMatrixCreator
                 {
                     relativesList.Add(new Relative(
                         relativeNumber,
-                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
+                        RelationshipDegreesDictionary[RelationshipDegreesDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
                         new List<Relative>(),
                         new List<Relative>()));
 
@@ -754,7 +754,7 @@ namespace FamilyMatrixCreator
                 {
                     relativesList.Add(new Relative(
                         relativeNumber,
-                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
+                        RelationshipDegreesDictionary[RelationshipDegreesDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
                         new List<Relative>(),
                         new List<Relative>()));
 
@@ -782,7 +782,7 @@ namespace FamilyMatrixCreator
                 {
                     relativesList.Add(new Relative(
                         relativeNumber,
-                        RelationshipDictionary[RelationshipDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
+                        RelationshipDegreesDictionary[RelationshipDegreesDictionary.First(x => x.Value.X == coordX && x.Value.Y == coordY).Key],
                         new List<Relative>(),
                         new List<Relative>()));
 

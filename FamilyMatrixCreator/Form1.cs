@@ -7,7 +7,7 @@ namespace FamilyMatrixCreator
 {
     public static partial class Form1
     {
-        private static Dictionary<int, RelationshipDegree> RelationshipDictionary;
+        private static Dictionary<int, RelationshipDegree> RelationshipDegreesDictionary;
         private static List<int> ExistingRelationshipDegrees;
         private static int[,][] RelationshipsMatrix;
         private static List<int> SiblindantsList;
