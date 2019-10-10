@@ -167,11 +167,24 @@ namespace FamilyMatrixCreator
                 generatedOutputMatrix[0][i] = relativesList[randomNumbers[i]].RelationshipDegree.RelationshipNumber;
             }
 
-            //int yMrca = GetYOfMRCA(_zeroRelative.X, _zeroRelative.Y, _firstRelative.X, _firstRelative.Y);
+            for (int i = 1; i < generatedMatrixSize; i++)
+            {
+                RelationshipDegree zeroRelative = relativesList[randomNumbers[i]].RelationshipDegree;
 
-            //int y0Result = yMrca - _zeroRelative.Y;
-            //int y1Result = yMrca - _firstRelative.Y;
-            //List<Relative> possibleRelationshipsList = GetPossibleRelationshipsList(yMrca, y0Result, y1Result, _zeroRelative, _firstRelative, _relativesList);
+                for (int j = i + 1; j < generatedMatrixSize; j++)
+                {
+                    RelationshipDegree firstRelative = relativesList[randomNumbers[j]].RelationshipDegree;
+
+                    int yMrca = GetYOfMRCA(zeroRelative.X, zeroRelative.Y, firstRelative.X, firstRelative.Y);
+
+                    int y0Result = yMrca - zeroRelative.Y;
+                    int y1Result = yMrca - firstRelative.Y;
+                    List<RelationshipDegree> possibleRelationshipsList = GetPossibleRelationshipsList(yMrca,
+                        y0Result, y1Result,
+                        zeroRelative, firstRelative,
+                        RelationshipDegreesDictionary.Values.ToList());
+                }
+            }
 
             return generatedOutputMatrix;
         }
