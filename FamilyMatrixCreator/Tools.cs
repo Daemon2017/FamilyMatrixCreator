@@ -95,7 +95,7 @@ namespace FamilyMatrixCreator
             RelationshipDegreesDictionary = new Dictionary<int, RelationshipDegree>();
             foreach (RelationshipDegree relationship in relationships)
             {
-                RelationshipDegreesDictionary.Add(relationship.RelationshipNumber, relationship);
+                RelationshipDegreesDictionary.Add(relationship.RelationshipDegreeNumber, relationship);
             }
         }
 
@@ -164,25 +164,59 @@ namespace FamilyMatrixCreator
             generatedOutputMatrix[0] = new float[generatedMatrixSize];
             for (int i = 0; i < generatedMatrixSize; i++)
             {
-                generatedOutputMatrix[0][i] = relativesList[randomNumbers[i]].RelationshipDegree.RelationshipNumber;
+                generatedOutputMatrix[0][i] = relativesList[randomNumbers[i]].RelationshipDegree.RelationshipDegreeNumber;
             }
 
             for (int i = 1; i < generatedMatrixSize; i++)
             {
-                RelationshipDegree zeroRelative = relativesList[randomNumbers[i]].RelationshipDegree;
+                generatedOutputMatrix[i] = new float[generatedMatrixSize];
+                Relative zeroRelative = relativesList[randomNumbers[i]];
 
                 for (int j = i + 1; j < generatedMatrixSize; j++)
                 {
-                    RelationshipDegree firstRelative = relativesList[randomNumbers[j]].RelationshipDegree;
+                    Relative firstRelative = relativesList[randomNumbers[j]];
+                    int yMrca = GetYOfMRCA(zeroRelative.RelationshipDegree.X, zeroRelative.RelationshipDegree.Y,
+                        firstRelative.RelationshipDegree.X, firstRelative.RelationshipDegree.Y);
+                    int y0Result = yMrca - zeroRelative.RelationshipDegree.Y;
+                    int y1Result = yMrca - firstRelative.RelationshipDegree.Y;
 
-                    int yMrca = GetYOfMRCA(zeroRelative.X, zeroRelative.Y, firstRelative.X, firstRelative.Y);
-
-                    int y0Result = yMrca - zeroRelative.Y;
-                    int y1Result = yMrca - firstRelative.Y;
                     List<RelationshipDegree> possibleRelationshipsList = GetPossibleRelationshipsList(yMrca,
                         y0Result, y1Result,
-                        zeroRelative, firstRelative,
+                        zeroRelative.RelationshipDegree, firstRelative.RelationshipDegree,
                         RelationshipDegreesDictionary.Values.ToList());
+                    RelationshipDegree trueRelative = null;
+
+                    foreach (RelationshipDegree possibleRelationship in possibleRelationshipsList)
+                    {
+                        if (AncestorList.Contains(possibleRelationship.RelationshipDegreeNumber))
+                        {
+                            int yDistanceToMRCA = possibleRelationship.Y;
+                            List<Relative> parentsList = new List<Relative> { zeroRelative };
+
+                            for (int g = 0; g < yDistanceToMRCA; g++)
+                            {
+                                List<Relative> newParentsList = new List<Relative> { };
+                                foreach (Relative parent in parentsList)
+                                {
+                                    newParentsList.AddRange(parent.ParentsList);
+                                }
+
+                                parentsList = newParentsList;
+                            }
+
+                            if (parentsList.Contains(firstRelative))
+                            {
+                                trueRelative = possibleRelationship;
+                                break;
+                            }
+                        }
+                        else
+                        {
+
+                        }
+                    }
+
+                    generatedOutputMatrix[i][j] = trueRelative.RelationshipDegreeNumber;
                 }
             }
 

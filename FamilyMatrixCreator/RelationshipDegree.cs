@@ -4,7 +4,7 @@ namespace FamilyMatrixCreator
 {
     public class RelationshipDegree
     {
-        public int RelationshipNumber { get; set; }
+        public int RelationshipDegreeNumber { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public float CommonCm { get; set; }
@@ -13,16 +13,16 @@ namespace FamilyMatrixCreator
         public int RelationshipMaxCount { get; set; }
         public Dictionary<int, List<string>> PossibleRelationships { get; set; }
 
-        public RelationshipDegree(int relationshipNumber,
+        public RelationshipDegree(int relationshipDegreeNumber,
             float commonCm,
-            int coordX, int coordY,
+            int X, int Y,
             bool isAncestorOfProband, bool isSiblindantOfProband,
             int relationshipMaxCount)
         {
-            RelationshipNumber = relationshipNumber;
+            RelationshipDegreeNumber = relationshipDegreeNumber;
             CommonCm = commonCm;
-            X = coordX;
-            Y = coordY;
+            this.X = X;
+            this.Y = Y;
             IsAncestorOfProband = isAncestorOfProband;
             IsSiblindantOfProband = isSiblindantOfProband;
             RelationshipMaxCount = relationshipMaxCount;
