@@ -67,13 +67,13 @@ namespace FamilyMatrixCreator
             {
                 return relatives.Where(rel =>
                 rel.X == 0 &&
-                rel.Y == distanceBetweenMrcaAndZeroPerson).Single();
+                rel.Y == distanceBetweenMrcaAndZeroPerson).SingleOrDefault();
             }
             else
             {
                 return relatives.Where(rel =>
                 rel.X == distanceBetweenMrcaAndZeroPerson &&
-                rel.Y == distanceBetweenMrcaAndZeroPerson - distanceBetweenMrcaAndFirstPerson).Single();
+                rel.Y == distanceBetweenMrcaAndZeroPerson - distanceBetweenMrcaAndFirstPerson).SingleOrDefault();
             }
         }
 
