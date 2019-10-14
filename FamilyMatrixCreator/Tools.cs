@@ -144,6 +144,13 @@ namespace FamilyMatrixCreator
         public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
         {
             List<Relative> relativesList = GetTree(generatedMatrixSize, existingRelationshipDegrees);
+            float[][] relativesMatrix = GetMatrix(generatedMatrixSize, relativesList);
+
+            return relativesMatrix;
+        }
+
+        public static float[][] GetMatrix(int generatedMatrixSize, List<Relative> relativesList)
+        {
             List<int> relativesNumbersRange = Enumerable.Range(0, relativesList.Count).ToList();
 
             List<int> randomNumbers = new List<int> { 0 };
@@ -154,16 +161,16 @@ namespace FamilyMatrixCreator
                 relativesNumbersRange.RemoveAt(randomValue);
             }
 
-            float[][] generatedOutputMatrix = new float[generatedMatrixSize][];
-            generatedOutputMatrix[0] = new float[generatedMatrixSize];
+            float[][] relativesMatrix = new float[generatedMatrixSize][];
+            relativesMatrix[0] = new float[generatedMatrixSize];
             for (int i = 0; i < generatedMatrixSize; i++)
             {
-                generatedOutputMatrix[0][i] = relativesList[randomNumbers[i]].RelationshipDegree.RelationshipDegreeNumber;
+                relativesMatrix[0][i] = relativesList[randomNumbers[i]].RelationshipDegree.RelationshipDegreeNumber;
             }
 
             for (int i = 1; i < generatedMatrixSize; i++)
             {
-                generatedOutputMatrix[i] = new float[generatedMatrixSize];
+                relativesMatrix[i] = new float[generatedMatrixSize];
                 Relative zeroRelative = relativesList[randomNumbers[i]];
 
                 for (int j = i + 1; j < generatedMatrixSize; j++)
@@ -174,76 +181,83 @@ namespace FamilyMatrixCreator
                     int y0Result = yMrca - zeroRelative.RelationshipDegree.Y;
                     int y1Result = yMrca - firstRelative.RelationshipDegree.Y;
 
-                    List<RelationshipDegree> possibleRelationshipsList = GetPossibleRelationshipsList(yMrca,
+                    List<RelationshipDegree> possibleRelationshipDegreesList = GetPossibleRelationshipsList(yMrca,
                         y0Result, y1Result,
                         zeroRelative.RelationshipDegree, firstRelative.RelationshipDegree,
                         RelationshipDegreesDictionary.Values.ToList());
-                    RelationshipDegree trueRelative = null;
+                    RelationshipDegree trueRelationshipDegree = GetTrueRelationshipDegree(zeroRelative, firstRelative, possibleRelationshipDegreesList);
 
-                    foreach (RelationshipDegree possibleRelationship in possibleRelationshipsList)
-                    {
-                        if (possibleRelationship.RelationshipDegreeNumber == 0)
-                        {
-                            trueRelative = possibleRelationship;
-                        }
-                        else
-                        {
-                            if (AncestorList.Contains(possibleRelationship.RelationshipDegreeNumber))
-                            {
-                                int yDistanceToMRCA = possibleRelationship.Y;
-                                List<Relative> parentsList = new List<Relative> { zeroRelative };
-
-                                for (int g = 0; g < yDistanceToMRCA; g++)
-                                {
-                                    List<Relative> newParentsList = new List<Relative> { };
-                                    foreach (Relative parent in parentsList)
-                                    {
-                                        newParentsList.AddRange(parent.ParentsList);
-                                    }
-
-                                    parentsList = newParentsList;
-                                }
-
-                                if (parentsList.Contains(firstRelative))
-                                {
-                                    trueRelative = possibleRelationship;
-                                    break;
-                                }
-                            }
-                            else if (DescendantsList.Contains(possibleRelationship.RelationshipDegreeNumber))
-                            {
-                                int yDistanceToMRCA = possibleRelationship.Y;
-                                List<Relative> childsList = new List<Relative> { zeroRelative };
-
-                                for (int g = 0; g > yDistanceToMRCA; g--)
-                                {
-                                    List<Relative> newChildsList = new List<Relative> { };
-                                    foreach (Relative child in childsList)
-                                    {
-                                        newChildsList.AddRange(child.ChildsList);
-                                    }
-
-                                    childsList = newChildsList;
-                                }
-
-                                if (childsList.Contains(firstRelative))
-                                {
-                                    trueRelative = possibleRelationship;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-
-                            }
-                        }
-                    }
-
-                    generatedOutputMatrix[i][j] = trueRelative.RelationshipDegreeNumber;
+                    relativesMatrix[i][j] = trueRelationshipDegree.RelationshipDegreeNumber;
                 }
             }
 
-            return generatedOutputMatrix;
+            return relativesMatrix;
+        }
+
+        private static RelationshipDegree GetTrueRelationshipDegree(Relative zeroRelative, Relative firstRelative, List<RelationshipDegree> possibleRelationshipDegreesList)
+        {
+            RelationshipDegree trueRelationshipDegree = null;
+
+            foreach (RelationshipDegree possibleRelationshipDegree in possibleRelationshipDegreesList)
+            {
+                if (possibleRelationshipDegree.RelationshipDegreeNumber == 0)
+                {
+                    trueRelationshipDegree = possibleRelationshipDegree;
+                }
+                else
+                {
+                    if (AncestorList.Contains(possibleRelationshipDegree.RelationshipDegreeNumber))
+                    {
+                        int yDistanceToMRCA = possibleRelationshipDegree.Y;
+                        List<Relative> parentsList = new List<Relative> { zeroRelative };
+
+                        for (int g = 0; g < yDistanceToMRCA; g++)
+                        {
+                            List<Relative> newParentsList = new List<Relative> { };
+                            foreach (Relative parent in parentsList)
+                            {
+                                newParentsList.AddRange(parent.ParentsList);
+                            }
+
+                            parentsList = newParentsList;
+                        }
+
+                        if (parentsList.Contains(firstRelative))
+                        {
+                            trueRelationshipDegree = possibleRelationshipDegree;
+                            break;
+                        }
+                    }
+                    else if (DescendantsList.Contains(possibleRelationshipDegree.RelationshipDegreeNumber))
+                    {
+                        int yDistanceToMRCA = possibleRelationshipDegree.Y;
+                        List<Relative> childsList = new List<Relative> { zeroRelative };
+
+                        for (int g = 0; g > yDistanceToMRCA; g--)
+                        {
+                            List<Relative> newChildsList = new List<Relative> { };
+                            foreach (Relative child in childsList)
+                            {
+                                newChildsList.AddRange(child.ChildsList);
+                            }
+
+                            childsList = newChildsList;
+                        }
+
+                        if (childsList.Contains(firstRelative))
+                        {
+                            trueRelationshipDegree = possibleRelationshipDegree;
+                            break;
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+
+            return trueRelationshipDegree;
         }
 
         /*
