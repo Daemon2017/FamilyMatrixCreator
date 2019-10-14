@@ -9,7 +9,7 @@ namespace FamilyMatrixCreator
         public int Y { get; set; }
         public float CommonCm { get; set; }
         public bool IsAncestorOfProband { get; set; }
-        public bool IsSiblindantOfProband { get; set; }
+        public bool IsDescendantOfProband { get; set; }
         public int RelationshipMaxCount { get; set; }
         public Dictionary<int, List<string>> PossibleRelationships { get; set; }
 
@@ -24,7 +24,7 @@ namespace FamilyMatrixCreator
             this.X = X;
             this.Y = Y;
             IsAncestorOfProband = isAncestorOfProband;
-            IsSiblindantOfProband = isSiblindantOfProband;
+            IsDescendantOfProband = isSiblindantOfProband;
             RelationshipMaxCount = relationshipMaxCount;
         }
     }

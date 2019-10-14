@@ -10,7 +10,7 @@ namespace FamilyMatrixCreator
         private static Dictionary<int, RelationshipDegree> RelationshipDegreesDictionary;
         private static List<int> ExistingRelationshipDegrees;
         private static int[,][] RelationshipsMatrix;
-        private static List<int> SiblindantsList;
+        private static List<int> DescendantsList;
         private static List<int> AncestorList;
         private static int NumberOfProband;
 
@@ -24,15 +24,6 @@ namespace FamilyMatrixCreator
             Console.WriteLine("Введите требуемый размер стороны каждой матрицы (0;+inf):");
             int sizeOfMatrices = Convert.ToInt32(Console.ReadLine());
 
-            Console.WriteLine("Введите MIN % значащих значений каждой матрицы (0;+inf):");
-            int minPercentOfValues = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Введите MAX % значащих значений каждой матрицы (0;+inf):");
-            int maxPercentOfValues = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Введите % случаев, когда необходимо предпочитать отсутствие родства (0;1):");
-            double noRelationPercent = Convert.ToDouble(Console.ReadLine());
-
             int quantityOfMatrixes = numberOfMatrices;
 
             Stopwatch myStopwatch = new Stopwatch();
@@ -43,8 +34,7 @@ namespace FamilyMatrixCreator
                 Console.WriteLine("Все необходимые сведения получены, начинается работа...");
                 int generatedMatrixSize = sizeOfMatrices;
 
-                Thread matricesCreator = new Thread(() => CreateMatrices(ExistingRelationshipDegrees, quantityOfMatrixes, generatedMatrixSize,
-                    minPercentOfValues, maxPercentOfValues, noRelationPercent));
+                Thread matricesCreator = new Thread(() => CreateMatrices(ExistingRelationshipDegrees, quantityOfMatrixes, generatedMatrixSize));
                 matricesCreator.Start();
                 matricesCreator.Join();
 

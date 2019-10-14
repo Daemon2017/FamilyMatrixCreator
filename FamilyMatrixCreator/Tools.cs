@@ -24,8 +24,7 @@ namespace FamilyMatrixCreator
             int[] coordXMatrix = Array.ConvertAll(FileSaverLoader.LoadFromFile1dFloat("xs.csv"), x => (int)x);
             int[] coordYMatrix = Array.ConvertAll(FileSaverLoader.LoadFromFile1dFloat("ys.csv"), y => (int)y);
             int[][] _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2dInt("ancestorsMatrix.csv");
-            int[] siblindantsMatrix = FileSaverLoader.LoadFromFile1dInt("siblindantsMatrix.csv");
-            SiblindantsList = siblindantsMatrix.ToList();
+            DescendantsList = FileSaverLoader.LoadFromFile1dInt("descendantsMatrix.csv").ToList();
             Console.WriteLine("Необходимые файлы успешно подготовлены!");
 
             AncestorList = Enumerable
@@ -70,7 +69,7 @@ namespace FamilyMatrixCreator
                 int coordX = coordXDictionary[degree];
                 int coordY = coordYDictionary[degree];
                 bool isAncestorOfProband = AncestorList.Contains(degree);
-                bool isSiblindantOfProband = SiblindantsList.Contains(degree);
+                bool isSiblindantOfProband = DescendantsList.Contains(degree);
                 int relationshipMaxCount;
                 if (AncestorsMaxCountDictionary.ContainsKey(degree))
                 {
@@ -99,15 +98,13 @@ namespace FamilyMatrixCreator
             }
         }
 
-        private static void CreateMatrices(List<int> existingRelationshipDegrees, int quantityOfMatrixes, int generatedMatrixSize,
-            int minPercentOfValues, int maxPercentOfValues, double noRelationPercent)
+        private static void CreateMatrices(List<int> existingRelationshipDegrees, int quantityOfMatrixes, int generatedMatrixSize)
         {
             Parallel.For(0, quantityOfMatrixes, matrixNumber =>
             {
                 Console.WriteLine("Начинается построение матрицы #{0}...", matrixNumber);
                 float[][] generatedOutputMatrix =
-                    GetOutputMatrix(generatedMatrixSize, existingRelationshipDegrees,
-                    minPercentOfValues, maxPercentOfValues, noRelationPercent);
+                    GetOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
                 float[][] generatedInputMatrix =
                     GetInputMatrix(generatedOutputMatrix, generatedMatrixSize);
                 Console.WriteLine("Завершено построение матрицы #{0}!", matrixNumber);
@@ -129,12 +126,10 @@ namespace FamilyMatrixCreator
         /*
          * Построение выходной матрицы (матрицы родственных отношений).
          */
-        private static float[][] GetOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
-            int minPercentOfValues, int maxPercentOfValues, double noRelationPercent)
+        private static float[][] GetOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
         {
             float[][] generatedOutputMatrix = GetRightTopPartOfOutputMatrix(
-                generatedMatrixSize, existingRelationshipDegrees,
-                minPercentOfValues, maxPercentOfValues, noRelationPercent);
+                generatedMatrixSize, existingRelationshipDegrees);
             generatedOutputMatrix =
                 GetLeftBottomPartOfOutputMatrix(generatedOutputMatrix);
 
@@ -146,8 +141,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение правой (верхней) стороны выходной матрицы.
          */
-        public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
-            int minPercent, int maxPercent, double noRelationPercent)
+        public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
         {
             List<Relative> relativesList = GetTree(generatedMatrixSize, existingRelationshipDegrees);
             List<int> relativesNumbersRange = Enumerable.Range(0, relativesList.Count).ToList();
@@ -188,31 +182,60 @@ namespace FamilyMatrixCreator
 
                     foreach (RelationshipDegree possibleRelationship in possibleRelationshipsList)
                     {
-                        if (AncestorList.Contains(possibleRelationship.RelationshipDegreeNumber))
+                        if (possibleRelationship.RelationshipDegreeNumber == 0)
                         {
-                            int yDistanceToMRCA = possibleRelationship.Y;
-                            List<Relative> parentsList = new List<Relative> { zeroRelative };
-
-                            for (int g = 0; g < yDistanceToMRCA; g++)
-                            {
-                                List<Relative> newParentsList = new List<Relative> { };
-                                foreach (Relative parent in parentsList)
-                                {
-                                    newParentsList.AddRange(parent.ParentsList);
-                                }
-
-                                parentsList = newParentsList;
-                            }
-
-                            if (parentsList.Contains(firstRelative))
-                            {
-                                trueRelative = possibleRelationship;
-                                break;
-                            }
+                            trueRelative = possibleRelationship;
                         }
                         else
                         {
+                            if (AncestorList.Contains(possibleRelationship.RelationshipDegreeNumber))
+                            {
+                                int yDistanceToMRCA = possibleRelationship.Y;
+                                List<Relative> parentsList = new List<Relative> { zeroRelative };
 
+                                for (int g = 0; g < yDistanceToMRCA; g++)
+                                {
+                                    List<Relative> newParentsList = new List<Relative> { };
+                                    foreach (Relative parent in parentsList)
+                                    {
+                                        newParentsList.AddRange(parent.ParentsList);
+                                    }
+
+                                    parentsList = newParentsList;
+                                }
+
+                                if (parentsList.Contains(firstRelative))
+                                {
+                                    trueRelative = possibleRelationship;
+                                    break;
+                                }
+                            }
+                            else if (DescendantsList.Contains(possibleRelationship.RelationshipDegreeNumber))
+                            {
+                                int yDistanceToMRCA = possibleRelationship.Y;
+                                List<Relative> childsList = new List<Relative> { zeroRelative };
+
+                                for (int g = 0; g > yDistanceToMRCA; g--)
+                                {
+                                    List<Relative> newChildsList = new List<Relative> { };
+                                    foreach (Relative child in childsList)
+                                    {
+                                        newChildsList.AddRange(child.ChildsList);
+                                    }
+
+                                    childsList = newChildsList;
+                                }
+
+                                if (childsList.Contains(firstRelative))
+                                {
+                                    trueRelative = possibleRelationship;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+
+                            }
                         }
                     }
 
