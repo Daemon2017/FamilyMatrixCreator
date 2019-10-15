@@ -143,8 +143,18 @@ namespace FamilyMatrixCreator
          */
         public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
         {
-            List<Relative> relativesList = GetTree(generatedMatrixSize, existingRelationshipDegrees);
-            float[][] relativesMatrix = GetMatrix(generatedMatrixSize, relativesList);
+            float[][] relativesMatrix;
+
+            try
+            {
+                List<Relative> relativesList = GetTree(generatedMatrixSize, existingRelationshipDegrees);
+                relativesMatrix = GetMatrix(generatedMatrixSize, relativesList);
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine("{0}\n Осуществляется новая попытка построения правой верхней части матрицы.", e);
+                relativesMatrix = GetRightTopPartOfOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
+            }
 
             return relativesMatrix;
         }
@@ -185,6 +195,7 @@ namespace FamilyMatrixCreator
                         y0Result, y1Result,
                         zeroRelative.RelationshipDegree, firstRelative.RelationshipDegree,
                         RelationshipDegreesDictionary.Values.ToList());
+                    possibleRelationshipDegreesList = possibleRelationshipDegreesList.Where(x => x.RelationshipDegreeNumber != 1).ToList();
                     RelationshipDegree trueRelationshipDegree = GetTrueRelationshipDegree(zeroRelative, firstRelative, possibleRelationshipDegreesList);
 
                     relativesMatrix[i][j] = trueRelationshipDegree.RelationshipDegreeNumber;
