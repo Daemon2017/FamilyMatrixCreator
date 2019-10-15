@@ -12,6 +12,7 @@ namespace FamilyMatrixCreator
     public static partial class Form1
     {
         private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
+        private static Random random = new Random();
 
         public static void GetStaticData()
         {
@@ -98,13 +99,13 @@ namespace FamilyMatrixCreator
             }
         }
 
-        private static void CreateMatrices(List<int> existingRelationshipDegrees, int quantityOfMatrixes, int generatedMatrixSize)
+        private static void CreateMatrices(List<int> existingRelationshipDegrees, int quantityOfMatrixes, int generatedMatrixSize, double noRelationPercent)
         {
             Parallel.For(0, quantityOfMatrixes, matrixNumber =>
             {
                 Console.WriteLine("Начинается построение матрицы #{0}...", matrixNumber);
                 float[][] generatedOutputMatrix =
-                    GetOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
+                    GetOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent);
                 float[][] generatedInputMatrix =
                     GetInputMatrix(generatedOutputMatrix, generatedMatrixSize);
                 Console.WriteLine("Завершено построение матрицы #{0}!", matrixNumber);
@@ -126,10 +127,10 @@ namespace FamilyMatrixCreator
         /*
          * Построение выходной матрицы (матрицы родственных отношений).
          */
-        private static float[][] GetOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
+        private static float[][] GetOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees, double probabilityOfNotCreatingNewRelative)
         {
             float[][] generatedOutputMatrix = GetRightTopPartOfOutputMatrix(
-                generatedMatrixSize, existingRelationshipDegrees);
+                generatedMatrixSize, existingRelationshipDegrees, probabilityOfNotCreatingNewRelative);
             generatedOutputMatrix =
                 GetLeftBottomPartOfOutputMatrix(generatedOutputMatrix);
 
@@ -141,19 +142,19 @@ namespace FamilyMatrixCreator
         /*
          * Построение правой (верхней) стороны выходной матрицы.
          */
-        public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees)
+        public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees, double noRelationPercent)
         {
             float[][] relativesMatrix;
 
             try
             {
-                List<Relative> relativesList = GetTree(generatedMatrixSize, existingRelationshipDegrees);
+                List<Relative> relativesList = GetTree(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent);
                 relativesMatrix = GetMatrix(generatedMatrixSize, relativesList);
             }
             catch (NullReferenceException e)
             {
                 Console.WriteLine("{0}\n Осуществляется новая попытка построения правой верхней части матрицы.", e);
-                relativesMatrix = GetRightTopPartOfOutputMatrix(generatedMatrixSize, existingRelationshipDegrees);
+                relativesMatrix = GetRightTopPartOfOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent);
             }
 
             return relativesMatrix;
@@ -543,7 +544,7 @@ namespace FamilyMatrixCreator
             return currentPossibleRelationships;
         }
 
-        private static List<Relative> GetTree(int generatedMatrixSize, List<int> existingRelationshipDegrees)
+        private static List<Relative> GetTree(int generatedMatrixSize, List<int> existingRelationshipDegrees, double probabilityOfNotCreatingNewRelative)
         {
             List<Relative> relativesList = new List<Relative>
             {
@@ -566,7 +567,7 @@ namespace FamilyMatrixCreator
                     {
                         for (int stepY = 0; stepY < distanceY; stepY++)
                         {
-                            relativesList = AddParentalRelationship(relativesList, relativeNumber, 0, stepY + 1, stepY == 0, stepY == distanceY - 1);
+                            relativesList = AddParentalRelationship(relativesList, relativeNumber, 0, stepY + 1, stepY == 0, stepY == distanceY - 1, probabilityOfNotCreatingNewRelative);
 
                             relativeNumber++;
                         }
@@ -575,7 +576,7 @@ namespace FamilyMatrixCreator
                     {
                         for (int stepY = 0; stepY > distanceY; stepY--)
                         {
-                            relativesList = AddDescendantRelationship(relativesList, relativeNumber, 0, stepY - 1, stepY == 0, stepY == distanceY + 1, true);
+                            relativesList = AddDescendantRelationship(relativesList, relativeNumber, 0, stepY - 1, stepY == 0, stepY == distanceY + 1, true, probabilityOfNotCreatingNewRelative);
 
                             relativeNumber++;
                         }
@@ -585,14 +586,14 @@ namespace FamilyMatrixCreator
                 {
                     for (int stepY = 0; stepY < distanceX; stepY++)
                     {
-                        relativesList = AddParentalRelationship(relativesList, relativeNumber, 0, stepY + 1, stepY == 0, 1 != 0);
+                        relativesList = AddParentalRelationship(relativesList, relativeNumber, 0, stepY + 1, stepY == 0, 1 != 0, probabilityOfNotCreatingNewRelative);
 
                         relativeNumber++;
                     }
 
                     for (int stepY = distanceX; stepY > distanceY; stepY--)
                     {
-                        relativesList = AddDescendantRelationship(relativesList, relativeNumber, distanceX, stepY - 1, 1 == 0, stepY == distanceY + 1, false);
+                        relativesList = AddDescendantRelationship(relativesList, relativeNumber, distanceX, stepY - 1, 1 == 0, stepY == distanceY + 1, false, probabilityOfNotCreatingNewRelative);
 
                         relativeNumber++;
                     }
@@ -818,11 +819,11 @@ namespace FamilyMatrixCreator
         }
 
         public static List<Relative> AddParentalRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY,
-            bool isFirstIteration, bool isLastIteration)
+            bool isFirstIteration, bool isLastIteration, double probabilityOfNotCreatingNewRelative)
         {
             if (isFirstIteration)
             {
-                if (relativesList[0].ParentsList.Count != 0 && GetNextRandomValue(0, 2) == 0)
+                if (relativesList[0].ParentsList.Count != 0 && random.NextDouble() < probabilityOfNotCreatingNewRelative)
                 {
                     relativesList.Add(relativesList[0].ParentsList[GetNextRandomValue(0, relativesList[0].ParentsList.Count)]);
                 }
@@ -840,7 +841,7 @@ namespace FamilyMatrixCreator
             }
             else
             {
-                if (relativesList[relativesList.Count - 1].ParentsList.Count != 0 && GetNextRandomValue(0, 2) == 0 && !isLastIteration)
+                if (relativesList[relativesList.Count - 1].ParentsList.Count != 0 && random.NextDouble() < probabilityOfNotCreatingNewRelative && !isLastIteration)
                 {
                     relativesList.Add(relativesList[relativesList.Count - 1].ParentsList[GetNextRandomValue(0, relativesList[relativesList.Count - 1].ParentsList.Count)]);
                 }
@@ -861,11 +862,11 @@ namespace FamilyMatrixCreator
         }
 
         private static List<Relative> AddDescendantRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY,
-            bool isFirstIteration, bool isLastIteration, bool descendantOfProband)
+            bool isFirstIteration, bool isLastIteration, bool descendantOfProband, double probabilityOfNotCreatingNewRelative)
         {
             if (isFirstIteration)
             {
-                if (relativesList[0].ChildsList.Count != 0 && GetNextRandomValue(0, 2) == 0)
+                if (relativesList[0].ChildsList.Count != 0 && random.NextDouble() < probabilityOfNotCreatingNewRelative)
                 {
                     relativesList.Add(relativesList[0].ChildsList[GetNextRandomValue(0, relativesList[0].ChildsList.Count)]);
                 }
@@ -886,7 +887,7 @@ namespace FamilyMatrixCreator
                 List<Relative> cleanChildsList = relativesList[relativesList.Count - 1].ChildsList.Where(child => child.RelationshipDegree.X != 0).ToList();
 
                 if (((descendantOfProband && relativesList[relativesList.Count - 1].ChildsList.Count != 0) || (!descendantOfProband && cleanChildsList.Count != 0))
-                     && GetNextRandomValue(0, 2) == 0 && !isLastIteration)
+                     && random.NextDouble() < probabilityOfNotCreatingNewRelative && !isLastIteration)
                 {
                     if (descendantOfProband)
                     {

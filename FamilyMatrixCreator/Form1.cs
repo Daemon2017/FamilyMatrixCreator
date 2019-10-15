@@ -24,6 +24,9 @@ namespace FamilyMatrixCreator
             Console.WriteLine("Введите требуемый размер стороны каждой матрицы (0;+inf):");
             int sizeOfMatrices = Convert.ToInt32(Console.ReadLine());
 
+            Console.WriteLine("Введите % случаев, когда не будет создаваться новый родственник (0;1):");
+            double probabilityOfNotCreatingNewRelative = Convert.ToDouble(Console.ReadLine());
+
             int quantityOfMatrixes = numberOfMatrices;
 
             Stopwatch myStopwatch = new Stopwatch();
@@ -34,7 +37,7 @@ namespace FamilyMatrixCreator
                 Console.WriteLine("Все необходимые сведения получены, начинается работа...");
                 int generatedMatrixSize = sizeOfMatrices;
 
-                Thread matricesCreator = new Thread(() => CreateMatrices(ExistingRelationshipDegrees, quantityOfMatrixes, generatedMatrixSize));
+                Thread matricesCreator = new Thread(() => CreateMatrices(ExistingRelationshipDegrees, quantityOfMatrixes, generatedMatrixSize, probabilityOfNotCreatingNewRelative));
                 matricesCreator.Start();
                 matricesCreator.Join();
 
