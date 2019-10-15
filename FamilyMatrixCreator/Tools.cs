@@ -208,7 +208,8 @@ namespace FamilyMatrixCreator
                 {
                     if (AncestorList.Contains(possibleRelationshipDegree.RelationshipDegreeNumber))
                     {
-                        List<Relative> parentsList = GetParentsListInSelectedGeneration(zeroRelative, possibleRelationshipDegree);
+                        int yDistanceToMRCA = possibleRelationshipDegree.Y;
+                        List<Relative> parentsList = GetParentsListInSelectedGeneration(zeroRelative, yDistanceToMRCA);
 
                         if (parentsList.Contains(firstRelative))
                         {
@@ -218,7 +219,8 @@ namespace FamilyMatrixCreator
                     }
                     else if (DescendantsList.Contains(possibleRelationshipDegree.RelationshipDegreeNumber))
                     {
-                        List<Relative> childsList = GetChildsListInSelectedGeneration(zeroRelative, possibleRelationshipDegree);
+                        int yDistanceToMRCA = possibleRelationshipDegree.Y;
+                        List<Relative> childsList = GetChildsListInSelectedGeneration(zeroRelative, yDistanceToMRCA);
 
                         if (childsList.Contains(firstRelative))
                         {
@@ -228,7 +230,17 @@ namespace FamilyMatrixCreator
                     }
                     else
                     {
+                        int yDistanceToMRCAFromZeroPerson = possibleRelationshipDegree.X;
+                        List<Relative> parentsListOfZeroPerson = GetParentsListInSelectedGeneration(zeroRelative, yDistanceToMRCAFromZeroPerson);
 
+                        int yDistanceToMRCAFromFirstPerson = possibleRelationshipDegree.X - possibleRelationshipDegree.Y;
+                        List<Relative> parentsListOfFirstPerson = GetParentsListInSelectedGeneration(firstRelative, yDistanceToMRCAFromFirstPerson);
+
+                        if (parentsListOfZeroPerson.Intersect(parentsListOfFirstPerson).ToList().Count > 0)
+                        {
+                            trueRelationshipDegree = possibleRelationshipDegree;
+                            break;
+                        }
                     }
                 }
             }
@@ -236,9 +248,8 @@ namespace FamilyMatrixCreator
             return trueRelationshipDegree;
         }
 
-        private static List<Relative> GetChildsListInSelectedGeneration(Relative zeroRelative, RelationshipDegree possibleRelationshipDegree)
+        private static List<Relative> GetChildsListInSelectedGeneration(Relative zeroRelative, int yDistanceToMRCA)
         {
-            int yDistanceToMRCA = possibleRelationshipDegree.Y;
             List<Relative> childsList = new List<Relative> { zeroRelative };
 
             for (int g = 0; g > yDistanceToMRCA; g--)
@@ -255,9 +266,8 @@ namespace FamilyMatrixCreator
             return childsList;
         }
 
-        private static List<Relative> GetParentsListInSelectedGeneration(Relative zeroRelative, RelationshipDegree possibleRelationshipDegree)
+        private static List<Relative> GetParentsListInSelectedGeneration(Relative zeroRelative, int yDistanceToMRCA)
         {
-            int yDistanceToMRCA = possibleRelationshipDegree.Y;
             List<Relative> parentsList = new List<Relative> { zeroRelative };
 
             for (int g = 0; g < yDistanceToMRCA; g++)
