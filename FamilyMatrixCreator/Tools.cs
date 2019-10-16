@@ -567,7 +567,10 @@ namespace FamilyMatrixCreator
                     {
                         for (int stepY = 0; stepY < distanceY; stepY++)
                         {
-                            relativesList = AddParentalRelationship(relativesList, relativeNumber, 0, stepY + 1, stepY == 0, stepY == distanceY - 1, probabilityOfNotCreatingNewRelative);
+                            relativesList = AddParentalRelationship(relativesList, relativeNumber,
+                                0, stepY + 1,
+                                stepY == 0, stepY == distanceY - 1,
+                                probabilityOfNotCreatingNewRelative);
 
                             relativeNumber++;
                         }
@@ -576,7 +579,10 @@ namespace FamilyMatrixCreator
                     {
                         for (int stepY = 0; stepY > distanceY; stepY--)
                         {
-                            relativesList = AddDescendantRelationship(relativesList, relativeNumber, 0, stepY - 1, stepY == 0, stepY == distanceY + 1, true, probabilityOfNotCreatingNewRelative);
+                            relativesList = AddDescendantRelationship(relativesList, relativeNumber,
+                                0, stepY - 1,
+                                stepY == 0, stepY == distanceY + 1,
+                                true, probabilityOfNotCreatingNewRelative);
 
                             relativeNumber++;
                         }
@@ -586,14 +592,20 @@ namespace FamilyMatrixCreator
                 {
                     for (int stepY = 0; stepY < distanceX; stepY++)
                     {
-                        relativesList = AddParentalRelationship(relativesList, relativeNumber, 0, stepY + 1, stepY == 0, 1 != 0, probabilityOfNotCreatingNewRelative);
+                        relativesList = AddParentalRelationship(relativesList, relativeNumber,
+                            0, stepY + 1,
+                            stepY == 0, 0 != 0,
+                            probabilityOfNotCreatingNewRelative);
 
                         relativeNumber++;
                     }
 
                     for (int stepY = distanceX; stepY > distanceY; stepY--)
                     {
-                        relativesList = AddDescendantRelationship(relativesList, relativeNumber, distanceX, stepY - 1, 1 == 0, stepY == distanceY + 1, false, probabilityOfNotCreatingNewRelative);
+                        relativesList = AddDescendantRelationship(relativesList, relativeNumber,
+                            distanceX, stepY - 1,
+                            1 == 0, stepY == distanceY + 1,
+                            false, probabilityOfNotCreatingNewRelative);
 
                         relativeNumber++;
                     }
@@ -818,12 +830,14 @@ namespace FamilyMatrixCreator
             return numberOfAncestorsNotZero;
         }
 
-        public static List<Relative> AddParentalRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY,
-            bool isFirstIteration, bool isLastIteration, double probabilityOfNotCreatingNewRelative)
+        public static List<Relative> AddParentalRelationship(List<Relative> relativesList, int relativeNumber,
+            int coordX, int coordY,
+            bool isFirstIteration, bool isLastIteration,
+            double probabilityOfNotCreatingNewRelative)
         {
             if (isFirstIteration)
             {
-                if (relativesList[0].ParentsList.Count != 0 && random.NextDouble() < probabilityOfNotCreatingNewRelative)
+                if (relativesList[0].ParentsList.Count != 0 && random.NextDouble() <= probabilityOfNotCreatingNewRelative)
                 {
                     relativesList.Add(relativesList[0].ParentsList[GetNextRandomValue(0, relativesList[0].ParentsList.Count)]);
                 }
@@ -841,7 +855,7 @@ namespace FamilyMatrixCreator
             }
             else
             {
-                if (relativesList[relativesList.Count - 1].ParentsList.Count != 0 && random.NextDouble() < probabilityOfNotCreatingNewRelative && !isLastIteration)
+                if (relativesList[relativesList.Count - 1].ParentsList.Count != 0 && random.NextDouble() <= probabilityOfNotCreatingNewRelative && !isLastIteration)
                 {
                     relativesList.Add(relativesList[relativesList.Count - 1].ParentsList[GetNextRandomValue(0, relativesList[relativesList.Count - 1].ParentsList.Count)]);
                 }
@@ -861,12 +875,14 @@ namespace FamilyMatrixCreator
             return relativesList;
         }
 
-        private static List<Relative> AddDescendantRelationship(List<Relative> relativesList, int relativeNumber, int coordX, int coordY,
-            bool isFirstIteration, bool isLastIteration, bool descendantOfProband, double probabilityOfNotCreatingNewRelative)
+        private static List<Relative> AddDescendantRelationship(List<Relative> relativesList, int relativeNumber,
+            int coordX, int coordY,
+            bool isFirstIteration, bool isLastIteration,
+            bool descendantOfProband, double probabilityOfNotCreatingNewRelative)
         {
             if (isFirstIteration)
             {
-                if (relativesList[0].ChildsList.Count != 0 && random.NextDouble() < probabilityOfNotCreatingNewRelative)
+                if (relativesList[0].ChildsList.Count != 0 && random.NextDouble() <= probabilityOfNotCreatingNewRelative)
                 {
                     relativesList.Add(relativesList[0].ChildsList[GetNextRandomValue(0, relativesList[0].ChildsList.Count)]);
                 }
@@ -887,7 +903,7 @@ namespace FamilyMatrixCreator
                 List<Relative> cleanChildsList = relativesList[relativesList.Count - 1].ChildsList.Where(child => child.RelationshipDegree.X != 0).ToList();
 
                 if (((descendantOfProband && relativesList[relativesList.Count - 1].ChildsList.Count != 0) || (!descendantOfProband && cleanChildsList.Count != 0))
-                     && random.NextDouble() < probabilityOfNotCreatingNewRelative && !isLastIteration)
+                     && random.NextDouble() <= probabilityOfNotCreatingNewRelative && !isLastIteration)
                 {
                     if (descendantOfProband)
                     {
