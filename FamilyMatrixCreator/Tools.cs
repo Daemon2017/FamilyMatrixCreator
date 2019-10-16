@@ -105,7 +105,7 @@ namespace FamilyMatrixCreator
             {
                 Console.WriteLine("Начинается построение матрицы #{0}...", matrixNumber);
                 float[][] generatedOutputMatrix =
-                    GetOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent);
+                    GetOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent, matrixNumber);
                 float[][] generatedInputMatrix =
                     GetInputMatrix(generatedOutputMatrix, generatedMatrixSize);
                 Console.WriteLine("Завершено построение матрицы #{0}!", matrixNumber);
@@ -127,10 +127,10 @@ namespace FamilyMatrixCreator
         /*
          * Построение выходной матрицы (матрицы родственных отношений).
          */
-        private static float[][] GetOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees, double probabilityOfNotCreatingNewRelative)
+        private static float[][] GetOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees, double probabilityOfNotCreatingNewRelative, int matrixNumber)
         {
             float[][] generatedOutputMatrix = GetRightTopPartOfOutputMatrix(
-                generatedMatrixSize, existingRelationshipDegrees, probabilityOfNotCreatingNewRelative);
+                generatedMatrixSize, existingRelationshipDegrees, probabilityOfNotCreatingNewRelative, matrixNumber);
             generatedOutputMatrix =
                 GetLeftBottomPartOfOutputMatrix(generatedOutputMatrix);
 
@@ -142,7 +142,7 @@ namespace FamilyMatrixCreator
         /*
          * Построение правой (верхней) стороны выходной матрицы.
          */
-        public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees, double noRelationPercent)
+        public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees, double noRelationPercent, int matrixNumber)
         {
             float[][] relativesMatrix;
 
@@ -151,10 +151,10 @@ namespace FamilyMatrixCreator
                 List<Relative> relativesList = GetTree(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent);
                 relativesMatrix = GetMatrix(generatedMatrixSize, relativesList);
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
-                Console.WriteLine("{0}\n Осуществляется новая попытка построения правой верхней части матрицы.", e);
-                relativesMatrix = GetRightTopPartOfOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent);
+                Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
+                relativesMatrix = GetRightTopPartOfOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent, matrixNumber);
             }
 
             return relativesMatrix;
