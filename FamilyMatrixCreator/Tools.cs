@@ -149,12 +149,12 @@ namespace FamilyMatrixCreator
             {
                 if (percentOfMeaningfulValues < minPercentOfMeaningfulValues)
                 {
-                    Console.WriteLine("[ОШИБКА] Процент значащих значений у матрицы {0} равен {1} и он ниже заданного! ", matrixNumber, percentOfMeaningfulValues);
+                    Console.WriteLine("[ОШИБКА] У матрицы {0} процент значащих значений равен {1} и он ниже заданного! ", matrixNumber, percentOfMeaningfulValues);
                     Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
                 }
                 else if (percentOfMeaningfulValues > maxPercentOfMeaningfulValues)
                 {
-                    Console.WriteLine("[ОШИБКА] Процент значащих значений у матрицы {0} равен {1} и он выше заданного! ", matrixNumber, percentOfMeaningfulValues);
+                    Console.WriteLine("[ОШИБКА] У матрицы {0} процент значащих значений равен {1} и он выше заданного! ", matrixNumber, percentOfMeaningfulValues);
                     Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
                 }
 
