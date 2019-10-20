@@ -149,12 +149,12 @@ namespace FamilyMatrixCreator
             {
                 if (percentOfMeaningfulValues < minPercentOfMeaningfulValues)
                 {
-                    Console.WriteLine("[ОШИБКА] У матрицы {0} процент значащих значений равен {1} и он ниже заданного! ", matrixNumber, percentOfMeaningfulValues);
+                    Console.WriteLine("[ОШИБКА] У матрицы #{0} процент значащих значений равен {1} и он ниже заданного! ", matrixNumber, percentOfMeaningfulValues);
                     Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
                 }
                 else if (percentOfMeaningfulValues > maxPercentOfMeaningfulValues)
                 {
-                    Console.WriteLine("[ОШИБКА] У матрицы {0} процент значащих значений равен {1} и он выше заданного! ", matrixNumber, percentOfMeaningfulValues);
+                    Console.WriteLine("[ОШИБКА] У матрицы #{0} процент значащих значений равен {1} и он выше заданного! ", matrixNumber, percentOfMeaningfulValues);
                     Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
                 }
 
@@ -179,7 +179,7 @@ namespace FamilyMatrixCreator
             }
             catch (NullReferenceException)
             {
-                Console.WriteLine("[ОШИБКА] Выявлен NPE - отсутствует какая-то степень родства!");
+                Console.WriteLine("[ОШИБКА] В ходе построения матрицы #{0} выявлен NPE - отсутствует какая-то степень родства!", matrixNumber);
                 Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
                 relativesMatrix = GetRightTopPartOfOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent, matrixNumber);
             }
