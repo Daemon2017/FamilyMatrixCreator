@@ -24,6 +24,12 @@ namespace FamilyMatrixCreator
             Console.WriteLine("Введите требуемый размер стороны каждой матрицы (0;+inf):");
             int sizeOfMatrices = Convert.ToInt32(Console.ReadLine());
 
+            Console.WriteLine("Введите MIN % значащих значений каждой матрицы (0;100):");
+            int minPercentOfMeaningfulValues = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Введите MAX % значащих значений каждой матрицы (0;100):");
+            int maxPercentOfMeaningfulValues = Convert.ToInt32(Console.ReadLine());
+
             Console.WriteLine("Введите % случаев, когда не будет создаваться новый родственник (0;1):");
             double probabilityOfNotCreatingNewRelative = Convert.ToDouble(Console.ReadLine());
 
@@ -37,7 +43,13 @@ namespace FamilyMatrixCreator
                 Console.WriteLine("Все необходимые сведения получены, начинается работа...");
                 int generatedMatrixSize = sizeOfMatrices;
 
-                Thread matricesCreator = new Thread(() => CreateMatrices(ExistingRelationshipDegrees, quantityOfMatrixes, generatedMatrixSize, probabilityOfNotCreatingNewRelative));
+                Thread matricesCreator = new Thread(() => CreateMatrices(
+                    ExistingRelationshipDegrees,
+                    quantityOfMatrixes,
+                    generatedMatrixSize,
+                    probabilityOfNotCreatingNewRelative,
+                    minPercentOfMeaningfulValues,
+                    maxPercentOfMeaningfulValues));
                 matricesCreator.Start();
                 matricesCreator.Join();
 

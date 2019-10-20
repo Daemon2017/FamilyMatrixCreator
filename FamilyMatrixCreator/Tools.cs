@@ -99,13 +99,15 @@ namespace FamilyMatrixCreator
             }
         }
 
-        private static void CreateMatrices(List<int> existingRelationshipDegrees, int quantityOfMatrixes, int generatedMatrixSize, double noRelationPercent)
+        private static void CreateMatrices(List<int> existingRelationshipDegrees, int quantityOfMatrixes, int generatedMatrixSize, double noRelationPercent,
+            int minPercentOfMeaningfulValues, int maxPercentOfMeaningfulValues)
         {
             Parallel.For(0, quantityOfMatrixes, matrixNumber =>
             {
                 Console.WriteLine("Начинается построение матрицы #{0}...", matrixNumber);
                 float[][] generatedOutputMatrix =
-                    GetOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent, matrixNumber);
+                    GetOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent, matrixNumber,
+                    minPercentOfMeaningfulValues, maxPercentOfMeaningfulValues);
                 float[][] generatedInputMatrix =
                     GetInputMatrix(generatedOutputMatrix, generatedMatrixSize);
                 Console.WriteLine("Завершено построение матрицы #{0}!", matrixNumber);
@@ -127,7 +129,9 @@ namespace FamilyMatrixCreator
         /*
          * Построение выходной матрицы (матрицы родственных отношений).
          */
-        private static float[][] GetOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees, double probabilityOfNotCreatingNewRelative, int matrixNumber)
+        private static float[][] GetOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees,
+            double probabilityOfNotCreatingNewRelative, int matrixNumber,
+            int minPercentOfMeaningfulValues, int maxPercentOfMeaningfulValues)
         {
             float[][] generatedOutputMatrix = GetRightTopPartOfOutputMatrix(
                 generatedMatrixSize, existingRelationshipDegrees, probabilityOfNotCreatingNewRelative, matrixNumber);
@@ -135,6 +139,28 @@ namespace FamilyMatrixCreator
                 GetLeftBottomPartOfOutputMatrix(generatedOutputMatrix);
 
             generatedOutputMatrix = FillMainDiagonalOfOutputMatrix(generatedOutputMatrix);
+
+            double percentOfMeaningfulValues = GetPercentOfMeaningfulValues(
+                generatedMatrixSize,
+                existingRelationshipDegrees,
+                generatedOutputMatrix);
+
+            if (percentOfMeaningfulValues < minPercentOfMeaningfulValues || percentOfMeaningfulValues > maxPercentOfMeaningfulValues)
+            {
+                if (percentOfMeaningfulValues < minPercentOfMeaningfulValues)
+                {
+                    Console.WriteLine("[ОШИБКА] Процент значащих значений у матрицы {0} равен {1} и он ниже заданного! ", matrixNumber, percentOfMeaningfulValues);
+                    Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
+                }
+                else if (percentOfMeaningfulValues > maxPercentOfMeaningfulValues)
+                {
+                    Console.WriteLine("[ОШИБКА] Процент значащих значений у матрицы {0} равен {1} и он выше заданного! ", matrixNumber, percentOfMeaningfulValues);
+                    Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
+                }
+
+                generatedOutputMatrix = GetOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, probabilityOfNotCreatingNewRelative, matrixNumber,
+                    minPercentOfMeaningfulValues, maxPercentOfMeaningfulValues);
+            }
 
             return generatedOutputMatrix;
         }
@@ -153,6 +179,7 @@ namespace FamilyMatrixCreator
             }
             catch (NullReferenceException)
             {
+                Console.WriteLine("[ОШИБКА] Выявлен NPE - отсутствует какая-то степень родства!");
                 Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
                 relativesMatrix = GetRightTopPartOfOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent, matrixNumber);
             }
