@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
 	<GenerateProgramFile>false</GenerateProgramFile>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+	<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

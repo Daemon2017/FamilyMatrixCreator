@@ -116,13 +116,13 @@ namespace FamilyMatrixCreator
                  * Сохранение входной матрицы в файл.
                  */
                 Directory.CreateDirectory("input");
-                FileSaverLoader.SaveToFile(@"input\generated_input", generatedInputMatrix, matrixNumber);
+                FileSaverLoader.SaveToFile(@"input/generated_input", generatedInputMatrix, matrixNumber);
 
                 /*
                  * Сохранение выходной матрицы в файл.
                  */
                 Directory.CreateDirectory("output");
-                FileSaverLoader.SaveToFile(@"output\generated_output", generatedOutputMatrix, matrixNumber);
+                FileSaverLoader.SaveToFile(@"output/generated_output", generatedOutputMatrix, matrixNumber);
             });
         }
 
