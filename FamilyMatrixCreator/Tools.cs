@@ -143,8 +143,6 @@ namespace FamilyMatrixCreator
                 generatedOutputMatrix =
                     GetLeftBottomPartOfOutputMatrix(generatedOutputMatrix);
 
-                generatedOutputMatrix = FillMainDiagonalOfOutputMatrix(generatedOutputMatrix);
-
                 percentOfMeaningfulValues = GetPercentOfMeaningfulValues(
                     generatedMatrixSize,
                     existingRelationshipDegrees,
@@ -170,18 +168,21 @@ namespace FamilyMatrixCreator
          */
         public static float[][] GetRightTopPartOfOutputMatrix(int generatedMatrixSize, List<int> existingRelationshipDegrees, double noRelationPercent, int matrixNumber)
         {
-            float[][] relativesMatrix;
+            float[][] relativesMatrix = { new float[] { 0 } };
 
-            try
+            while (relativesMatrix[0][0] == 0)
             {
-                List<Relative> relativesList = GetTree(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent);
-                relativesMatrix = GetMatrix(generatedMatrixSize, relativesList);
-            }
-            catch (NullReferenceException)
-            {
-                Console.WriteLine("[ОШИБКА] В ходе построения матрицы #{0} выявлен NPE - отсутствует какая-то степень родства!", matrixNumber);
-                Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
-                relativesMatrix = GetRightTopPartOfOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent, matrixNumber);
+                try
+                {
+                    List<Relative> relativesList = GetTree(generatedMatrixSize, existingRelationshipDegrees, noRelationPercent);
+                    relativesMatrix = GetMatrix(generatedMatrixSize, relativesList);
+                    relativesMatrix = FillMainDiagonalOfOutputMatrix(relativesMatrix);
+                }
+                catch (NullReferenceException)
+                {
+                    Console.WriteLine("[ОШИБКА] В ходе построения матрицы #{0} выявлен NPE - отсутствует какая-то степень родства!", matrixNumber);
+                    Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
+                }
             }
 
             return relativesMatrix;

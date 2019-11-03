@@ -24,10 +24,10 @@ namespace FamilyMatrixCreator
             Console.WriteLine("Введите требуемый размер стороны каждой матрицы (0;+inf):");
             int sizeOfMatrices = Convert.ToInt32(Console.ReadLine());
 
-            Console.WriteLine("Введите MIN % значащих значений каждой матрицы (0;100):");
+            Console.WriteLine("Введите MIN % значащих значений каждой матрицы (1;100):");
             int minPercentOfMeaningfulValues = Convert.ToInt32(Console.ReadLine());
 
-            Console.WriteLine("Введите MAX % значащих значений каждой матрицы (0;100):");
+            Console.WriteLine("Введите MAX % значащих значений каждой матрицы (1;100):");
             int maxPercentOfMeaningfulValues = Convert.ToInt32(Console.ReadLine());
 
             Console.WriteLine("Введите % случаев, когда не будет создаваться новый родственник (0;1):");
