@@ -133,20 +133,23 @@ namespace FamilyMatrixCreator
             double probabilityOfNotCreatingNewRelative, int matrixNumber,
             int minPercentOfMeaningfulValues, int maxPercentOfMeaningfulValues)
         {
-            float[][] generatedOutputMatrix = GetRightTopPartOfOutputMatrix(
-                generatedMatrixSize, existingRelationshipDegrees, probabilityOfNotCreatingNewRelative, matrixNumber);
-            generatedOutputMatrix =
-                GetLeftBottomPartOfOutputMatrix(generatedOutputMatrix);
+            double percentOfMeaningfulValues = 0;
+            float[][] generatedOutputMatrix = new float[][] { };
 
-            generatedOutputMatrix = FillMainDiagonalOfOutputMatrix(generatedOutputMatrix);
-
-            double percentOfMeaningfulValues = GetPercentOfMeaningfulValues(
-                generatedMatrixSize,
-                existingRelationshipDegrees,
-                generatedOutputMatrix);
-
-            if (percentOfMeaningfulValues < minPercentOfMeaningfulValues || percentOfMeaningfulValues > maxPercentOfMeaningfulValues)
+            while (percentOfMeaningfulValues < minPercentOfMeaningfulValues || percentOfMeaningfulValues > maxPercentOfMeaningfulValues)
             {
+                generatedOutputMatrix = GetRightTopPartOfOutputMatrix(
+                    generatedMatrixSize, existingRelationshipDegrees, probabilityOfNotCreatingNewRelative, matrixNumber);
+                generatedOutputMatrix =
+                    GetLeftBottomPartOfOutputMatrix(generatedOutputMatrix);
+
+                generatedOutputMatrix = FillMainDiagonalOfOutputMatrix(generatedOutputMatrix);
+
+                percentOfMeaningfulValues = GetPercentOfMeaningfulValues(
+                    generatedMatrixSize,
+                    existingRelationshipDegrees,
+                    generatedOutputMatrix);
+
                 if (percentOfMeaningfulValues < minPercentOfMeaningfulValues)
                 {
                     Console.WriteLine("[ОШИБКА] У матрицы #{0} процент значащих значений равен {1} и он ниже заданного! ", matrixNumber, percentOfMeaningfulValues);
@@ -157,9 +160,6 @@ namespace FamilyMatrixCreator
                     Console.WriteLine("[ОШИБКА] У матрицы #{0} процент значащих значений равен {1} и он выше заданного! ", matrixNumber, percentOfMeaningfulValues);
                     Console.WriteLine("Осуществляется повторная попытка построения правой верхней части матрицы #{0}...", matrixNumber);
                 }
-
-                generatedOutputMatrix = GetOutputMatrix(generatedMatrixSize, existingRelationshipDegrees, probabilityOfNotCreatingNewRelative, matrixNumber,
-                    minPercentOfMeaningfulValues, maxPercentOfMeaningfulValues);
             }
 
             return generatedOutputMatrix;
