@@ -9,7 +9,7 @@ namespace FamilyMatrixCreator
         [SetUp]
         public void DerivedSetUp()
         {
-            Form1.PrepareData();
+            Form1.GetStaticData();
         }
 
         private static readonly object[] CalculatePercentOfMeaningfulValues_DataProvider =
@@ -51,7 +51,7 @@ namespace FamilyMatrixCreator
             List<int> existingRelationshipDegrees, float[][] generatedOutputMatrix, double result)
         {
             Assert.That(
-                Form1.CalculatePercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees,
+                Form1.GetPercentOfMeaningfulValues(generatedMatrixSize, existingRelationshipDegrees,
                     generatedOutputMatrix),
                 Is.EqualTo(result));
         }
@@ -3372,7 +3372,7 @@ namespace FamilyMatrixCreator
             int[][] ancestorsCurrentCountMatrix = Form1.GetAncestorsCurrentCountMatrix(generatedOutputMatrix);
 
             Assert.That(
-                Form1.FindAllPossibleRelationships(
+                Form1.GetListOfAllPossibleRelationshipsOfRelative(
                     generatedOutputMatrix,
                     persons, person,
                     relatives, relative,
@@ -3446,7 +3446,7 @@ namespace FamilyMatrixCreator
                 Form1.GetAllExistingRelationshipDegrees();
 
             Assert.That(
-                Form1.DetectAllPossibleRelationships(
+                Form1.GetListOfAllPossibleRelationships(
                     existingRelationshipDegrees,
                     generatedOutputMatrix,
                     persons, person,
