@@ -7,6 +7,8 @@ namespace FamilyMatrixCreator
         public int RelationshipDegreeNumber { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public string RelationName { get; set; }
+        public int ClusterNumber { get; set; }
         public float CommonCm { get; set; }
         public bool IsAncestorOfProband { get; set; }
         public bool IsDescendantOfProband { get; set; }

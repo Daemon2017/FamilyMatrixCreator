@@ -1,4 +1,5 @@
 ﻿using MathNet.Numerics.Distributions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,76 +22,77 @@ namespace FamilyMatrixCreator
             Console.WriteLine("Подготовка необходимых файлов...");
             RelationshipsMatrix = FileSaverLoader.LoadFromFile2dJagged("relationships.csv");
             NumberOfProband = 0;
-            float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1dFloat("centimorgans.csv");
-            int[] coordXMatrix = Array.ConvertAll(FileSaverLoader.LoadFromFile1dFloat("xs.csv"), x => (int)x);
-            int[] coordYMatrix = Array.ConvertAll(FileSaverLoader.LoadFromFile1dFloat("ys.csv"), y => (int)y);
+            //float[] centimorgansMatrix = FileSaverLoader.LoadFromFile1dFloat("centimorgans.csv");
+            //int[] coordXMatrix = Array.ConvertAll(FileSaverLoader.LoadFromFile1dFloat("xs.csv"), x => (int)x);
+            //int[] coordYMatrix = Array.ConvertAll(FileSaverLoader.LoadFromFile1dFloat("ys.csv"), y => (int)y);
             int[][] _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2dInt("ancestorsMatrix.csv");
             DescendantsList = FileSaverLoader.LoadFromFile1dInt("descendantsMatrix.csv").ToList();
+            List<RelationshipDegree> relationships = JsonConvert.DeserializeObject<List<RelationshipDegree>>(File.ReadAllText("relatives.json"));
             Console.WriteLine("Необходимые файлы успешно подготовлены!");
 
             AncestorList = Enumerable
-                .Range(0, _ancestorsMaxCountMatrix.GetLength(0))
-                .Select(x => _ancestorsMaxCountMatrix[x][0])
-                .ToList();
+                    .Range(0, _ancestorsMaxCountMatrix.GetLength(0))
+                    .Select(x => _ancestorsMaxCountMatrix[x][0])
+                    .ToList();
 
-            Dictionary<int, int> AncestorsMaxCountDictionary = new Dictionary<int, int>();
-            for (int i = 0; i < _ancestorsMaxCountMatrix.GetLength(0); i++)
-            {
-                AncestorsMaxCountDictionary.Add(_ancestorsMaxCountMatrix[i][0], _ancestorsMaxCountMatrix[i][1]);
-            }
+            //Dictionary<int, int> AncestorsMaxCountDictionary = new Dictionary<int, int>();
+            //for (int i = 0; i < _ancestorsMaxCountMatrix.GetLength(0); i++)
+            //{
+            //    AncestorsMaxCountDictionary.Add(_ancestorsMaxCountMatrix[i][0], _ancestorsMaxCountMatrix[i][1]);
+            //}
 
             ExistingRelationshipDegrees =
                 GetAllExistingRelationshipDegrees();
 
-            Dictionary<int, float> _centimorgansDictionary = new Dictionary<int, float> { { 0, 0 } };
-            for (int i = 0; i < centimorgansMatrix.Length; i++)
-            {
-                _centimorgansDictionary.Add(ExistingRelationshipDegrees[i], centimorgansMatrix[i]);
-            }
+            //Dictionary<int, float> _centimorgansDictionary = new Dictionary<int, float> { { 0, 0 } };
+            //for (int i = 0; i < centimorgansMatrix.Length; i++)
+            //{
+            //    _centimorgansDictionary.Add(ExistingRelationshipDegrees[i], centimorgansMatrix[i]);
+            //}
 
-            Dictionary<int, int> coordXDictionary = new Dictionary<int, int> { { 0, -1 } };
-            for (int i = 0; i < coordXMatrix.Length; i++)
-            {
-                coordXDictionary.Add(ExistingRelationshipDegrees[i], coordXMatrix[i]);
-            }
+            //Dictionary<int, int> coordXDictionary = new Dictionary<int, int> { { 0, -1 } };
+            //for (int i = 0; i < coordXMatrix.Length; i++)
+            //{
+            //    coordXDictionary.Add(ExistingRelationshipDegrees[i], coordXMatrix[i]);
+            //}
 
-            Dictionary<int, int> coordYDictionary = new Dictionary<int, int> { { 0, -1 } };
-            for (int i = 0; i < coordYMatrix.Length; i++)
-            {
-                coordYDictionary.Add(ExistingRelationshipDegrees[i], coordYMatrix[i]);
-            }
+            //Dictionary<int, int> coordYDictionary = new Dictionary<int, int> { { 0, -1 } };
+            //for (int i = 0; i < coordYMatrix.Length; i++)
+            //{
+            //    coordYDictionary.Add(ExistingRelationshipDegrees[i], coordYMatrix[i]);
+            //}
 
             ExistingRelationshipDegrees.Insert(0, 0);
 
-            List<RelationshipDegree> relationships = new List<RelationshipDegree>();
-            foreach (int degree in ExistingRelationshipDegrees)
-            {
-                int relationshipNumber = degree;
-                float commonCm = _centimorgansDictionary[degree];
-                int coordX = coordXDictionary[degree];
-                int coordY = coordYDictionary[degree];
-                bool isAncestorOfProband = AncestorList.Contains(degree);
-                bool isSiblindantOfProband = DescendantsList.Contains(degree);
-                int relationshipMaxCount;
-                if (AncestorsMaxCountDictionary.ContainsKey(degree))
-                {
-                    relationshipMaxCount = AncestorsMaxCountDictionary[degree];
-                }
-                else
-                {
-                    relationshipMaxCount = int.MaxValue;
-                }
+            //List<RelationshipDegree> relationships = new List<RelationshipDegree>();
+            //foreach (int degree in ExistingRelationshipDegrees)
+            //{
+            //    int relationshipNumber = degree;
+            //    float commonCm = _centimorgansDictionary[degree];
+            //    int coordX = coordXDictionary[degree];
+            //    int coordY = coordYDictionary[degree];
+            //    bool isAncestorOfProband = AncestorList.Contains(degree);
+            //    bool isSiblindantOfProband = DescendantsList.Contains(degree);
+            //    int relationshipMaxCount;
+            //    if (AncestorsMaxCountDictionary.ContainsKey(degree))
+            //    {
+            //        relationshipMaxCount = AncestorsMaxCountDictionary[degree];
+            //    }
+            //    else
+            //    {
+            //        relationshipMaxCount = int.MaxValue;
+            //    }
 
-                RelationshipDegree rel = new RelationshipDegree(
-                    relationshipNumber,
-                    commonCm,
-                    coordX,
-                    coordY,
-                    isAncestorOfProband,
-                    isSiblindantOfProband,
-                    relationshipMaxCount);
-                relationships.Add(rel);
-            }
+            //    RelationshipDegree rel = new RelationshipDegree(
+            //        relationshipNumber,
+            //        commonCm,
+            //        coordX,
+            //        coordY,
+            //        isAncestorOfProband,
+            //        isSiblindantOfProband,
+            //        relationshipMaxCount);
+            //    relationships.Add(rel);
+            //}
 
             RelationshipDegreesDictionary = new Dictionary<int, RelationshipDegree>();
             foreach (RelationshipDegree relationship in relationships)
