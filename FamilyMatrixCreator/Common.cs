@@ -113,9 +113,9 @@ namespace FamilyMatrixCreator
                             yOfMrca - _firstRelationshipDegree.Y,
                             _relationshipDegreesList));
                     }
-                    catch (InvalidOperationException)
+                    catch (InvalidOperationException IOE)
                     {
-
+                        Console.WriteLine(IOE);
                     }
                 }
             }

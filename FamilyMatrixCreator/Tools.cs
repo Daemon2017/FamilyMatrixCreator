@@ -290,9 +290,9 @@ namespace FamilyMatrixCreator
                                    generatedOutputMatrix[genRelative][genPerson]
                              select RelationshipsMatrix[genRelationship, NumberOfProband][0]).Single();
                     }
-                    catch (InvalidOperationException)
+                    catch (InvalidOperationException IOE)
                     {
-
+                        Console.WriteLine(IOE);
                     }
                 }
             }
@@ -653,9 +653,9 @@ namespace FamilyMatrixCreator
                            generatedOutputMatrix[persons[previousPerson]][relatives[relative]]
                      select number).Single();
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException IOE)
             {
-
+                Console.WriteLine(IOE);
             }
 
             return numberOfJ;
