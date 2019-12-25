@@ -24,7 +24,7 @@ namespace FamilyMatrixCreator
             NumberOfProband = 0;
             int[][] _ancestorsMaxCountMatrix = FileSaverLoader.LoadFromFile2dInt("ancestorsMatrix.csv");
             DescendantsList = FileSaverLoader.LoadFromFile1dInt("descendantsMatrix.csv").ToList();
-            List<RelationshipDegree> relationships = JsonConvert.DeserializeObject<List<RelationshipDegree>>(File.ReadAllText("relatives.json"));
+            List<RelationshipDegree> relationships = JsonConvert.DeserializeObject<List<RelationshipDegree>>(File.ReadAllText("relationships.json"));
             Console.WriteLine("Необходимые файлы успешно подготовлены!");
 
             AncestorList = Enumerable
